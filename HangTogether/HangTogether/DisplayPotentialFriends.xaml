@@ -17,32 +17,41 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 
-                <pancakeView:PancakeView Grid.Row="0" WidthRequest="41" HeightRequest="41" CornerRadius="10" BackgroundColor="#FFF">
-
-                    <Image Source="mes_bg/ic_menu.png" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10" />
+                <pancakeView:PancakeView Grid.Row="0" Grid.Column="0" WidthRequest="70" HeightRequest="70" 
+                                         CornerRadius="10" BackgroundColor="SkyBlue" HorizontalOptions="End"
+                                         Margin="0,30,20,20">
+                    <pancakeView:PancakeView.Shadow>
+                        <pancakeView:DropShadow Color="#000"/>
+                    </pancakeView:PancakeView.Shadow>
+                    <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill"/>
                 </pancakeView:PancakeView>
                 
             
-                <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
-                                    Grid.Row="1" Grid.Column="0" Padding="0,0,0,40" 
-                                    Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}">
+              <!--  <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
+                                    Grid.Row="1" Grid.Column="0" Padding="0,0,0,0" 
+                                    Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}"
+                                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"> -->
                     
-                    <swipeCardView:SwipeCardView 
-                                 x:Name="swipElem" ItemsSource="{Binding Profiles}"
-                                 HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                                 SupportedSwipeDirections="Down,Up,Right,Left" > 
+                    <swipeCardView:SwipeCardView Grid.Row="1" Grid.Column="0"
+                                     x:Name="swipElem" ItemsSource="{Binding Profiles}"
+                                     HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                                     SupportedSwipeDirections="Down,Up,Right,Left" BackgroundColor="White"
+                    > 
                         
-                        <swipeCardView:SwipeCardView.ItemTemplate>
+                        <swipeCardView:SwipeCardView.ItemTemplate >
                             <DataTemplate>
-                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-                                    
-                                </StackLayout>
+                                <Frame CornerRadius="10" Padding="8" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand">
+                                    <AbsoluteLayout>
+                                        <Image Source="{Binding Photo}" Aspect="AspectFill"/>
+                                    </AbsoluteLayout>
+                                </Frame>
                             </DataTemplate>
+        
                             
                         </swipeCardView:SwipeCardView.ItemTemplate>
                         
                     </swipeCardView:SwipeCardView>
-                    </pancakeView:PancakeView>
+              <!--  </pancakeView:PancakeView>-->
                 
                 <Button Text="ENVOYEZ UN MESSAGE" Grid.Row="2" Grid.Column="0"></Button>
             </Grid>
