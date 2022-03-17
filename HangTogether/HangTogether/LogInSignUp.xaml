@@ -4,11 +4,11 @@
              xmlns:local="clr-namespace:HangTogether"
              x:Class="HangTogether.LogInSignUp">
 
-    <StackLayout BackgroundColor="#e6e6e6">
+    <StackLayout BackgroundColor="White">
         <Grid>
             <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
-                <Frame HeightRequest="150" BackgroundColor="HotPink" Padding="0" Margin="0">
-                    <Image Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>
+                <Frame HeightRequest="300" BackgroundColor="HotPink" Padding="0" Margin="0">
+                   <!-- <Image Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>-->
                 </Frame>
             </StackLayout>
             
@@ -30,7 +30,7 @@
                                     <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
                                 </Frame>
                                 
-                                <Entry Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"></Entry>
+                                <Entry Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand" ClearButtonVisibility="WhileEditing"/>
                             </StackLayout>
                         </Frame>
                         
@@ -48,7 +48,7 @@
                                 </Frame>
                                 
                                 <Entry Placeholder="Mot de passe" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
-                                       IsPassword="True"></Entry>
+                                       IsPassword="True" ClearButtonVisibility="WhileEditing"/>
                             </StackLayout>
                         </Frame>
                         
@@ -61,7 +61,7 @@
                                Margin="0,0,10,0" IsVisible="True"/>
                         
                         
-                        <Button Margin="10,30,10,0" Text="SIGN IN" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"/>
+                        <Button Margin="10,30,10,0" Text="SIGN IN" FontAttributes="Bold" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"/>
                         
                         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,8,0,0">
                             <Label Text="Vous n'avez pas de compte ?" TextColor="DarkGray" FontSize="Small"/>
