@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:HangTogether"
+             x:Class="HangTogether.SignUpUser">
+    
+
+
+        <StackLayout BackgroundColor="#e6e6e6">
+            <Grid>
+                <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
+                    <Frame HeightRequest="300" BackgroundColor="HotPink" Padding="0" Margin="0">
+                        <Image Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>
+                    </Frame>
+                </StackLayout>
+               
+                    <StackLayout Padding="0" Margin="10,80,10,0" HorizontalOptions="FillAndExpand">
+
+                        <Frame BackgroundColor="White" HeightRequest="600" HasShadow="True" Padding="0" Margin="0" CornerRadius="15">
+
+                            <StackLayout>
+                                <StackLayout Margin="10">
+                                            <Label Text="SIGN UP" TextColor="Black" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="28"/>
+                                    </StackLayout>
+                                
+                                <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" VerticalScrollBarVisibility="Always"
+                                            HorizontalOptions="FillAndExpand">
+                                    <StackLayout BackgroundColor="Ivory">
+                                
+                                    
+                                        <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
+                                               Margin="10,30,10,0"  BorderColor="DarkGray">
+                                            <StackLayout  Orientation="Horizontal" >
+                                                
+                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
+                                                </Frame>
+                                                
+                                                <Entry Placeholder="Nom" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
+                                                       ClearButtonVisibility="WhileEditing"></Entry>
+                                            </StackLayout>
+                                        </Frame>
+                                        
+                                        <Label Text="Veuillez indiquer votre nom" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                                               Margin="10,0,0,0" IsVisible="True"/>
+                                        
+                                        
+                                        
+                                        <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
+                                               Margin="10,15,10,0" BorderColor="DarkGray">
+                                            <StackLayout  Orientation="Horizontal" >
+                                                
+                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image  Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
+                                                </Frame>
+                                                
+                                                <Entry Placeholder="Prenom" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
+                                                       ClearButtonVisibility="WhileEditing"></Entry>
+                                            </StackLayout>
+                                        </Frame>
+                                        
+                                        <Label Text="Veuillez indiquer votre prenom" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                                               Margin="10,0,0,0" IsVisible="True"/>
+                                        
+                                        
+                                        <Frame BackgroundColor="White" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand"
+                                               Margin="10,15,10,0" BorderColor="DarkGray">
+                                            <StackLayout Orientation="Horizontal">
+                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image  Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
+                                                </Frame>
+                                                
+                                                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
+                                                    
+                                                    <DatePicker HorizontalOptions="Center" x:Name="startDatePicker" Format="D"/>
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </Frame>
+                                        
+                                        <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
+                                               Margin="10,30,10,0"  BorderColor="DarkGray">
+                                            <StackLayout  Orientation="Horizontal" >
+                                                
+                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
+                                                </Frame>
+                                                
+                                                <Entry Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
+                                                       ClearButtonVisibility="WhileEditing"></Entry>
+                                            </StackLayout>
+                                        </Frame>
+                                        
+                                        <Label Text="Courriel incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                                               Margin="10,0,0,0" IsVisible="True"/>
+                                        
+                                        
+                                        
+                                        <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
+                                               Margin="10,15,10,0" BorderColor="DarkGray">
+                                            <StackLayout  Orientation="Horizontal" >
+                                                
+                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image  Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
+                                                </Frame>
+                                                
+                                                <Entry Placeholder="Mot de passe" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
+                                                       IsPassword="True"></Entry>
+                                            </StackLayout>
+                                        </Frame>
+                                        
+                                        <Label Text="Veuillez indiquer un mot de passe" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                                               Margin="10,0,0,0" IsVisible="True"/>
+                                        
+                                        <Button Margin="20,30,20,10" Text="SIGN UP" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"/>
+                                        
+                                    </StackLayout> 
+                                </ScrollView>  
+                            
+                                
+                                
+                            </StackLayout>
+                             
+                        </Frame>
+                    
+                    </StackLayout>
+                
+            </Grid>
+        </StackLayout>
+ 
+</ContentPage>

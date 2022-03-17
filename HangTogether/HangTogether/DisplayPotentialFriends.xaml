@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:swipeCardView="clr-namespace:MLToolkit.Forms.SwipeCardView;assembly=MLToolkit.Forms.SwipeCardView"
+             xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             x:Class="HangTogether.DisplayPotentialFriends">
+    
+        <StackLayout>
+            
+            <Grid VerticalOptions="FillAndExpand" Margin="10,0,10,0"> 
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                
+                <pancakeView:PancakeView Grid.Row="0" WidthRequest="41" HeightRequest="41" CornerRadius="10" BackgroundColor="#FFF">
+
+                    <Image Source="mes_bg/ic_menu.png" HorizontalOptions="EndAndExpand" VerticalOptions="Center" Margin="10" />
+                </pancakeView:PancakeView>
+                
+            
+                <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
+                                    Grid.Row="1" Grid.Column="0" Padding="0,0,0,40" 
+                                    Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}">
+                    
+                    <swipeCardView:SwipeCardView 
+                                 x:Name="swipElem" ItemsSource="{Binding Profiles}"
+                                 HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                                 SupportedSwipeDirections="Down,Up,Right,Left" > 
+                        
+                        <swipeCardView:SwipeCardView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                                    
+                                </StackLayout>
+                            </DataTemplate>
+                            
+                        </swipeCardView:SwipeCardView.ItemTemplate>
+                        
+                    </swipeCardView:SwipeCardView>
+                    </pancakeView:PancakeView>
+                
+                <Button Text="ENVOYEZ UN MESSAGE" Grid.Row="2" Grid.Column="0"></Button>
+            </Grid>
+            
+        </StackLayout>
+    
+</ContentPage>

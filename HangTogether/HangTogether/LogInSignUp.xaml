@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:HangTogether"
+             x:Class="HangTogether.LogInSignUp">
+
+    <StackLayout BackgroundColor="#e6e6e6">
+        <Grid>
+            <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
+                <Frame HeightRequest="150" BackgroundColor="HotPink" Padding="0" Margin="0">
+                    <Image Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>
+                </Frame>
+            </StackLayout>
+            
+            <StackLayout Padding="0" Margin="10,100,10,0" HorizontalOptions="FillAndExpand">
+                <Frame BackgroundColor="White" HeightRequest="500" HasShadow="True" Padding="0" Margin="0" CornerRadius="15">
+                    <StackLayout>
+                    
+          
+                            <StackLayout Margin="10">
+                                    <Label Text="SIGN IN" TextColor="Black" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="28"/>
+                            </StackLayout>
+                        
+                            
+                        <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
+                               Margin="10,30,10,0"  >
+                            <StackLayout  Orientation="Horizontal" >
+                                
+                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                    <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
+                                </Frame>
+                                
+                                <Entry Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"></Entry>
+                            </StackLayout>
+                        </Frame>
+                        
+                        <Label Text="Courriel incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                               Margin="10,0,0,0" IsVisible="True"/>
+                        
+                        
+                        
+                        <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
+                               Margin="10,15,10,0" >
+                            <StackLayout  Orientation="Horizontal" >
+                                
+                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                    <Image Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
+                                </Frame>
+                                
+                                <Entry Placeholder="Mot de passe" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
+                                       IsPassword="True"></Entry>
+                            </StackLayout>
+                        </Frame>
+                        
+                        <Label Text="Mot de passe incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                               Margin="10,0,0,0" IsVisible="True"/>
+                        
+                        
+                        
+                        <Label Text="Mot de passe oublié?" TextColor="HotPink" FontAttributes="Bold" HorizontalOptions="EndAndExpand" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                               Margin="0,0,10,0" IsVisible="True"/>
+                        
+                        
+                        <Button Margin="10,30,10,0" Text="SIGN IN" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"/>
+                        
+                        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,8,0,0">
+                            <Label Text="Vous n'avez pas de compte ?" TextColor="DarkGray" FontSize="Small"/>
+                            <Label  Text="Sign Up" TextColor="HotPink" FontAttributes="Bold" FontSize="Small"/>
+                        </StackLayout>
+                        
+                        
+                    </StackLayout>
+                </Frame>
+                
+            </StackLayout>
+        </Grid>
+    </StackLayout>
+
+</ContentPage>
