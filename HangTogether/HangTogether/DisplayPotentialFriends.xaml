@@ -27,33 +27,70 @@
                 </pancakeView:PancakeView>
                 
             
-              <!--  <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
+                <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
                                     Grid.Row="1" Grid.Column="0" Padding="0,0,0,0" 
                                     Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}"
-                                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"> -->
+                                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"> 
                     
-                    <swipeCardView:SwipeCardView Grid.Row="1" Grid.Column="0"
-                                     x:Name="swipElem" ItemsSource="{Binding Profiles}"
+                    <swipeCardView:SwipeCardView 
+                                     x:Name="swipElem" ItemsSource="{Binding Profile}"
                                      HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                                     SupportedSwipeDirections="Down,Up,Right,Left" BackgroundColor="White"
+                                     SupportedSwipeDirections="Right,Left" BackgroundColor="White"
                     > 
                         
                         <swipeCardView:SwipeCardView.ItemTemplate >
                             <DataTemplate>
-                                <Frame CornerRadius="10" Padding="8" HorizontalOptions="FillAndExpand" VerticalOptions="EndAndExpand">
-                                    <AbsoluteLayout>
-                                        <Image Source="{Binding Photo}" Aspect="AspectFill"/>
-                                    </AbsoluteLayout>
-                                </Frame>
+                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="White">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                
+                                
+                                    <Frame Grid.Row="0" Grid.Column="0" Margin="20,40,20,0" HorizontalOptions="FillAndExpand"
+                                           BorderColor="Aquamarine" CornerRadius="20">
+                                        
+                                        <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                           <!-- <Label Text="NOM:" FontSize="Large" TextColor="Black" FontAttributes="Bold"/> -->
+                                            <Label Text="{Binding Titre}" FontSize="Large" FontAttributes="Bold"
+                                                   TextColor="Black" Margin="10,0,0,0" HorizontalOptions="CenterAndExpand"/> 
+                                        </StackLayout>
+                                    </Frame>
+                                    
+                                    
+                                    <Frame  Grid.Row="1" Grid.Column="0" Margin="40,15,40,30" HorizontalOptions="FillAndExpand"
+                                            BorderColor="purple" CornerRadius="20">
+                                        
+                                        <StackLayout Orientation="Vertical" >
+                                            <Label Text="Anecdotes:" FontSize="Large" TextColor="Black" HorizontalOptions="Center"
+                                                   FontAttributes="Bold"/>
+                                            <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" VerticalScrollBarVisibility="Always"
+                                                        HorizontalOptions="FillAndExpand">
+                                                <Label Text="{Binding Anecdote}" FontSize="22" TextColor="Black"
+                                                       HorizontalOptions="CenterAndExpand"/> 
+                                            </ScrollView>
+                                        </StackLayout>
+                                    </Frame>
+                                    
+                                    
+                                </Grid>
                             </DataTemplate>
         
                             
                         </swipeCardView:SwipeCardView.ItemTemplate>
                         
                     </swipeCardView:SwipeCardView>
-              <!--  </pancakeView:PancakeView>-->
+                </pancakeView:PancakeView>
                 
-                <Button Text="ENVOYEZ UN MESSAGE" Grid.Row="2" Grid.Column="0"></Button>
+
+                <Button Grid.Row="2" Grid.Column="0"  Text="ENVOYEZ UN MESSAGE" CornerRadius="15" HorizontalOptions="FillAndExpand"
+                        Margin="20,30,20,20" BackgroundColor="DarkGray"/>
+                
+                
+                
             </Grid>
             
         </StackLayout>

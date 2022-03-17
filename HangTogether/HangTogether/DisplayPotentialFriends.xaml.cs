@@ -17,11 +17,70 @@ namespace HangTogether
         public DisplayPotentialFriends()
         {
             InitializeComponent();
+            CardBinding();
+            BindingContext = this;
         }
 
         public void CardBinding()
         {
-            _Profiles.Add(new UserProfile(FirestName = "Dave", LastName = ));
+            _Profiles.Add(new UserProfile()
+                {
+                    FirstName = "Dave", LastName = "Dave",Age="18",
+                    Anecdote = "Je m'appelle dave, je vis en californie, j'aime aller a la plage, j'etudies en informatique a UdEm",
+                    Titre = "Dave Darley Joseph, 18"
+                    
+                }
+            );
+            _Profiles.Add(new UserProfile()
+                {
+                    FirstName = "Dave", LastName = "Dave",Age="18",
+                    Anecdote = "Je m'appelle dave, je vis en californie, j'aime aller a la plage, j'etudies en informatique a UdEm" +
+                               "j'aime programmer en java, c. T'aimes programmer, viens on se connecte",
+                    Titre = "Dave Darley Joseph, 18"
+                }
+            );
+            _Profiles.Add(new UserProfile()
+                {
+                    FirstName = "Dave", LastName = "Dave",Age="18",
+                    Anecdote = "Je m'appelle dave, je vis en californie, j'aime aller a la plage, j'etudies en informatique a UdEm",
+                    Titre = "Dave Darley Joseph, 18"
+                }
+            );
+            _Profiles.Add(new UserProfile()
+                {
+                    FirstName = "Dave", LastName = "Dave",Age="18",
+                    Anecdote = "Je m'appelle dave, je vis en californie, j'aime aller a la plage, j'etudies en informatique a UdEm",
+                    Titre = "Dave Darley Joseph, 18"
+                }
+            );
+            _Profiles.Add(new UserProfile()
+                {
+                    FirstName = "Dave", LastName = "Dave",Age="18",
+                    Anecdote = "Je m'appelle dave, je vis en californie, j'aime aller a la plage, j'etudies en informatique a UdEm",
+                    Titre = "Dave Darley Joseph, 18"
+                }
+            );
+            _Profiles.Add(new UserProfile()
+                {
+                    FirstName = "Dave", LastName = "Dave",Age="18",
+                    Anecdote = "Je m'appelle dave, je vis en californie, j'aime aller a la plage, j'etudies en informatique a UdEm",
+                    Titre = "Dave Darley Joseph, 18"
+                }
+            );
+            _Profiles.Add(new UserProfile()
+                {
+                    FirstName = "Dave", LastName = "Dave",Age="18",
+                    Anecdote = "Je m'appelle dave, je vis en californie, j'aime aller a la plage, j'etudies en informatique a UdEm",
+                    Titre = "Dave Darley Joseph, 18"
+                }
+            );
+            _Profiles.Add(new UserProfile()
+                {
+                    FirstName = "Dave", LastName = "Dave",Age="18",
+                    Anecdote = "Je m'appelle dave, je vis en californie, j'aime aller a la plage, j'etudies en informatique a UdEm",
+                    Titre = "Dave Darley Joseph, 18"
+                }
+            );
         }
 
         public ObservableCollection<UserProfile> Profile
@@ -41,6 +100,8 @@ namespace HangTogether
             public string LastName { get; set; }
             public string Age { get; set; }
             public string Anecdote { get; set; }
+
+            public string Titre { get; set; }
         }
     }
 }
