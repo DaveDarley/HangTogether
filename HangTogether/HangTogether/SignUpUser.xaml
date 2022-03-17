@@ -29,7 +29,7 @@
                                 <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" VerticalScrollBarVisibility="Always"
                                             HorizontalOptions="FillAndExpand" >
                    
-                                    <StackLayout BackgroundColor="Red" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                    <StackLayout BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
                                                  >
 
 
