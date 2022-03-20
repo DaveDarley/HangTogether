@@ -40,7 +40,7 @@
                     
                     <SearchBar Grid.Column="0" Grid.Row="0"  VerticalOptions="Center" Placeholder="Find Interests"
                                 VerticalTextAlignment="Center" PlaceholderColor="Gray" Margin="0,0,20,0"
-                                TextColor="Black"/>
+                                TextColor="Black" TextChanged="OnUserSearchChanged"/>
                     
                     <pancakeView:PancakeView Grid.Row="0" Grid.Column="1"  WidthRequest="40" HeightRequest="20" 
                                               CornerRadius="10" BackgroundColor="SkyBlue" HorizontalOptions="End"
@@ -74,113 +74,8 @@
                             Padding="8"
                             HorizontalOptions="FillAndExpand"
                             VerticalOptions="FillAndExpand"
+                            x:Name="layoutInterest"
                             >
-                
-                    <Frame
-                        BackgroundColor="White"
-                        CornerRadius="30"
-                        Margin="5,5,5,0"
-                        HasShadow="True"
-                    >
-                        <Label Text="Hellogajkgjkasgfkjashfjhaskj"  TextColor="Black" HorizontalOptions="FillAndExpand"
-                               
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               VerticalOptions="FillAndExpand"/>
-                    </Frame>
-                    
-                    <Frame
-                        BackgroundColor="White"
-                        CornerRadius="30"
-                        Margin="5,10,5,0"
-                        HasShadow="True"
-                    >
-                        <Label Text="Tennis"  TextColor="Black" HorizontalOptions="FillAndExpand"
-                               
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               VerticalOptions="FillAndExpand"/>
-                    </Frame>
-                    
-                    <Frame
-                        BackgroundColor="White"
-                        CornerRadius="30"
-                        Margin="5,10,5,0"
-                        HasShadow="True"
-                    >
-                        <Label Text="Bar Fight"  TextColor="Black" HorizontalOptions="FillAndExpand"
-                               
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               VerticalOptions="FillAndExpand"/>
-                    </Frame>
-                    
-                    <Frame
-                        BackgroundColor="White"
-                        CornerRadius="30"
-                        Margin="5,10,5,0"
-                        HasShadow="True"
-                    >
-                        <Label Text="Anime"  TextColor="Black"       HorizontalOptions="FillAndExpand"
-                               
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               VerticalOptions="FillAndExpand"/>
-                    </Frame>
-                    
-                    <Frame
-                        BackgroundColor="White"
-                        CornerRadius="30"
-                        Margin="5,10,5,0"
-                        HasShadow="True"
-                    >
-                        <Label Text="Footbal"  TextColor="Black" HorizontalOptions="FillAndExpand"
-                               
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               VerticalOptions="FillAndExpand"/>
-                    </Frame>
-                    
-                    <Frame
-                        BackgroundColor="White"
-                        CornerRadius="30"
-                        Margin="5,10,5,0"
-                        HasShadow="True"
-                    >
-                        <Label Text="Baking"  TextColor="Black" HorizontalOptions="FillAndExpand"
-                               
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               VerticalOptions="FillAndExpand"/>
-                    </Frame>
-                    
-                    <Frame
-                        BackgroundColor="White"
-                        CornerRadius="30"
-                        Margin="5,10,5,0"
-                        HasShadow="True"
-                    >
-                        <Label Text="Rap"  TextColor="Black" HorizontalOptions="FillAndExpand"
-                               
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               VerticalOptions="FillAndExpand"/>
-                    </Frame>
-                    
-                    <Frame
-                        BackgroundColor="White"
-                        CornerRadius="30"
-                        Margin="5,10,5,0"
-                        HasShadow="True"
-                    >
-                        <Label Text="Novel"  TextColor="Black" HorizontalOptions="FillAndExpand"
-                               
-                               HorizontalTextAlignment="Center"
-                               VerticalTextAlignment="Center"
-                               VerticalOptions="FillAndExpand"/>
-                    </Frame>
-
-
                 </FlexLayout>
             </ScrollView>
                 
