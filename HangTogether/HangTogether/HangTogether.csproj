@@ -12,7 +12,9 @@
     <ItemGroup>
         <PackageReference Include="MLToolkit.Forms.SwipeCardView" Version="2.2.0" />
         <PackageReference Include="Rg.Plugins.Popup" Version="2.1.0" />
+        <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="19.4.0.56" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+        <PackageReference Include="Xamarin.Forms.Chips" Version="1.0.13" />
         <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.3.0.763-beta" />
     </ItemGroup>
 
