@@ -30,12 +30,12 @@
                                     <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
                                 </Frame>
                                 
-                                <Entry Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand" ClearButtonVisibility="WhileEditing"/>
+                                <Entry x:Name="emailUser" Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand" ClearButtonVisibility="WhileEditing"/>
                             </StackLayout>
                         </Frame>
                         
-                        <Label Text="Courriel incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
-                               Margin="10,0,0,0" IsVisible="True"/>
+                        <Label x:Name="mailError" Text="Courriel incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                               Margin="10,0,0,0" IsVisible="False"/>
                         
                         
                         
@@ -47,26 +47,36 @@
                                     <Image Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
                                 </Frame>
                                 
-                                <Entry Placeholder="Mot de passe" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
+                                <Entry x:Name="mdpUser" Placeholder="Mot de passe" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
                                        IsPassword="True" ClearButtonVisibility="WhileEditing"/>
                             </StackLayout>
                         </Frame>
                         
-                        <Label Text="Mot de passe incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
-                               Margin="10,0,0,0" IsVisible="True"/>
+                        <Label x:Name="mdpError" Text="Mot de passe incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                               Margin="10,0,0,0" IsVisible="False"/>
                         
                         
                         
                         <Label Text="Mot de passe oublié?" TextColor="HotPink" FontAttributes="Bold" HorizontalOptions="EndAndExpand" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                               Margin="0,0,10,0" IsVisible="True"/>
+                               Margin="0,0,10,0" IsVisible="True">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapForgetPassword" />
+                            </Label.GestureRecognizers>
+                        </Label>
                         
                         
-                        <Button Margin="10,30,10,0" Text="SIGN IN" FontAttributes="Bold" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"/>
+                        <Button Margin="10,30,10,0" Text="SIGN IN" FontAttributes="Bold" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"
+                                Clicked="ValidateInfosUser"/>
                         
                         <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,8,0,0">
                             <Label Text="Vous n'avez pas de compte ?" TextColor="DarkGray" FontSize="Small"/>
-                            <Label  Text="Sign Up" TextColor="HotPink" FontAttributes="Bold" FontSize="Small"/>
+                            <Label  Text="Sign Up" TextColor="HotPink" FontAttributes="Bold" FontSize="Small">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnTapSignUp" />
+                                </Label.GestureRecognizers>
+                            </Label>
                         </StackLayout>
+                        
                         
                         
                     </StackLayout>

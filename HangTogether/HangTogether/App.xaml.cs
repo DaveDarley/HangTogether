@@ -12,7 +12,7 @@ namespace HangTogether
             InitializeComponent();
 
            // MainPage = new MainPage();
-           MainPage = new ChooseAndModifyInterests();
+           MainPage = new NavigationPage(new LogInSignUp());
         }
 
         protected override void OnStart()
