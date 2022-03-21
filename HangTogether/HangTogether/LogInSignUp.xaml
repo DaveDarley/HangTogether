@@ -7,13 +7,14 @@
     <StackLayout BackgroundColor="White">
         <Grid>
             <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
-                <Frame HeightRequest="300" BackgroundColor="HotPink" Padding="0" Margin="0">
-                   <!-- <Image Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>-->
-                </Frame>
+                <Frame HeightRequest="400"  Padding="0" Margin="10,10,10,0" CornerRadius="40" HasShadow="True"
+                       BorderColor="Coral">
+                    <!--<Image Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>-->
+                </Frame> 
             </StackLayout>
             
-            <StackLayout Padding="0" Margin="10,100,10,0" HorizontalOptions="FillAndExpand">
-                <Frame BackgroundColor="White" HeightRequest="500" HasShadow="True" Padding="0" Margin="0" CornerRadius="15">
+            <StackLayout Padding="0" Margin="20,100,20,0" HorizontalOptions="FillAndExpand">
+                <Frame BackgroundColor="White" HeightRequest="500" HasShadow="True" Padding="0" Margin="0" CornerRadius="15" BorderColor="BlueViolet">
                     <StackLayout>
                     
           
@@ -23,7 +24,7 @@
                         
                             
                         <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
-                               Margin="10,30,10,0"  >
+                               Margin="10,30,10,0"  BorderColor="DarkGray" >
                             <StackLayout  Orientation="Horizontal" >
                                 
                                 <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
@@ -40,7 +41,7 @@
                         
                         
                         <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
-                               Margin="10,15,10,0" >
+                               Margin="10,15,10,0" BorderColor="DarkCyan">
                             <StackLayout  Orientation="Horizontal" >
                                 
                                 <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">

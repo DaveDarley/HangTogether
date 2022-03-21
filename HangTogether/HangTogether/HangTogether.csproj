@@ -21,4 +21,9 @@
     <ItemGroup>
       <Folder Include="mes_bg" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="mes_bg\ic_menu.png" />
+      <EmbeddedResource Include="mes_bg\ic_menu.png" />
+    </ItemGroup>
 </Project>

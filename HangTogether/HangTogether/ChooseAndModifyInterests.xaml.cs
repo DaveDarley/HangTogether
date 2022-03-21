@@ -5,7 +5,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Rg.Plugins.Popup.Contracts;
+using Rg.Plugins.Popup.Extensions;
+using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -175,6 +177,50 @@ namespace HangTogether
             }
             addLoisirsToLayout();
         }
+
+        async void OnTapMenu(Object s, EventArgs e)
+        {
+            
+        }
+        
+        // Lorsque un user ne trouve pas son loisirs dans la liste de loisirs
+        // il va l'ajouter lui meme (On peut qd meme pas enumerer tous les loisirs :) )
+        async void OnAddInterests(Object s, EventArgs e)
+        {
+            string loisirsAjoute = await DisplayPromptAsync("Ajout Loisirs", "Veuillez ajouter votre loisirs", keyboard: Keyboard.Text);
+            if (!String.IsNullOrEmpty(loisirsAjoute))
+            {
+                Frame frame = new Frame()
+                {
+                    BackgroundColor = Color.Black,
+                    CornerRadius = 30,
+                    Margin = new Thickness(5,5,5,0),
+                    HasShadow = true,
+                    IsVisible = true,
+                    Content = new Label()
+                    {
+                        Text = loisirsAjoute,
+                        TextColor = Color.White,
+                        HorizontalOptions = LayoutOptions.FillAndExpand,
+                        HorizontalTextAlignment = TextAlignment.Center,
+                        VerticalTextAlignment = TextAlignment.Center,
+                        VerticalOptions = LayoutOptions.FillAndExpand
+                    }
+                };
+                
+                // Ajout d'un eventListener sur le nouveau frame cree :
+                var tapGestureRecognizer = new TapGestureRecognizer();
+                tapGestureRecognizer.Tapped += (obj, ev) => {
+                    // handle the tap
+                    OnTapFramFrame(obj,ev);
+                };
+                frame.GestureRecognizers.Add(tapGestureRecognizer);
+                // on ajout ce nouveau frame a la liste des anciens frames
+                allFrame.Add(frame);
+                addLoisirsToLayout();
+            }
+        }
+
 
 
 

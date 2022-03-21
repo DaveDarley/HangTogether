@@ -15,6 +15,7 @@ namespace HangTogether
         public SignUpUser()
         {
             InitializeComponent();
+            this.imgMenu.Source = "mes_bg/menu.png";
         }
     }
 }

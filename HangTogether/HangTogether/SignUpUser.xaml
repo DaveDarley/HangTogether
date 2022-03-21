@@ -11,13 +11,14 @@
             <Grid>
                 <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
                     <Frame HeightRequest="300" BackgroundColor="HotPink" Padding="0" Margin="0">
-                        <Image Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>
+                        <Image  Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>
                     </Frame>
                 </StackLayout>
 
                     <StackLayout Padding="0" Margin="10,80,10,40" HorizontalOptions="FillAndExpand">
 
-                        <Frame BackgroundColor="White" HeightRequest="600" HasShadow="True" Padding="0" Margin="0" CornerRadius="15">
+                        <Frame BackgroundColor="White" HeightRequest="600" HasShadow="True" Padding="0" Margin="0" CornerRadius="15"
+                               BorderColor="BlueViolet">
 
                             <StackLayout>
                                 <StackLayout Margin="10">
@@ -38,7 +39,7 @@
                                             <StackLayout  Orientation="Horizontal" >
 
                                                 <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                                    <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
+                                                    <Image x:Name="imgMenu" Aspect="AspectFill" Margin="0" />
                                                 </Frame>
 
                                                 <Entry Placeholder="Nom" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
@@ -52,7 +53,7 @@
 
 
                                         <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
-                                               Margin="10,15,10,0" BorderColor="DarkGray">
+                                               Margin="10,15,10,0" BorderColor="DarkCyan">
                                             <StackLayout  Orientation="Horizontal" >
 
                                                 <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
@@ -69,7 +70,7 @@
 
 
                                         <Frame BackgroundColor="White" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand"
-                                               Margin="10,15,10,0" BorderColor="DarkGray">
+                                               Margin="10,15,10,0" BorderColor="DarkOrchid">
                                             <StackLayout Orientation="Horizontal">
                                                 <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
                                                     <Image  Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
@@ -83,7 +84,7 @@
                                         </Frame>
 
                                         <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
-                                               Margin="10,30,10,0"  BorderColor="DarkGray">
+                                               Margin="10,30,10,0"  BorderColor="DarkOrange">
                                             <StackLayout  Orientation="Horizontal" >
 
                                                 <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
@@ -101,7 +102,7 @@
 
 
                                         <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
-                                               Margin="10,15,10,0" BorderColor="DarkGray">
+                                               Margin="10,15,10,0" BorderColor="DarkMagenta">
                                             <StackLayout  Orientation="Horizontal" >
 
                                                 <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">

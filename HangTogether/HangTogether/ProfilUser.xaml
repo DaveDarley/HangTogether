@@ -1,32 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<pages:PopupPage  
-    xmlns="http://xamarin.com/schemas/2014/forms"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:pages="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
-    xmlns:animations="clr-namespace:Rg.Plugins.Popup.Animations;assembly=Rg.Plugins.Popup"
-    xmlns:yummy="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-    x:Class="HangTogether.ProfilUser">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:HangTogether"
+             xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             x:Class="HangTogether.ProfilUser"
+             InputTransparent="True">
     
-    <pages:PopupPage.Animation>
-        <animations:ScaleAnimation 
-            PositionIn="Bottom"
-            PositionOut="Bottom"
-           
-            DurationIn="400"
-            DurationOut="300"
-            EasingIn="SinOut"
-            EasingOut="SinIn"
-            HasBackgroundAnimation="True"/>
-    </pages:PopupPage.Animation>
-    
-    <!--You can use any elements here which are extended from Xamarin.Forms.View-->
     <StackLayout 
-        VerticalOptions="EndAndExpand" 
+        VerticalOptions="End" 
         HorizontalOptions="FillAndExpand" 
     >
       
-        <yummy:PancakeView CornerRadius="40,40,0,0" BackgroundColor="White" HeightRequest="400"
-                           HorizontalOptions="FillAndExpand"  >
+        <pancakeView:PancakeView CornerRadius="40,40,0,0" BackgroundColor="White" HeightRequest="400"
+                                 HorizontalOptions="FillAndExpand" >
+            
+  
+            
             <StackLayout Orientation="Vertical" Margin="10,40,10,40" VerticalOptions="FillAndExpand">
                 
                 <Grid VerticalOptions="FillAndExpand">
@@ -58,7 +47,8 @@
                 </Grid>
                 
             </StackLayout>
-        </yummy:PancakeView>
+            
+        </pancakeView:PancakeView>
       
     </StackLayout>
-</pages:PopupPage>
+    </ContentPage>

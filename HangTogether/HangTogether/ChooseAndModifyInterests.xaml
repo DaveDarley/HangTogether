@@ -19,12 +19,17 @@
             </Grid.ColumnDefinitions>
             
             <pancakeView:PancakeView Grid.Row="0" Grid.Column="0" WidthRequest="50" HeightRequest="50" 
-                                     CornerRadius="10" BackgroundColor="SkyBlue" HorizontalOptions="End"
-                                     Margin="0,5,20,0">
+                                     CornerRadius="10"  HorizontalOptions="End"
+                                     Margin="0,5,20,0" >
                 <pancakeView:PancakeView.Shadow>
                     <pancakeView:DropShadow Color="#000"/>
                 </pancakeView:PancakeView.Shadow>
-                <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill"/>
+                
+                <pancakeView:PancakeView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTapMenu" />
+                </pancakeView:PancakeView.GestureRecognizers>
+                
+                <Image Source="mes_bg/ic_menu.png" Aspect="AspectFill" />
             </pancakeView:PancakeView>
             
             
@@ -48,6 +53,11 @@
                         <pancakeView:PancakeView.Shadow>
                             <pancakeView:DropShadow Color="#000"/>
                         </pancakeView:PancakeView.Shadow>
+                        
+                        <pancakeView:PancakeView.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnAddInterests" />
+                        </pancakeView:PancakeView.GestureRecognizers>
+                        
                         <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill"/>
                     </pancakeView:PancakeView>
                     
@@ -62,34 +72,25 @@
                     <pancakeView:DropShadow Color="#000"/>
                 </pancakeView:PancakeView.Shadow>
                 
-                            <ScrollView Grid.Row="2" Grid.Column="0" VerticalOptions="FillAndExpand"
+                <ScrollView Grid.Row="2" Grid.Column="0" VerticalOptions="FillAndExpand"
                         HorizontalOptions="FillAndExpand" VerticalScrollBarVisibility="Always"
                          >
-                <FlexLayout 
-                            Wrap="Wrap"
-                            Direction="Row"
-                            JustifyContent="Start"
-                            AlignItems="Start"
-                            AlignContent="Start"
-                            Padding="8"
-                            HorizontalOptions="FillAndExpand"
-                            VerticalOptions="FillAndExpand"
-                            x:Name="layoutInterest"
-                            >
-                </FlexLayout>
-            </ScrollView>
-                
+                    <FlexLayout 
+                                Wrap="Wrap"
+                                Direction="Row"
+                                JustifyContent="Start"
+                                AlignItems="Start"
+                                AlignContent="Start"
+                                Padding="8"
+                                HorizontalOptions="FillAndExpand"
+                                VerticalOptions="FillAndExpand"
+                                x:Name="layoutInterest"
+                                >
+                    </FlexLayout>
+                </ScrollView>
             </pancakeView:PancakeView>
-
+ 
             
-
-          
-            
-         
-                    
-
-                    
-
             
         </Grid>
     </ContentPage.Content>

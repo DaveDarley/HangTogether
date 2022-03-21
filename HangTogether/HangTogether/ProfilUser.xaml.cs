@@ -4,23 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace HangTogether
 {
-    //[XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class ProfilUser : Rg.Plugins.Popup.Pages.PopupPage
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class ProfilUser : ContentPage
     {
         public ProfilUser()
         {
             InitializeComponent();
+            
+
+            
         }
         
-        private async void Button_Clicked(object sender, EventArgs e)
+        private void updatePan (object sender, EventArgs e)
         {
-            await Navigation.PopPopupAsync();
+            
         }
+        
     }
 }
