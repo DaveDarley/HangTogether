@@ -32,8 +32,13 @@ namespace HangTogether
             "Wood burning", "Wood carving", "Sightseeing", "drawing"
         };
 
-        // List qui contient les loisirs du user sous forme de Frame
+        // List qui contient tous les loisirs du user sous forme de Frame
         private List<Frame> allFrame = new List<Frame>();
+
+        // ici est stocké les choix de loisirs du User
+        private List<Frame> choixUser = new List<Frame>();
+        // ici est stocké les anecdotes du user
+        private string textePresentationUser;
 
         public ChooseAndModifyInterests()
         {
@@ -96,16 +101,37 @@ namespace HangTogether
                 monFrame.BackgroundColor = Color.White;
                 var monLabel = (Label) monFrame.Content;
                 monLabel.TextColor= Color.Black;
+                RemoveUserChoice(monFrame);
             }
             else
             {
                 monFrame.BackgroundColor = Color.Black;
                 var monLabel = (Label) monFrame.Content;
                 monLabel.TextColor= Color.White;
+                choixUser.Add(monFrame);
             }
         }
 
-        
+
+        public void RemoveUserChoice(Frame toRemove)
+        {
+            var labelFrame = (Label)toRemove.Content;
+            string titreLoisir = labelFrame.Text;
+            
+            for (int i = 0; i < choixUser.Count; i++)
+            {
+                var possibleFrameToRemove = (Label)choixUser[i].Content;
+                string titrePossibleFrameToRemove = possibleFrameToRemove.Text;
+
+                if (titreLoisir == titrePossibleFrameToRemove)
+                {
+                   choixUser.RemoveAt(i);
+                   return;
+                }
+            }    
+        }
+
+
         /*
          * Fonction qui prend une liste de Frame et un FlexLayout
          * et dessine tous les frames ,dont l'attribut IsVisble est true, sur le FlexLayout
@@ -178,6 +204,7 @@ namespace HangTogether
             addLoisirsToLayout();
         }
 
+        
         async void OnTapMenu(Object s, EventArgs e)
         {
             
@@ -217,8 +244,62 @@ namespace HangTogether
                 frame.GestureRecognizers.Add(tapGestureRecognizer);
                 // on ajout ce nouveau frame a la liste des anciens frames
                 allFrame.Add(frame);
+                choixUser.Add(frame);
                 addLoisirsToLayout();
             }
+        }
+
+        async void OnTapRecherche(object sender, EventArgs args)
+        {
+            
+           //await Navigation.PushAsync(new SignUpUser());
+            if (validateUserChoice())
+            {
+                 // Application.Current.MainPage = new DisplayPotentialFriends();
+                  //await Navigation.PushAsync(new SignUpUser());
+                  // await Navigation.PushAsync(new DisplayPotentialFriends());
+
+                //  Navigation.InsertPageBefore (new SignUpUser(), this);
+                  
+                await Navigation.PushAsync (new SignUpUser ());
+            }
+            else
+            {
+                await DisplayAlert ("Alert", "Veuillez indiquer au moins un loisir et une anecdote", "OK");
+            }
+
+        }
+        
+        
+        /*
+         * Qd user clique sur le boutton de recherche de nouveauPote;
+         * Il faut s'assurer que le User a fait au moins un choix de loisirs
+         * mais a aussi inscrit au moins une acdotes;
+         * On savegarde ensuite les loisirs choisies par le user mais aussi les
+         * anecdotes du User dans les variables qui leurs correspondent
+         */
+        public bool validateUserChoice()
+        {
+            var canUserGoToNextPage = true;
+            var lesAnecdotesDuUser = this.anecdotesUser.Text;
+            if (choixUser.Count > 0)
+            {
+            }
+            else
+            {
+                canUserGoToNextPage = false;
+            }
+
+            if (!String.IsNullOrEmpty(lesAnecdotesDuUser))
+            {
+                textePresentationUser = lesAnecdotesDuUser;
+            }
+            else
+            {
+               // await DisplayAlert ("Alert", "Veuillez indiquer au moins une anecdote", "OK");
+                canUserGoToNextPage = false;
+            }
+            return canUserGoToNextPage;
         }
 
 

@@ -108,10 +108,10 @@
                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <Label Text="Viens trouver ton nouveau pote" TextColor="White" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
                        VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" x:Name="trouverPote">
-                    <Label.GestureRecognizers>
-                        <GestureRecognizer Tapped="rechercheNouveauPote"></GestureRecognizer>
-                    </Label.GestureRecognizers>
                 </Label>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTapRecherche"></TapGestureRecognizer>
+                </Frame.GestureRecognizers>
             </Frame>
             
         </Grid>
