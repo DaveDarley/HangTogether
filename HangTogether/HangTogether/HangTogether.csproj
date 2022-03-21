@@ -35,5 +35,7 @@
       <EmbeddedResource Include="mes_bg\ic_password.png" />
       <None Remove="mes_bg\addInterests.png" />
       <None Remove="mes_bg\add_interests.png" />
+      <None Remove="mes_bg\add_loisirs.png" />
+      <EmbeddedResource Include="mes_bg\add_loisirs.png" />
     </ItemGroup>
 </Project>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:chips="clr-namespace:Xamarin.Forms.Chips;assembly=Xamarin.Forms.Chips"
@@ -14,17 +13,16 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="200"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             
-            <pancakeView:PancakeView Grid.Row="0" Grid.Column="0" WidthRequest="50" HeightRequest="50" 
+            <pancakeView:PancakeView Grid.Row="0" Grid.Column="0" WidthRequest="40" HeightRequest="40" 
                                        HorizontalOptions="End"
                                      Margin="0,5,20,0" BackgroundColor="White">
-                <pancakeView:PancakeView.Shadow>
-                    <pancakeView:DropShadow Color="#000"/>
-                </pancakeView:PancakeView.Shadow>
                 
                 <pancakeView:PancakeView.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnTapMenu" />
@@ -34,7 +32,8 @@
             </pancakeView:PancakeView>
             
             
-            <Frame Grid.Row="1" Grid.Column="0" Margin="10,0,10,0" CornerRadius="15">
+            <Frame Grid.Row="1" Grid.Column="0" Margin="10,0,10,0" CornerRadius="15"
+                   BorderColor="DarkCyan">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
@@ -50,17 +49,15 @@
                     
                     
                     <pancakeView:PancakeView Grid.Row="0" Grid.Column="1"  WidthRequest="40" HeightRequest="20" 
-                                              CornerRadius="10" BackgroundColor="SkyBlue" HorizontalOptions="End"
+                                               HorizontalOptions="End"
                                               >
-                        <pancakeView:PancakeView.Shadow>
-                            <pancakeView:DropShadow Color="#000"/>
-                        </pancakeView:PancakeView.Shadow>
+                       
                         
                         <pancakeView:PancakeView.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnAddInterests" />
                         </pancakeView:PancakeView.GestureRecognizers>
                         
-                        <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.add_interests.png}" Aspect="AspectFill"/>
+                        <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.add_loisirs.png}" Aspect="AspectFill"/>
                     </pancakeView:PancakeView>
                     
                     
@@ -92,8 +89,30 @@
                     </FlexLayout>
                 </ScrollView>
             </pancakeView:PancakeView>
- 
             
+            
+            <Frame Grid.Row="3" Grid.Column="0" CornerRadius="15" HasShadow="True"
+                   BorderColor="DarkCyan" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                   Margin="10,0,10,0">
+                <StackLayout VerticalOptions="Fill" HorizontalOptions="FillAndExpand" Orientation="Vertical">
+                    <Label Text="Anecdotes" TextColor="Black" FontAttributes="Bold" HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center" FontSize="Large" Margin="0"/>
+                    <Editor x:Name="anecdotesUser" Placeholder="Veuillez inscrire vos differentes anecdotes"
+                           HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                           Margin="0"/>
+                </StackLayout>
+                
+            </Frame>
+            
+            <Frame Grid.Row="4" Grid.Column="0" CornerRadius="30" BackgroundColor="MediumSlateBlue" Margin="25,0,25,5"
+                   VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <Label Text="Viens trouver ton nouveau pote" TextColor="White" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                       VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" x:Name="trouverPote">
+                    <Label.GestureRecognizers>
+                        <GestureRecognizer Tapped="rechercheNouveauPote"></GestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Frame>
             
         </Grid>
     </ContentPage.Content>
