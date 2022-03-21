@@ -25,5 +25,17 @@
     <ItemGroup>
       <None Remove="mes_bg\ic_menu.png" />
       <EmbeddedResource Include="mes_bg\ic_menu.png" />
+      <None Remove="mes_bg\dob.png" />
+      <EmbeddedResource Include="mes_bg\dob.png" />
+      <None Remove="mes_bg\ic_email.png" />
+      <EmbeddedResource Include="mes_bg\ic_email.png" />
+      <None Remove="mes_bg\ic_name.png" />
+      <EmbeddedResource Include="mes_bg\ic_name.png" />
+      <None Remove="mes_bg\ic_password.png" />
+      <EmbeddedResource Include="mes_bg\ic_password.png" />
+      <None Remove="mes_bg\addInterests.png" />
+      <EmbeddedResource Include="mes_bg\addInterests.png" />
+      <None Remove="mes_bg\add_interests.png" />
+      <EmbeddedResource Include="mes_bg\add_interests.png" />
     </ItemGroup>
 </Project>

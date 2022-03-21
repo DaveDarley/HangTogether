@@ -17,8 +17,7 @@
 
                     <StackLayout Padding="0" Margin="10,80,10,40" HorizontalOptions="FillAndExpand">
 
-                        <Frame BackgroundColor="White" HeightRequest="600" HasShadow="True" Padding="0" Margin="0" CornerRadius="15"
-                               BorderColor="BlueViolet">
+                        <Frame BackgroundColor="White" HeightRequest="600" HasShadow="True" Padding="0" Margin="0" CornerRadius="15">
 
                             <StackLayout>
                                 <StackLayout Margin="10">
@@ -38,17 +37,17 @@
                                                Margin="10,30,10,0"  BorderColor="DarkGray">
                                             <StackLayout  Orientation="Horizontal" >
 
-                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                                    <Image x:Name="imgMenu" Aspect="AspectFill" Margin="0" />
+                                                <Frame BackgroundColor="White" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image Source="{local:ImageRessource HangTogether.mes_bg.ic_name.png}" Aspect="AspectFill" Margin="0"  />
                                                 </Frame>
 
                                                 <Entry Placeholder="Nom" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
-                                                       ClearButtonVisibility="WhileEditing"></Entry>
+                                                       ClearButtonVisibility="WhileEditing" x:Name="nom"/>
                                             </StackLayout>
                                         </Frame>
 
                                         <Label Text="Veuillez indiquer votre nom" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
-                                               Margin="10,0,0,0" IsVisible="True"/>
+                                               Margin="10,0,0,0" IsVisible="False" x:Name="nomError"/>
 
 
 
@@ -56,24 +55,24 @@
                                                Margin="10,15,10,0" BorderColor="DarkCyan">
                                             <StackLayout  Orientation="Horizontal" >
 
-                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                                    <Image  Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
+                                                <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image  Source="{local:ImageRessource HangTogether.mes_bg.ic_name.png}" Aspect="AspectFill" Margin="0"/>
                                                 </Frame>
 
                                                 <Entry Placeholder="Prenom" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
-                                                       ClearButtonVisibility="WhileEditing"></Entry>
+                                                       ClearButtonVisibility="WhileEditing" x:Name="prenom"/>
                                             </StackLayout>
                                         </Frame>
 
                                         <Label Text="Veuillez indiquer votre prenom" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
-                                               Margin="10,0,0,0" IsVisible="True"/>
+                                               Margin="10,0,0,0" IsVisible="False" x:Name="prenomError"/>
 
 
                                         <Frame BackgroundColor="White" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand"
                                                Margin="10,15,10,0" BorderColor="DarkOrchid">
                                             <StackLayout Orientation="Horizontal">
-                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                                    <Image  Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
+                                                <Frame Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image  Source="{local:ImageRessource HangTogether.mes_bg.dob.png}" Aspect="AspectFill" Margin="0"/>
                                                 </Frame>
 
                                                 <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand">
@@ -87,17 +86,17 @@
                                                Margin="10,30,10,0"  BorderColor="DarkOrange">
                                             <StackLayout  Orientation="Horizontal" >
 
-                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                                    <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
+                                                <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image Source="{local:ImageRessource HangTogether.mes_bg.ic_email.png}" Aspect="AspectFill" Margin="0"/>
                                                 </Frame>
 
                                                 <Entry Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
-                                                       ClearButtonVisibility="WhileEditing"></Entry>
+                                                       ClearButtonVisibility="WhileEditing" x:Name="email"/>
                                             </StackLayout>
                                         </Frame>
 
                                         <Label Text="Courriel incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
-                                               Margin="10,0,0,0" IsVisible="True"/>
+                                               Margin="10,0,0,0" IsVisible="False" x:Name="emailError"/>
 
 
 
@@ -105,19 +104,20 @@
                                                Margin="10,15,10,0" BorderColor="DarkMagenta">
                                             <StackLayout  Orientation="Horizontal" >
 
-                                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                                    <Image  Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
+                                                <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                    <Image  Source="{local:ImageRessource HangTogether.mes_bg.ic_password.png}" Aspect="AspectFill" Margin="0"/>
                                                 </Frame>
 
                                                 <Entry Placeholder="Mot de passe" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
-                                                       IsPassword="True"></Entry>
+                                                       IsPassword="True" x:Name="mdp"/>
                                             </StackLayout>
                                         </Frame>
 
                                         <Label Text="Veuillez indiquer un mot de passe" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
-                                               Margin="10,0,0,0" IsVisible="True"/>
+                                               Margin="10,0,0,0" IsVisible="False" x:Name="mdpError"/>
 
-                                        <Button Margin="20,30,20,10" Text="SIGN UP" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"/>
+                                        <Button Margin="20,30,20,10" Text="SIGN UP" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"
+                                                Clicked="onClickSignUp"/>
 
                                     </StackLayout> 
                                 </ScrollView> 

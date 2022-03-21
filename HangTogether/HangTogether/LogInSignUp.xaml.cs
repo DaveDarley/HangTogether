@@ -78,11 +78,24 @@ namespace HangTogether
         /*
          * Gestion du click sur mon label: Mdp oublié
          * On envoie l'user sur la page de
-         * recouvrement de MDP
+         * recouvrement de MDP;
+         * Mais Avant faut demander au user l'email sur lequel il veut
+         * recevoir 
          */
         async void OnTapForgetPassword(object sender, EventArgs args)
         {
-            await Navigation.PushAsync(new ForgottenPassword());
+            // S'assurer que l'email est bien valide aussi (BD)
+            // Si pas validde on reste dans la meme page et on ft un petit toast
+            string emailUser = await DisplayPromptAsync("Recover Password", "What's your email?");
+            if (String.IsNullOrEmpty(emailUser))
+            {
+            }
+            else
+            {
+                await Navigation.PushAsync(new ForgottenPassword());
+            }
+
+            
             
         }
         

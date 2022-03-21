@@ -27,8 +27,8 @@
                                Margin="10,30,10,0"  BorderColor="DarkGray" >
                             <StackLayout  Orientation="Horizontal" >
                                 
-                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                    <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill" Margin="0"/>
+                                <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                    <Image Source="{local:ImageRessource HangTogether.mes_bg.ic_email.png}" Aspect="AspectFill" Margin="0"/>
                                 </Frame>
                                 
                                 <Entry x:Name="emailUser" Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand" ClearButtonVisibility="WhileEditing"/>
@@ -44,8 +44,8 @@
                                Margin="10,15,10,0" BorderColor="DarkCyan">
                             <StackLayout  Orientation="Horizontal" >
                                 
-                                <Frame BackgroundColor="SkyBlue" CornerRadius="30" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                    <Image Source="https://images.all-free-download.com/images/graphicthumb/lock_icon_6813906.jpg" Aspect="AspectFill" Margin="0"/>
+                                <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                    <Image Source="{local:ImageRessource HangTogether.mes_bg.ic_password.png}" Aspect="AspectFill" Margin="0"/>
                                 </Frame>
                                 
                                 <Entry x:Name="mdpUser" Placeholder="Mot de passe" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
