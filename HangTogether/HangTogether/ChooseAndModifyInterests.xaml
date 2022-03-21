@@ -20,8 +20,8 @@
             </Grid.ColumnDefinitions>
             
             <pancakeView:PancakeView Grid.Row="0" Grid.Column="0" WidthRequest="50" HeightRequest="50" 
-                                     CornerRadius="10"  HorizontalOptions="End"
-                                     Margin="0,5,20,0" >
+                                       HorizontalOptions="End"
+                                     Margin="0,5,20,0" BackgroundColor="White">
                 <pancakeView:PancakeView.Shadow>
                     <pancakeView:DropShadow Color="#000"/>
                 </pancakeView:PancakeView.Shadow>
