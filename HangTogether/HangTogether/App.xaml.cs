@@ -11,7 +11,7 @@ namespace HangTogether
         {
             InitializeComponent();
 
-           // MainPage = new MainPage();
+            //MainPage = new TestRelativeLayout();
            MainPage =  new NavigationPage(new LogInSignUp());
         }
 

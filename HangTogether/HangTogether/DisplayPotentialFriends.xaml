@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:swipeCardView="clr-namespace:MLToolkit.Forms.SwipeCardView;assembly=MLToolkit.Forms.SwipeCardView"
              xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:customControl="clr-namespace:CoolBottomSheet;assembly=CoolBottomSheet"
              xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
+
              x:Class="HangTogether.DisplayPotentialFriends">
     
     <NavigationPage.TitleView>
@@ -21,9 +23,13 @@
         </StackLayout>
     </NavigationPage.TitleView>
     
+    <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
     <StackLayout>
+        
             
-            <Grid VerticalOptions="FillAndExpand" Margin="10,0,10,0"> 
+        
+            
+        <Grid VerticalOptions="FillAndExpand" Margin="10,0,10,0"> 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
@@ -119,12 +125,76 @@
                 
 
                 <Button Grid.Row="1" Grid.Column="0"  Text="ENVOYEZ UN MESSAGE" CornerRadius="15" HorizontalOptions="FillAndExpand"
-                        Margin="20,30,20,20" BackgroundColor="DarkGray"/>
+                        Margin="20,30,20,10" BackgroundColor="DarkGray"/>
                 
-                
+
                 
             </Grid>
+        
+        <!--              RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent,
+                                                                       Property=Height,
+                                                                       Factor=0,
+                                                                       Constant=0}"
+            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent,
+                                                                      Property=Width,
+                                                                      Factor=1,
+                                                                      Constant=0}"
+            RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,
+            Property=Height,
+            Factor=0.9,
+            Constant=0}" -->
+        
+
+        
+        <!-- Pas de XConstraint et Width Constraint = 1 alors ca prend toute la largeur de l'ecran-->
+        <!-- YConstraint = 0.97 alors on place le layout a 97% du haut de l'ecran et Height = 0.8
+                -->
+        
+    </StackLayout>
+        
+        <Frame 
+            x:Name="frameMenu"
+            CornerRadius="20"
+            HasShadow="true"
+            HeightRequest="400"
+            VerticalOptions="EndAndExpand"
             
-        </StackLayout>
+            
+>
+            
+            <StackLayout Orientation="Vertical" Margin="10,40,10,40" VerticalOptions="FillAndExpand">
+                
+                <Grid VerticalOptions="FillAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="0.5*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.5*" />
+                        <RowDefinition Height="0.5*" />
+                    </Grid.RowDefinitions>
+                    
+                    <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="TROUVER&#10;UN POTE"
+                               TextColor="White" FontSize="Large"></Label>   
+                    </Frame>
+                    <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="MODIFIER&#10;MES LOISIRS"
+                               TextColor="Black" FontSize="Large"></Label>  
+                    </Frame>
+                    <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="VOIR MES&#10;MESSAGES"
+                               TextColor="Black" FontSize="Large"></Label>  
+                    </Frame>
+                    <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="DESACTIVER&#10;MON COMPTE"
+                               TextColor="White" FontSize="Large"></Label>  
+                    </Frame>
+                </Grid>
+                
+            </StackLayout>
+            
+        </Frame>
+        </Grid>
     
 </ContentPage>

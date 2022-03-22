@@ -45,6 +45,7 @@ namespace HangTogether
             InitializeComponent();
             CreateLoisirsFrame();
             addLoisirsToLayout();
+            invisibleMenu();
         }
 
         /*
@@ -204,10 +205,31 @@ namespace HangTogether
             addLoisirsToLayout();
         }
 
-        
-        async void OnTapMenu(Object s, EventArgs e)
-        {
+        class Global  
+        {  
+            public static bool isMenuOpen = false;  
             
+        } 
+        
+        public void invisibleMenu()
+        {
+            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest+50);
+        }
+
+        async void OnTapMenu(Object o, EventArgs e)
+        {
+            if (Global.isMenuOpen)
+            {
+                this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
+                    1000);
+                Global.isMenuOpen = false;
+            }
+            else
+            {
+                this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
+                    1000);
+                Global.isMenuOpen = true;
+            }
         }
         
         // Lorsque un user ne trouve pas son loisirs dans la liste de loisirs

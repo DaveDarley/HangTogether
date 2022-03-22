@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Plugin.DeviceOrientation;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,15 +14,44 @@ namespace HangTogether
     public partial class DisplayPotentialFriends : ContentPage
     {
         public ObservableCollection<UserProfile> _Profiles = new ObservableCollection<UserProfile>();
+
+        class Global  
+        {  
+            public static bool isMenuOpen = false;  
+         
+        } 
+        
         public DisplayPotentialFriends()
         {
             InitializeComponent();
             CardBinding();
             BindingContext = this;
+            
+            // rentrer le menu en bas de l'ecran
+            invisibleMenu();
+        }
+        
+        
+
+        public void invisibleMenu()
+        {
+            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest + 50);
         }
 
         async void OnTapMenu(Object o, EventArgs e)
         {
+            if (Global.isMenuOpen)
+            {
+                this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
+                    1000);
+                Global.isMenuOpen = false;
+            }
+            else
+            {
+                this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
+                    1000);
+                Global.isMenuOpen = true;
+            }
         }
 
         public void CardBinding()
@@ -100,6 +129,7 @@ namespace HangTogether
 
         public class UserProfile
         {
+            
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string Age { get; set; }
