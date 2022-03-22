@@ -3,13 +3,28 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:swipeCardView="clr-namespace:MLToolkit.Forms.SwipeCardView;assembly=MLToolkit.Forms.SwipeCardView"
              xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
              x:Class="HangTogether.DisplayPotentialFriends">
     
-        <StackLayout>
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+            <pancakeView:PancakeView  WidthRequest="40" HeightRequest="40" 
+                                      HorizontalOptions="End"
+                                      Margin="0,0,10,0" BackgroundColor="White">
+                
+                <pancakeView:PancakeView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTapMenu" />
+                </pancakeView:PancakeView.GestureRecognizers>
+                
+                <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.ic_menu.png}" Aspect="AspectFill" />
+            </pancakeView:PancakeView>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    
+    <StackLayout>
             
             <Grid VerticalOptions="FillAndExpand" Margin="10,0,10,0"> 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -17,20 +32,11 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 
-                <pancakeView:PancakeView Grid.Row="0" Grid.Column="0" WidthRequest="70" HeightRequest="70" 
-                                         CornerRadius="10" BackgroundColor="SkyBlue" HorizontalOptions="End"
-                                         Margin="0,30,20,20">
-                    <pancakeView:PancakeView.Shadow>
-                        <pancakeView:DropShadow Color="#000"/>
-                    </pancakeView:PancakeView.Shadow>
-                    <Image Source="https://www.findool.com/images/avatars/avatar.png" Aspect="AspectFill"/>
-                </pancakeView:PancakeView>
-                
-            
                 <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
-                                    Grid.Row="1" Grid.Column="0" Padding="0,0,0,0" 
+                                    Grid.Row="0" Grid.Column="0" Padding="0,0,0,0" 
                                     Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}"
-                                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"> 
+                                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                    Margin="0,15,0,0"> 
                     
                     <swipeCardView:SwipeCardView 
                                      x:Name="swipElem" ItemsSource="{Binding Profile}"
@@ -43,6 +49,7 @@
                                 <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="White">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="200"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
@@ -50,7 +57,7 @@
                                     </Grid.ColumnDefinitions>
                                 
                                 
-                                    <Frame Grid.Row="0" Grid.Column="0" Margin="20,40,20,0" HorizontalOptions="FillAndExpand"
+                                    <Frame Grid.Row="0" Grid.Column="0" Margin="20,20,20,0" HorizontalOptions="FillAndExpand"
                                            BorderColor="Aquamarine" CornerRadius="20">
                                         
                                         <StackLayout Orientation="Horizontal" VerticalOptions="Center">
@@ -60,8 +67,33 @@
                                         </StackLayout>
                                     </Frame>
                                     
+                                    <Frame Grid.Row="1" Grid.Column="0" Margin="20,15,20,0" HorizontalOptions="FillAndExpand"
+                                           BorderColor="DarkCyan" CornerRadius="20" HasShadow="True">
+                                        
+                                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+                                            <Label Text="Loisir(s) en commun(s)" TextColor="Black" FontAttributes="Bold" HorizontalTextAlignment="Center" FontSize="Large"/>
+                                        
+                                            <ScrollView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" VerticalScrollBarVisibility="Always">
+                                                <FlexLayout 
+                                                    Wrap="Wrap"
+                                                    Direction="Row"
+                                                    JustifyContent="Start"
+                                                    AlignItems="Start"
+                                                    AlignContent="Start"
+                                                    Padding="8"
+                                                    HorizontalOptions="FillAndExpand"
+                                                    VerticalOptions="FillAndExpand"
+                                                    x:Name="layoutInterest"
+                                                >
+                                                </FlexLayout>
+                                            </ScrollView>
+                                            
+                                        </StackLayout>
+                                        
+                                    </Frame>
                                     
-                                    <Frame  Grid.Row="1" Grid.Column="0" Margin="40,15,40,30" HorizontalOptions="FillAndExpand"
+                                    
+                                    <Frame  Grid.Row="2" Grid.Column="0" Margin="40,15,40,30" HorizontalOptions="FillAndExpand"
                                             BorderColor="purple" CornerRadius="20">
                                         
                                         <StackLayout Orientation="Vertical" >
@@ -86,7 +118,7 @@
                 </pancakeView:PancakeView>
                 
 
-                <Button Grid.Row="2" Grid.Column="0"  Text="ENVOYEZ UN MESSAGE" CornerRadius="15" HorizontalOptions="FillAndExpand"
+                <Button Grid.Row="1" Grid.Column="0"  Text="ENVOYEZ UN MESSAGE" CornerRadius="15" HorizontalOptions="FillAndExpand"
                         Margin="20,30,20,20" BackgroundColor="DarkGray"/>
                 
                 

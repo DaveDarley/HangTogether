@@ -21,6 +21,10 @@ namespace HangTogether
             BindingContext = this;
         }
 
+        async void OnTapMenu(Object o, EventArgs e)
+        {
+        }
+
         public void CardBinding()
         {
             _Profiles.Add(new UserProfile()
