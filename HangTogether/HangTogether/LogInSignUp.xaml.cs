@@ -30,7 +30,7 @@ namespace HangTogether
             if (IsUserCorrect())
             {
                 // m'envoie a la page recherche loisirs
-                Application.Current.MainPage = new ChooseAndModifyInterests();
+                Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests()) ;
             }
         }
 

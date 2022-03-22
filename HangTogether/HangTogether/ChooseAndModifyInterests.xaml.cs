@@ -249,19 +249,13 @@ namespace HangTogether
             }
         }
 
-        async void OnTapRecherche(object sender, EventArgs args)
+        
+         async void OnTapRecherche(object sender, EventArgs args)
         {
             
-           //await Navigation.PushAsync(new SignUpUser());
             if (validateUserChoice())
             {
-                 // Application.Current.MainPage = new DisplayPotentialFriends();
-                  //await Navigation.PushAsync(new SignUpUser());
-                  // await Navigation.PushAsync(new DisplayPotentialFriends());
-
-                //  Navigation.InsertPageBefore (new SignUpUser(), this);
-                  
-                await Navigation.PushAsync (new SignUpUser ());
+                await Navigation.PushAsync(new DisplayPotentialFriends()); 
             }
             else
             {

@@ -68,14 +68,19 @@ namespace HangTogether
             {
                 // Une fois user login je change le mainPage a la page "RechercheLosisrs"
                 // Une fois connecte il doit pas pouvoir retourner a la page RecoverPassword
-                Application.Current.MainPage = new ChooseAndModifyInterests();
+                Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests());
             }
         }
 
         async void goSignUp(Object s, EventArgs e)
         {
+            
             await Navigation.PushAsync(new SignUpUser());
+            // Si une personne passe de mdp oublie a sign up, on lui empeche
+            // de revenir a la page mdp oublie, de preference il reviendra 
+            // a la page sign in
+            Navigation.RemovePage(Navigation.NavigationStack[1]);
         }
-
+        
     }
 }

@@ -21,7 +21,7 @@ namespace HangTogether
         {
             if (validateInfosUser())
             {
-                Application.Current.MainPage = new ChooseAndModifyInterests();
+                Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests());
             }
         }
 
