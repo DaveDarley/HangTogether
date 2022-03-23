@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
+             xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
+             x:Class="HangTogether.DisplayMessages">
+    
+    <NavigationPage.TitleView>
+        <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+            <pancakeView:PancakeView  WidthRequest="40" HeightRequest="40" 
+                                      HorizontalOptions="End"
+                                      Margin="0,0,10,0" BackgroundColor="White">
+                <pancakeView:PancakeView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTapMenu"></TapGestureRecognizer>
+                </pancakeView:PancakeView.GestureRecognizers>
+
+                
+                <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.ic_menu.png}" Aspect="AspectFill" />
+            </pancakeView:PancakeView>
+        </StackLayout>
+    </NavigationPage.TitleView>
+    
+    
+    <ContentPage.Content>
+        <Grid>
+            
+            <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
+                <Frame HeightRequest="300" BackgroundColor="MidnightBlue" Padding="0" Margin="15,0,15,0" CornerRadius="30">
+                </Frame>
+            </StackLayout>
+            
+            <StackLayout Padding="0" Margin="0,10,0,0" HorizontalOptions="FillAndExpand"
+                         Orientation="Vertical">
+                
+                <Label Text="Messages" HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center" TextColor="White"
+                       FontAttributes="Bold" FontSize="32" Margin="0,10,0,0"/>
+                <pancakeView:PancakeView Margin="25,1,25,0" CornerRadius="10">
+                    
+                    <SearchBar  Placeholder="Taper un nom"
+                                VerticalTextAlignment="Center" PlaceholderColor="Gray" 
+                                TextColor="Black" TextChanged="OnUserSearchChanged"/>
+                    
+                </pancakeView:PancakeView>
+          
+                
+            </StackLayout>
+            
+            
+            
+            <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Margin="10,150,10,20"
+                    CornerRadius="20" HasShadow="True">
+                
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="0,0,0,0">
+                <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical" VerticalScrollBarVisibility="Always">
+                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                        
+                        <!-- Ce stack contiendra ts mes messages-->
+                        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical" x:Name="Messages">
+                            
+                        </StackLayout>
+                        
+                    </StackLayout>
+                </ScrollView>
+                </StackLayout>
+                
+                
+            </Frame>
+            
+                    <Frame 
+            x:Name="frameMenu"
+            CornerRadius="20"
+            HasShadow="true"
+            HeightRequest="400"
+            VerticalOptions="EndAndExpand"
+            
+            
+>
+            
+            <StackLayout Orientation="Vertical" Margin="10,40,10,40" VerticalOptions="FillAndExpand">
+                
+                <Grid VerticalOptions="FillAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="0.5*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.5*" />
+                        <RowDefinition Height="0.5*" />
+                    </Grid.RowDefinitions>
+                    
+                    <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="TROUVER&#10;UN POTE"
+                               TextColor="White" FontSize="Large"></Label>   
+                    </Frame>
+                    <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="MODIFIER&#10;MES LOISIRS"
+                               TextColor="Black" FontSize="Large"></Label>  
+                    </Frame>
+                    <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="VOIR MES&#10;MESSAGES"
+                               TextColor="Black" FontSize="Large"></Label>  
+                    </Frame>
+                    <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True">
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="DESACTIVER&#10;MON COMPTE"
+                               TextColor="White" FontSize="Large"></Label>  
+                    </Frame>
+                </Grid>
+                
+            </StackLayout>
+            
+        </Frame>
+       
+        </Grid>
+        
+        
+        
+    </ContentPage.Content>
+</ContentPage>

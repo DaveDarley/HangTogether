@@ -11,8 +11,8 @@ namespace HangTogether
         {
             InitializeComponent();
 
-            //MainPage = new TestRelativeLayout();
-           MainPage =  new NavigationPage(new LogInSignUp());
+            MainPage = new NavigationPage(new DisplayMessages());
+           //MainPage =  new NavigationPage(new LogInSignUp());
         }
 
         protected override void OnStart()
