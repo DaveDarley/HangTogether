@@ -130,26 +130,7 @@
 
                 
             </Grid>
-        
-        <!--              RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent,
-                                                                       Property=Height,
-                                                                       Factor=0,
-                                                                       Constant=0}"
-            RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent,
-                                                                      Property=Width,
-                                                                      Factor=1,
-                                                                      Constant=0}"
-            RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent,
-            Property=Height,
-            Factor=0.9,
-            Constant=0}" -->
-        
 
-        
-        <!-- Pas de XConstraint et Width Constraint = 1 alors ca prend toute la largeur de l'ecran-->
-        <!-- YConstraint = 0.97 alors on place le layout a 97% du haut de l'ecran et Height = 0.8
-                -->
-        
     </StackLayout>
         
         <Frame 
@@ -160,7 +141,7 @@
             VerticalOptions="EndAndExpand"
             
             
->
+        >
             
             <StackLayout Orientation="Vertical" Margin="10,40,10,40" VerticalOptions="FillAndExpand">
                 
@@ -176,20 +157,48 @@
                     
                     <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="TROUVER&#10;UN POTE"
-                               TextColor="White" FontSize="Large"></Label>   
+                               TextColor="White" FontSize="Large">
+                            
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                            
+                        </Label>   
                     </Frame>
+                    
                     <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="MODIFIER&#10;MES LOISIRS"
-                               TextColor="Black" FontSize="Large"></Label>  
+                               TextColor="Black" FontSize="Large">
+                            
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                            
+                        </Label>  
                     </Frame>
+                    
                     <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="VOIR MES&#10;MESSAGES"
-                               TextColor="Black" FontSize="Large"></Label>  
+                               TextColor="Black" FontSize="Large">
+                            
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                            
+                        </Label>  
                     </Frame>
+                    
                     <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="DESACTIVER&#10;MON COMPTE"
-                               TextColor="White" FontSize="Large"></Label>  
+                               TextColor="White" FontSize="Large">
+                            
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                            
+                        </Label>  
                     </Frame>
+                    
                 </Grid>
                 
             </StackLayout>

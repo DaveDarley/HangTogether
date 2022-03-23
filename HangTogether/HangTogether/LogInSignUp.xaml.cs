@@ -17,9 +17,7 @@ namespace HangTogether
         {
             InitializeComponent();
         }
-        
-        // command pattern 3911??
-       // public ICommand ForgotPasswordCommand => new Command(OnForgotPassword);
+       
         
         /*
          * Validation des infos entrees par le user
@@ -34,6 +32,10 @@ namespace HangTogether
             }
         }
 
+        /*
+         * Cette fonction valide les infos entrees par le user a l'etap de
+         * sign in; Si infos correct on l'envoie a la page de LOISIRS
+         */
         public bool IsUserCorrect()
         {
 
@@ -61,7 +63,7 @@ namespace HangTogether
                  else
                  {
                      var mdpError = this.mdpError;
-                     mdpError.IsVisible = true;
+                     mdpError.IsVisible = false;
                  }
 
                  return false;
@@ -94,8 +96,6 @@ namespace HangTogether
             {
                 await Navigation.PushAsync(new ForgottenPassword());
             }
-
-            
             
         }
         

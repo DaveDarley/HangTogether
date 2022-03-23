@@ -17,6 +17,10 @@ namespace HangTogether
             InitializeComponent();
         }
         
+        /*
+         * Fonction qui valide les infos rentrees par le user lors
+         * du recouvrement de son mot de passe
+         */
         public bool verifRecoveryPassword()
         {
 

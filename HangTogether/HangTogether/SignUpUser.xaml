@@ -10,14 +10,18 @@
         <StackLayout BackgroundColor="#e6e6e6">
             <Grid>
                 <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
-                    <Frame HeightRequest="300" BackgroundColor="HotPink" Padding="0" Margin="0">
-                        <Image  Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>
-                    </Frame>
+                    <Frame HeightRequest="300"  Padding="0" Margin="10,0,10,0" CornerRadius="40" HasShadow="True"
+                           BorderColor="DarkTurquoise"/> 
                 </StackLayout>
+                
+                <Grid Padding="0" Margin="20,80,20,40"  HorizontalOptions="FillAndExpand">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                    <StackLayout Padding="0" Margin="10,80,10,40" HorizontalOptions="FillAndExpand">
+                    <StackLayout Grid.Row="0">
 
-                        <Frame BackgroundColor="White" HeightRequest="600" HasShadow="True" Padding="0" Margin="0" CornerRadius="15">
+                        <Frame BackgroundColor="White" HasShadow="True" Padding="0" Margin="0" CornerRadius="15">
 
                             <StackLayout>
                                 <StackLayout Margin="10">
@@ -130,7 +134,8 @@
                         </Frame>
 
                     </StackLayout>
-
+                </Grid>
+                
             </Grid>
         </StackLayout>
 

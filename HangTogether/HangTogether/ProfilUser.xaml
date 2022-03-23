@@ -6,6 +6,8 @@
              x:Class="HangTogether.ProfilUser"
              InputTransparent="True">
     
+    <!-- Cette page n'a pas ete utilisé-->
+    
     <StackLayout 
         VerticalOptions="End" 
         HorizontalOptions="FillAndExpand" 

@@ -8,82 +8,95 @@
         <Grid>
             <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
                 <Frame HeightRequest="400"  Padding="0" Margin="10,10,10,0" CornerRadius="40" HasShadow="True"
-                       BorderColor="Coral">
-                    <!--<Image Source="https://images.pexels.com/photos/247431/pexels-photo-247431.jpeg" Aspect="AspectFill" Margin="0"/>-->
-                </Frame> 
+                       BorderColor="Coral"/> 
             </StackLayout>
             
-            <StackLayout Padding="0" Margin="20,100,20,0" HorizontalOptions="FillAndExpand">
-                <Frame BackgroundColor="White" HeightRequest="500" HasShadow="True" Padding="0" Margin="0" CornerRadius="15" BorderColor="DarkGray">
-                    <StackLayout>
-                    
-          
-                            <StackLayout Margin="10">
-                                    <Label Text="SIGN IN" TextColor="Black" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="28"/>
-                            </StackLayout>
-                        
-                            
-                        <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
-                               Margin="10,30,10,0"  BorderColor="DarkGray" >
-                            <StackLayout  Orientation="Horizontal" >
-                                
-                                <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                    <Image Source="{local:ImageRessource HangTogether.mes_bg.ic_email.png}" Aspect="AspectFill" Margin="0"/>
-                                </Frame>
-                                
-                                <Entry x:Name="emailUser" Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand" ClearButtonVisibility="WhileEditing"/>
-                            </StackLayout>
-                        </Frame>
-                        
-                        <Label x:Name="mailError" Text="Courriel incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
-                               Margin="10,0,0,0" IsVisible="False"/>
-                        
-                        
-                        
-                        <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
-                               Margin="10,15,10,0" BorderColor="DarkCyan">
-                            <StackLayout  Orientation="Horizontal" >
-                                
-                                <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
-                                    <Image Source="{local:ImageRessource HangTogether.mes_bg.ic_password.png}" Aspect="AspectFill" Margin="0"/>
-                                </Frame>
-                                
-                                <Entry x:Name="mdpUser" Placeholder="Mot de passe" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
-                                       IsPassword="True" ClearButtonVisibility="WhileEditing"/>
-                            </StackLayout>
-                        </Frame>
-                        
-                        <Label x:Name="mdpError" Text="Mot de passe incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
-                               Margin="10,0,0,0" IsVisible="False"/>
-                        
-                        
-                        
-                        <Label Text="Mot de passe oublié?" TextColor="HotPink" FontAttributes="Bold" HorizontalOptions="EndAndExpand" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                               Margin="0,0,10,0" IsVisible="True">
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnTapForgetPassword" />
-                            </Label.GestureRecognizers>
-                        </Label>
-                        
-                        
-                        <Button Margin="10,30,10,0" Text="SIGN IN" FontAttributes="Bold" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"
-                                Clicked="ValidateInfosUser"/>
-                        
-                        <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,8,0,0">
-                            <Label Text="Vous n'avez pas de compte ?" TextColor="DarkGray" FontSize="Small"/>
-                            <Label  Text="Sign Up" TextColor="HotPink" FontAttributes="Bold" FontSize="Small">
-                                <Label.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnTapSignUp" />
-                                </Label.GestureRecognizers>
-                            </Label>
-                        </StackLayout>
-                        
-                        
-                        
-                    </StackLayout>
-                </Frame>
+            <!-- Idee: Je met ma page de sign in dans un grid avec height="*" et je ne 
+                definie pas de height pour le Frame(Sign in) alors ca prend la hauteur en fontion
+                de la hauteur de ces elements. Si ecran diminue en hauteur elle prendra tujours la 
+                hauteur de ces elments mais le user devra scroll-->
+            
+            <Grid Padding="0" Margin="20,100,20,10" HorizontalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
                 
-            </StackLayout>
+            
+                    <StackLayout Grid.Row="0">
+                        
+                        <Frame BackgroundColor="White" HasShadow="True" Padding="0" Margin="0" CornerRadius="15" BorderColor="DarkGray">
+                            <ScrollView>
+                                <StackLayout>
+                                    
+                                        <StackLayout Margin="10">
+                                                <Label Text="SIGN IN" TextColor="Black" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="28"/>
+                                        </StackLayout>
+                                    
+                                        
+                                    <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
+                                           Margin="10,30,10,0"  BorderColor="DarkGray" >
+                                        <StackLayout  Orientation="Horizontal" >
+                                            
+                                            <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                <Image Source="{local:ImageRessource HangTogether.mes_bg.ic_email.png}" Aspect="AspectFill" Margin="0"/>
+                                            </Frame>
+                                            
+                                            <Entry x:Name="emailUser" Placeholder="Email" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand" ClearButtonVisibility="WhileEditing"/>
+                                        </StackLayout>
+                                    </Frame>
+                                    
+                                    <Label x:Name="mailError" Text="Courriel incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                                           Margin="10,0,0,0" IsVisible="False"/>
+                                    
+                                    
+                                    
+                                    <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
+                                           Margin="10,15,10,0" BorderColor="DarkCyan">
+                                        <StackLayout  Orientation="Horizontal" >
+                                            
+                                            <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
+                                                <Image Source="{local:ImageRessource HangTogether.mes_bg.ic_password.png}" Aspect="AspectFill" Margin="0"/>
+                                            </Frame>
+                                            
+                                            <Entry x:Name="mdpUser" Placeholder="Mot de passe" VerticalOptions="Center" FontSize="18" HorizontalOptions="FillAndExpand"
+                                                   IsPassword="True" ClearButtonVisibility="WhileEditing"/>
+                                        </StackLayout>
+                                    </Frame>
+                                    
+                                    <Label x:Name="mdpError" Text="Mot de passe incorrect" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
+                                           Margin="10,0,0,0" IsVisible="False"/>
+                                    
+                                    
+                                    
+                                    <Label Text="Mot de passe oublié?" TextColor="HotPink" FontAttributes="Bold" HorizontalOptions="EndAndExpand" FontSize="Small" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                                           Margin="0,0,10,0" IsVisible="True">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="OnTapForgetPassword" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+                                    
+                                    
+                                    <Button Margin="10,30,10,0" Text="SIGN IN" FontAttributes="Bold" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"
+                                            Clicked="ValidateInfosUser"/>
+                                    
+                                    <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,8,0,20">
+                                        <Label Text="Vous n'avez pas de compte ?" TextColor="DarkGray" FontSize="Small"/>
+                                        <Label  Text="Sign Up" TextColor="HotPink" FontAttributes="Bold" FontSize="Small">
+                                            <Label.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnTapSignUp" />
+                                            </Label.GestureRecognizers>
+                                        </Label>
+                                    </StackLayout>
+                                    
+                                </StackLayout>
+                            </ScrollView>
+                        </Frame>
+                            
+                        
+                </StackLayout>
+            </Grid>
+            
+            
         </Grid>
     </StackLayout>
 

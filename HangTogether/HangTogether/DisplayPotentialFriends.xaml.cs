@@ -15,12 +15,7 @@ namespace HangTogether
     {
         public ObservableCollection<UserProfile> _Profiles = new ObservableCollection<UserProfile>();
 
-        class Global  
-        {  
-            public static bool isMenuOpen = false;  
-         
-        } 
-        
+        private bool isMenuOpen = false;
         public DisplayPotentialFriends()
         {
             InitializeComponent();
@@ -38,22 +33,53 @@ namespace HangTogether
             this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest + 50);
         }
 
+        /*
+         * Fonction qui s'occupe de l'apparition du menu
+         * sur l'ecran
+         */
         async void OnTapMenu(Object o, EventArgs e)
         {
-            if (Global.isMenuOpen)
+            if (isMenuOpen)
             {
                 this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
                     1000);
-                Global.isMenuOpen = false;
+                isMenuOpen = false;
             }
             else
             {
                 this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
                     1000);
-                Global.isMenuOpen = true;
+                isMenuOpen = true;
             }
         }
-
+        
+        /*
+         * Dans ces 4 prochaines fonctions , je gere lorsque le
+         * user clique sur un element du menu
+         */
+        async void OnTapFindFriends(object o, EventArgs e)
+        {
+            ProfilUser.GestionClickMenu("pote");
+        }
+        async void OnTapChooseInterests(object o, EventArgs e)
+        {
+            ProfilUser.GestionClickMenu("loisirs");
+        }
+        async void OnTapViewMessages(object o, EventArgs e)
+        {
+            ProfilUser.GestionClickMenu("messages");
+        }
+        async void OnTapDeactivateAccount(object o, EventArgs e)
+        {
+            bool desactiverCompte = await DisplayAlert ("Desactivation Compte", "Etes vous sur de vouloir desactiver votre compte", "Oui", "Non");
+            if (desactiverCompte)
+            {
+                // Supprmimer user de la base de données
+                Application.Current.MainPage = new NavigationPage(new LogInSignUp());
+            }
+        }
+        
+        // Test:
         public void CardBinding()
         {
             _Profiles.Add(new UserProfile()

@@ -21,6 +21,10 @@ namespace HangTogether
         // Message du user
         private List<Frame> userConvo = new List<Frame>();
 
+        // aide a savoir si le user a clique pour ouvert le menu ou pour 
+        // le fermer
+        private bool isMenuOpen = false;
+
         public DisplayMessages()
         {
             InitializeComponent();
@@ -31,32 +35,59 @@ namespace HangTogether
             displayAllConvos();
         }
         
-        class Global  
-        {  
-            public static bool isMenuOpen = false;  
-            
-        } 
         
         public void invisibleMenu()
         {
             this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest + 50);
         }
-
+        
+        /*
+         * Fonction qui s'occupe de l'apparition du menu
+         * sur l'ecran
+         */
         async void OnTapMenu(Object o, EventArgs e)
         {
-            if (Global.isMenuOpen)
+            if (isMenuOpen)
             {
                 this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
                     1000);
-                Global.isMenuOpen = false;
+                isMenuOpen = false;
             }
             else
             {
                 this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
                     1000);
-                Global.isMenuOpen = true;
+                isMenuOpen = true;
             }
         }
+        
+        /*
+         * Dans ces 4 prochaines fonctions , je gere lorsque le
+         * user clique sur un element du menu
+         */
+        async void OnTapFindFriends(object o, EventArgs e)
+        {
+            ProfilUser.GestionClickMenu("pote");
+        }
+        async void OnTapChooseInterests(object o, EventArgs e)
+        {
+            ProfilUser.GestionClickMenu("loisirs");
+        }
+        async void OnTapViewMessages(object o, EventArgs e)
+        {
+            ProfilUser.GestionClickMenu("messages");
+        }
+        async void OnTapDeactivateAccount(object o, EventArgs e)
+        {
+            bool desactiverCompte = await DisplayAlert ("Desactivation Compte", "Etes vous sur de vouloir desactiver votre compte", "Oui", "Non");
+            if (desactiverCompte)
+            {
+                // Supprmimer user de la base de données
+                Application.Current.MainPage = new NavigationPage(new LogInSignUp());
+            }
+        }
+        
+        
         
         // Tesstons en ajoutant nous memes des infos a notre dictionnaire:
         public void fullDictionary()
@@ -152,14 +183,16 @@ namespace HangTogether
         }
         
         /*
- * Fonction qui prend le texte entré  par le user dans
- * le searchBar et affiche dans le flexLayout les
- * Frames qui correspond a la recherche (s'il y en a)
- *
- * Losrque User tape texte dans le searchbar, on parcours notre liste de frame
- * si le texte du frame contient le query du user (ou query contient texte du frame) on met le frame.IsVisible
- * a true sinon on le met a false.
- */
+         * Fonction qui prend le texte entré  par le user dans
+         * le searchBar et affiche dans le flexLayout les
+         * Frames qui correspond a la recherche (s'il y en a)
+         *
+         * Losrque User tape texte dans le searchbar, on parcours notre liste de frame
+         * si le texte du frame contient le query du user (ou query contient texte du frame) on met le frame.IsVisible
+         * a true sinon on le met a false.
+         *
+         * NB: La recherche se ft en fonction des noms des User et nom des mots des messages
+         */
         void OnUserSearchChanged(object sender, EventArgs e)
         {
             SearchBar searchBar = (SearchBar)sender;
@@ -206,6 +239,7 @@ namespace HangTogether
             }
             displayAllConvos();
         }
+        
 
     }
 }

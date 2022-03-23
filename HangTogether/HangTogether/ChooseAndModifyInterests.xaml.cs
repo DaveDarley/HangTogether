@@ -37,8 +37,11 @@ namespace HangTogether
 
         // ici est stocké les choix de loisirs du User
         private List<Frame> choixUser = new List<Frame>();
+        
         // ici est stocké les anecdotes du user
         private string textePresentationUser;
+
+        private bool isMenuOpen = false;
 
         public ChooseAndModifyInterests()
         {
@@ -60,17 +63,14 @@ namespace HangTogether
                 {
                     BackgroundColor = Color.White,
                     CornerRadius = 30,
-                    Margin = new Thickness(5,5,5,0),
                     HasShadow = true,
                     IsVisible = true,
+                    Margin = new Thickness(0,4,0,4),
                     Content = new Label()
                     {
                         Text = loisirsUser[i],
                         TextColor = Color.Black,
-                        HorizontalOptions = LayoutOptions.FillAndExpand,
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        VerticalTextAlignment = TextAlignment.Center,
-                        VerticalOptions = LayoutOptions.FillAndExpand
+                        HorizontalOptions = LayoutOptions.StartAndExpand,
                     }
                 };
                 
@@ -113,7 +113,12 @@ namespace HangTogether
             }
         }
 
-
+        /*
+         * Fonction qui permet d'enlever une frame dans la liste de
+         * choix du User qd celui-ci deselectionne le loisir;
+         * Elle recoit en parametre la frame qu'elle est censée enlever
+         * (Celle-ci a ete deselectionnée par le user)
+         */
         public void RemoveUserChoice(Frame toRemove)
         {
             var labelFrame = (Label)toRemove.Content;
@@ -171,7 +176,7 @@ namespace HangTogether
                 {
                     allFrame[i].IsVisible = true;
                 }
-                addLoisirsToLayout();
+                addLoisirsToLayout(); 
                 return;
             }
 
@@ -205,30 +210,29 @@ namespace HangTogether
             addLoisirsToLayout();
         }
 
-        class Global  
-        {  
-            public static bool isMenuOpen = false;  
-            
-        } 
-        
         public void invisibleMenu()
         {
             this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest+50);
         }
+        
+        /*
+         * Fonction qui s'occupe de l'apparition du menu
+         * sur l'ecran
+         */
 
         async void OnTapMenu(Object o, EventArgs e)
         {
-            if (Global.isMenuOpen)
+            if (isMenuOpen)
             {
                 this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
                     1000);
-                Global.isMenuOpen = false;
+                isMenuOpen = false;
             }
             else
             {
                 this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
                     1000);
-                Global.isMenuOpen = true;
+                isMenuOpen = true;
             }
         }
         
@@ -243,17 +247,17 @@ namespace HangTogether
                 {
                     BackgroundColor = Color.Black,
                     CornerRadius = 30,
-                    Margin = new Thickness(5,5,5,0),
                     HasShadow = true,
                     IsVisible = true,
+                    Margin = new Thickness(0,4,0,4),
                     Content = new Label()
                     {
                         Text = loisirsAjoute,
                         TextColor = Color.White,
-                        HorizontalOptions = LayoutOptions.FillAndExpand,
-                        HorizontalTextAlignment = TextAlignment.Center,
-                        VerticalTextAlignment = TextAlignment.Center,
-                        VerticalOptions = LayoutOptions.FillAndExpand
+                        HorizontalOptions = LayoutOptions.StartAndExpand,
+                        LineBreakMode = LineBreakMode.WordWrap
+                       
+                        
                     }
                 };
                 
@@ -285,6 +289,34 @@ namespace HangTogether
             }
 
         }
+
+         /*
+          * Dans ces 4 prochaines fonctions , je gere lorsque le
+          * user clique sur un element du menu
+          */
+         async void OnTapFindFriends(object o, EventArgs e)
+         {
+             ProfilUser.GestionClickMenu("pote");
+         }
+         async void OnTapChooseInterests(object o, EventArgs e)
+         {
+             ProfilUser.GestionClickMenu("loisirs");
+         }
+         async void OnTapViewMessages(object o, EventArgs e)
+         {
+             ProfilUser.GestionClickMenu("messages");
+         }
+         async void OnTapDeactivateAccount(object o, EventArgs e)
+         {
+             bool desactiverCompte = await DisplayAlert ("Desactivation Compte", "Etes vous sur de vouloir desactiver votre compte", "Oui", "Non");
+             if (desactiverCompte)
+             {
+                 // Supprmimer user de la base de données
+                 Application.Current.MainPage = new NavigationPage(new LogInSignUp());
+             }
+         }
+         
+         
         
         
         /*
@@ -312,16 +344,12 @@ namespace HangTogether
             }
             else
             {
-               // await DisplayAlert ("Alert", "Veuillez indiquer au moins une anecdote", "OK");
                 canUserGoToNextPage = false;
             }
             return canUserGoToNextPage;
         }
 
 
-
-
-
-
+        
     }
 }

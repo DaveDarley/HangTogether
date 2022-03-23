@@ -63,18 +63,16 @@
                 </ScrollView>
                 </StackLayout>
                 
-                
             </Frame>
             
-                    <Frame 
-            x:Name="frameMenu"
-            CornerRadius="20"
-            HasShadow="true"
-            HeightRequest="400"
-            VerticalOptions="EndAndExpand"
             
-            
->
+            <Frame 
+                x:Name="frameMenu"
+                CornerRadius="20"
+                HasShadow="true"
+                HeightRequest="400"
+                VerticalOptions="EndAndExpand"
+            >
             
             <StackLayout Orientation="Vertical" Margin="10,40,10,40" VerticalOptions="FillAndExpand">
                 
@@ -90,29 +88,56 @@
                     
                     <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="TROUVER&#10;UN POTE"
-                               TextColor="White" FontSize="Large"></Label>   
+                               TextColor="White" FontSize="Large">
+                            
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                            
+                        </Label>   
                     </Frame>
+                    
                     <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="MODIFIER&#10;MES LOISIRS"
-                               TextColor="Black" FontSize="Large"></Label>  
+                               TextColor="Black" FontSize="Large">
+                            
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                            
+                        </Label>  
                     </Frame>
+                    
                     <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="VOIR MES&#10;MESSAGES"
-                               TextColor="Black" FontSize="Large"></Label>  
+                               TextColor="Black" FontSize="Large">
+                            
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                            
+                        </Label>  
                     </Frame>
+                    
                     <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="DESACTIVER&#10;MON COMPTE"
-                               TextColor="White" FontSize="Large"></Label>  
+                               TextColor="White" FontSize="Large">
+                            
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                            
+                        </Label>  
                     </Frame>
+                    
                 </Grid>
                 
             </StackLayout>
             
         </Frame>
        
+            
         </Grid>
-        
-        
         
     </ContentPage.Content>
 </ContentPage>
