@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Firebase.Database;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -22,13 +22,19 @@ namespace HangTogether
             if (validateInfosUser())
             {
                 Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests());
+                
+                FirebaseClient firebaseClient = new FirebaseClient("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+                // Si ressource Users existe pas encore??
+                await firebaseClient  
+                    .Child("Users")  
+                    .PostAsync((new Users() { nom = "lalal", prenom = "lalal" , dob = "dob", email = "lalal", mdp = "lalal"}).ToString());
             }
         }
 
         
         // A verifier si l'email n'est pas deja en cours d'utilisation
         // dans la BD et s'il a rentre tous les infos requises
-        public bool validateInfosUser()
+        public  bool validateInfosUser()
         {
             var nomUser = this.nom.Text;
             var prenomUser = this.prenom.Text;
@@ -88,8 +94,11 @@ namespace HangTogether
             
             dob.SetValue (DatePicker.MaximumDateProperty, DateTime.Now);
             
-
+            
             // Faut verifier si email pas deja en utilisation ici
+            SignUpManager addInfosUser = new SignUpManager();
+
+             //addInfosUser.addNewuserToDB(nomUser, prenomUser, dob, emailUser, mdpUser);
             return isInfosValid;
         }
     }
