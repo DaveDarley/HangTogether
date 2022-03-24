@@ -298,11 +298,11 @@ namespace HangTogether
          {
              ProfilUser.GestionClickMenu("pote");
          }
-         async void OnTapChooseInterests(object o, EventArgs e)
+          async void OnTapChooseInterests(object o, EventArgs e)
          {
              ProfilUser.GestionClickMenu("loisirs");
          }
-         async void OnTapViewMessages(object o, EventArgs e)
+          async void OnTapViewMessages(object o, EventArgs e)
          {
              ProfilUser.GestionClickMenu("messages");
          }

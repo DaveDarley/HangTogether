@@ -15,7 +15,7 @@ namespace HangTogether
     {
         public ProfilUser()
         {
-            InitializeComponent();
+           // InitializeComponent();
             
 
             

@@ -15,7 +15,7 @@ namespace HangTogether
     {
         public ObservableCollection<UserProfile> _Profiles = new ObservableCollection<UserProfile>();
 
-        private bool isMenuOpen = false;
+        public bool isMenuOpen = false;
         public DisplayPotentialFriends()
         {
             InitializeComponent();
@@ -23,12 +23,12 @@ namespace HangTogether
             BindingContext = this;
             
             // rentrer le menu en bas de l'ecran
-            invisibleMenu();
+            InvisibleMenu();
         }
         
         
 
-        public void invisibleMenu()
+        public void InvisibleMenu()
         {
             this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest + 50);
         }
@@ -41,13 +41,13 @@ namespace HangTogether
         {
             if (isMenuOpen)
             {
-                this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
+                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
                     1000);
                 isMenuOpen = false;
             }
             else
             {
-                this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
+                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
                     1000);
                 isMenuOpen = true;
             }
@@ -59,15 +59,15 @@ namespace HangTogether
          */
         async void OnTapFindFriends(object o, EventArgs e)
         {
-            ProfilUser.GestionClickMenu("pote");
+           // ProfilUser.GestionClickMenu("pote");
         }
         async void OnTapChooseInterests(object o, EventArgs e)
         {
-            ProfilUser.GestionClickMenu("loisirs");
+          //  ProfilUser.GestionClickMenu("loisirs");
         }
         async void OnTapViewMessages(object o, EventArgs e)
         {
-            ProfilUser.GestionClickMenu("messages");
+         //   ProfilUser.GestionClickMenu("messages");
         }
         async void OnTapDeactivateAccount(object o, EventArgs e)
         {

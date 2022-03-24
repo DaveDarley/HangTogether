@@ -9,7 +9,7 @@ using Xamarin.Forms.Xaml;
 
 namespace HangTogether
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
+   // [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Conversation : ContentPage
     {
         public Conversation()

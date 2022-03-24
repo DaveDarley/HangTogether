@@ -1,16 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Xamarin.CommunityToolkit.Converters;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace HangTogether
 {
-   // [XamlCompilation(XamlCompilationOptions.Compile)]
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LogInSignUp : ContentPage
     {
         public LogInSignUp()
@@ -18,6 +12,7 @@ namespace HangTogether
             InitializeComponent();
         }
        
+        
         
         /*
          * Validation des infos entrees par le user
@@ -31,17 +26,17 @@ namespace HangTogether
                 Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests()) ;
             }
         }
-
+        
         /*
          * Cette fonction valide les infos entrees par le user a l'etap de
          * sign in; Si infos correct on l'envoie a la page de LOISIRS
          */
         public bool IsUserCorrect()
         {
-
+        
              var emailUser = this.emailUser.Text;
              var mdpUser = this.mdpUser.Text;
- 
+        
              if ( String.IsNullOrEmpty(emailUser) || String.IsNullOrEmpty(mdpUser))
              {
                  if (String.IsNullOrEmpty(emailUser))
@@ -54,7 +49,7 @@ namespace HangTogether
                      var mailError = this.mailError;
                      mailError.IsVisible = false;
                  }
-
+        
                  if (String.IsNullOrEmpty(mdpUser))
                  {
                      var mdpError = this.mdpError;
@@ -65,7 +60,7 @@ namespace HangTogether
                      var mdpError = this.mdpError;
                      mdpError.IsVisible = false;
                  }
-
+        
                  return false;
              }
              // Validate par base de données
@@ -73,8 +68,8 @@ namespace HangTogether
              {
                  return true;
              }
-
-
+        
+        
         }
         
         /*

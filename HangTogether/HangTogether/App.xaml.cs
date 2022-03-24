@@ -3,16 +3,15 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
+
 namespace HangTogether
 {
     public partial class App : Application
     {
-        public App()
+        public App() 
         {
-            InitializeComponent();
-
-            //MainPage = new NavigationPage(new DisplayMessages());
-           MainPage =  new NavigationPage(new LogInSignUp());
+           // InitializeComponent();
+            MainPage =  new NavigationPage(new LogInSignUp());
         }
 
         protected override void OnStart()
