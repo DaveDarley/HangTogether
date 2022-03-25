@@ -5,9 +5,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Rg.Plugins.Popup.Contracts;
-using Rg.Plugins.Popup.Extensions;
-using Rg.Plugins.Popup.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -224,13 +221,13 @@ namespace HangTogether
         {
             if (isMenuOpen)
             {
-                this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
+                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
                     1000);
                 isMenuOpen = false;
             }
             else
             {
-                this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
+                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
                     1000);
                 isMenuOpen = true;
             }
@@ -294,15 +291,15 @@ namespace HangTogether
           * Dans ces 4 prochaines fonctions , je gere lorsque le
           * user clique sur un element du menu
           */
-         async void OnTapFindFriends(object o, EventArgs e)
+          void OnTapFindFriends(object o, EventArgs e)
          {
              ProfilUser.GestionClickMenu("pote");
          }
-          async void OnTapChooseInterests(object o, EventArgs e)
+           void OnTapChooseInterests(object o, EventArgs e)
          {
              ProfilUser.GestionClickMenu("loisirs");
          }
-          async void OnTapViewMessages(object o, EventArgs e)
+           void OnTapViewMessages(object o, EventArgs e)
          {
              ProfilUser.GestionClickMenu("messages");
          }

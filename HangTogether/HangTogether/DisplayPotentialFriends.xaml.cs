@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Plugin.DeviceOrientation;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -57,15 +56,15 @@ namespace HangTogether
          * Dans ces 4 prochaines fonctions , je gere lorsque le
          * user clique sur un element du menu
          */
-        async void OnTapFindFriends(object o, EventArgs e)
+         void OnTapFindFriends(object o, EventArgs e)
         {
             ProfilUser.GestionClickMenu("pote");
         }
-        async void OnTapChooseInterests(object o, EventArgs e)
+         void OnTapChooseInterests(object o, EventArgs e)
         {
             ProfilUser.GestionClickMenu("loisirs");
         }
-        async void OnTapViewMessages(object o, EventArgs e)
+         void OnTapViewMessages(object o, EventArgs e)
         {
             ProfilUser.GestionClickMenu("messages");
         }

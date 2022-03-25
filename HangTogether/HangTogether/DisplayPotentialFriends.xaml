@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:swipeCardView="clr-namespace:MLToolkit.Forms.SwipeCardView;assembly=MLToolkit.Forms.SwipeCardView"
              xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
-             xmlns:customControl="clr-namespace:CoolBottomSheet;assembly=CoolBottomSheet"
              xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
 
              x:Class="HangTogether.DisplayPotentialFriends">
@@ -16,7 +15,7 @@
                 
                 <pancakeView:PancakeView.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnTapMenu" />
-                </pancakeView:PancakeView.GestureRecognizers>
+                </pancakeView:PancakeView.GestureRecognizers> 
                 
                 <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.ic_menu.png}" Aspect="AspectFill" />
             </pancakeView:PancakeView>

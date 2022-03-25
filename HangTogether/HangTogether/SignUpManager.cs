@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace HangTogether
 {
-    public class SignUpManager 
+    public class SignUpManager : ContentPage
     {
         
 

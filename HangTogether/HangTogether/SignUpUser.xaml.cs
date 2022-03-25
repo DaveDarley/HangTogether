@@ -23,11 +23,11 @@ namespace HangTogether
             {
                 Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests());
                 
-                FirebaseClient firebaseClient = new FirebaseClient("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
-                // Si ressource Users existe pas encore??
-                await firebaseClient  
-                    .Child("Users")  
-                    .PostAsync((new Users() { nom = "lalal", prenom = "lalal" , dob = "dob", email = "lalal", mdp = "lalal"}).ToString());
+                // FirebaseClient firebaseClient = new FirebaseClient("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+                // // Si ressource Users existe pas encore??
+                // await firebaseClient  
+                //     .Child("Users")  
+                //     .PostAsync((new Users() { nom = "lalal", prenom = "lalal" , dob = "dob", email = "lalal", mdp = "lalal"}).ToString());
             }
         }
 
@@ -96,7 +96,7 @@ namespace HangTogether
             
             
             // Faut verifier si email pas deja en utilisation ici
-            SignUpManager addInfosUser = new SignUpManager();
+           // SignUpManager addInfosUser = new SignUpManager();
 
              //addInfosUser.addNewuserToDB(nomUser, prenomUser, dob, emailUser, mdpUser);
             return isInfosValid;

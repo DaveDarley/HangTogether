@@ -10,9 +10,10 @@
             <pancakeView:PancakeView  WidthRequest="40" HeightRequest="40" 
                                       HorizontalOptions="End"
                                       Margin="0,0,10,0" BackgroundColor="White">
+                
                 <pancakeView:PancakeView.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnTapMenu"></TapGestureRecognizer>
-                </pancakeView:PancakeView.GestureRecognizers>
+                </pancakeView:PancakeView.GestureRecognizers> 
 
                 
                 <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.ic_menu.png}" Aspect="AspectFill" />

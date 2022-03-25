@@ -9,16 +9,11 @@
         <DebugSymbols>true</DebugSymbols>
     </PropertyGroup>
 
+    
     <ItemGroup>
-        <PackageReference Include="BottomSheetXF" Version="1.1.0" />
-        <PackageReference Include="CoolBottomSheet" Version="1.1.1" />
         <PackageReference Include="FirebaseDatabase.net" Version="4.0.7" />
         <PackageReference Include="MLToolkit.Forms.SwipeCardView" Version="2.2.0" />
-        <PackageReference Include="Plugin.DeviceOrientation" Version="1.0.7" />
-        <PackageReference Include="Rg.Plugins.Popup" Version="2.1.0" />
-        <PackageReference Include="Syncfusion.Xamarin.Buttons" Version="19.4.0.56" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-        <PackageReference Include="Xamarin.Forms.Chips" Version="1.0.13" />
         <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.3.0.763-beta" />
     </ItemGroup>
 
@@ -45,9 +40,6 @@
       <EmbeddedResource Include="mes_bg\ic_menu_user.png" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="Xamarin.Google.Android.Material, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\..\.nuget\packages\xamarin.google.android.material\1.2.1.1\lib\monoandroid90\Xamarin.Google.Android.Material.dll</HintPath>
-      </Reference>
-    </ItemGroup>
+
+
 </Project>
