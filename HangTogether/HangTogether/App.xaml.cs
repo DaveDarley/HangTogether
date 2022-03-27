@@ -8,9 +8,10 @@ namespace HangTogether
 {
     public partial class App : Application
     {
-        public App() 
+        private DataBaseManager dbManager;
+        public App()
         {
-           // InitializeComponent();
+            dbManager = new DataBaseManager(); 
             MainPage =  new NavigationPage(new LogInSignUp());
         }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using HangTogether.ServerManager;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -12,67 +12,86 @@ namespace HangTogether
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ForgottenPassword : ContentPage
     {
-        public ForgottenPassword()
+        private RecoverPasswordUser utilisateurQuiModifieSonMdp;
+        public ForgottenPassword(RecoverPasswordUser userToRecoverPassword)
         {
             InitializeComponent();
+            this.utilisateurQuiModifieSonMdp = userToRecoverPassword;
         }
         
         /*
-         * Fonction qui valide les infos rentrees par le user lors
-         * du recouvrement de son mot de passe
+         * Fonction qui valide le format des informations entrees par le
+         * user (S'assure champ code de verif pas vide mais aussi mdp a au moins 8 caracteres)
          */
         public bool verifRecoveryPassword()
         {
 
             var codeVerif = this.verifCode.Text;
             var nouveauMdpUser = this.nouveauMdp.Text;
+            bool didUserEnterInfos = true;
  
-            if ( String.IsNullOrEmpty(codeVerif) || String.IsNullOrEmpty(nouveauMdpUser))
+
+            // User rentre pas code verif et clique sign In
+            if (String.IsNullOrEmpty(codeVerif))
             {
-                // User rentre pas code verif et clique sign In
-                if (String.IsNullOrEmpty(codeVerif))
-                {
-                    var CodeVerifError = this.codeVerifError;
-                    CodeVerifError.IsVisible = true;
-                    CodeVerifError.Text = "Veuillez entrer le code de verification qui vous a ete fourni par courriel";
-                }
-                else // pas vide ou null alors on va valider par la base de donnée
-                {
-                    var CodeVerifError = this.codeVerifError;
-                    CodeVerifError.IsVisible = false;
-                }
-
-                if (String.IsNullOrEmpty(nouveauMdpUser))
-                {
-                    var mdpError = this.nouveauMdpError;
-                    mdpError.IsVisible = true;
-                }
-                else // pas vide ou null alors on va valider par la base de donnée
-                {
-                    var mdpError = this.nouveauMdpError;
-                    mdpError.IsVisible = false; 
-                }
-
-                return false;
+                this.codeVerifError.IsVisible = true;
+                this.codeVerifError.Text = "Veuillez entrer le code de verification qui vous a ete fourni par courriel";
+                didUserEnterInfos = false;
             }
-            // Validate par base de données
-            else
+            else // pas vide ou null alors on va valider par la base de donnée
             {
-                // Verifier que c'est le bon code de recouvrement 
-                // et que Mdp n'est pas reutilisé
-                return true;
+                this.codeVerifError.IsVisible = false;
             }
 
-
+            if (String.IsNullOrEmpty(nouveauMdpUser))
+            {
+                this.nouveauMdpError.IsVisible = true;
+                didUserEnterInfos = false;
+            }
+            else 
+            {
+                if (this.nouveauMdp.Text.Length < 8)
+                {
+                    this.nouveauMdpError.Text = "Votre mot de passe doit contenir au moins 8 caracteres";
+                    this.nouveauMdpError.IsVisible = true;
+                    didUserEnterInfos = false;
+                }
+                else
+                {
+                    this.nouveauMdpError.IsVisible = false;
+                }
+            }
+            return didUserEnterInfos;
         }
+
+        
 
         async void signInRecoverPassword(Object s, EventArgs e)
         {
             if (verifRecoveryPassword())
             {
-                // Une fois user login je change le mainPage a la page "RechercheLosisrs"
-                // Une fois connecte il doit pas pouvoir retourner a la page RecoverPassword
-                Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests());
+                DataBaseManager dataBaseManager = new DataBaseManager();
+                var verifCodeEnterByUser = this.verifCode.Text;
+                var verifCodeSendToUser = utilisateurQuiModifieSonMdp.verifCode;
+                var emailUserRecoveringPassword = utilisateurQuiModifieSonMdp.email;
+                List<User> allUsers = await dataBaseManager.GetAllUsers();
+                User toUpdate = dataBaseManager.getUser(allUsers, emailUserRecoveringPassword);
+                
+                
+                // C'est bien un user valide qui change son mdp
+                if (verifCodeSendToUser == verifCodeEnterByUser)
+                {
+                    // change mdp de ce user dans l'autre table
+                    toUpdate.mdp = this.nouveauMdp.Text;
+                    await dataBaseManager.UpdateUser(toUpdate);
+                    Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(toUpdate));
+                }
+                else
+                {
+                    this.codeVerifError.Text = "Le code de verification rentré est incorrect";
+                    this.codeVerifError.IsVisible = true;
+                }
+                
             }
         }
 

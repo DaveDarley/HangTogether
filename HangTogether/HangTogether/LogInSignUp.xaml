@@ -2,14 +2,16 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
+             x:Class="HangTogether.LogInSignUp"
+             BackgroundImageSource="{hangTogether:ImageRessource HangTogether.mes_bg.bg_welcome_page copy.jpeg}"
+>
 
-             x:Class="HangTogether.LogInSignUp">
-
-    <StackLayout BackgroundColor="White">
+    <StackLayout >
+        
         <Grid>
             <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
                 <Frame HeightRequest="400"  Padding="0" Margin="10,10,10,0" CornerRadius="40" HasShadow="True"
-                       BorderColor="Coral"/> 
+                       BorderColor="Coral" Opacity="0"/> 
             </StackLayout>
             
             <!-- Idee: Je met ma page de sign in dans un grid avec height="*" et je ne 

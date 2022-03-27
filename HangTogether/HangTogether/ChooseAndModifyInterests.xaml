@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
+             BackgroundImageSource="{hangTogether:ImageRessource HangTogether.mes_bg.bg_choix_loisirs copy.jpeg}"
+
              x:Class="HangTogether.ChooseAndModifyInterests"
              >
     
@@ -10,7 +12,7 @@
     <NavigationPage.TitleView >
         
         
-        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand" BackgroundColor="White">
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
             
             <Label Text="Choix de loisirs" TextColor="Black" FontAttributes="Bold"
                    FontSize="Large" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand"
@@ -18,7 +20,7 @@
             
             <pancakeView:PancakeView  WidthRequest="40" HeightRequest="40" 
                                       HorizontalOptions="End"
-                                      Margin="0,0,10,0" BackgroundColor="White">
+                                      Margin="0,0,10,0" BackgroundColor="White" CornerRadius="5">
                 
                 <pancakeView:PancakeView.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnTapMenu" />
@@ -45,8 +47,8 @@
                 <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             
-            <Frame Grid.Row="0" Grid.Column="0" Margin="10,5,10,0" CornerRadius="15"
-                   BorderColor="DarkCyan" HeightRequest="35">
+            <Frame Grid.Row="0" Grid.Column="0" Margin="30,5,30,0" CornerRadius="15"
+                   BorderColor="DarkCyan" HeightRequest="30">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -77,14 +79,14 @@
             </Frame>
             
             
-            <pancakeView:PancakeView Grid.Row="1" Grid.Column="0" VerticalOptions="FillAndExpand"
-                                     HorizontalOptions="FillAndExpand" CornerRadius="10,10,10,10"
-                                     Margin="10,0,10,10" BackgroundColor="White">
-                <pancakeView:PancakeView.Shadow>
-                    <pancakeView:DropShadow Color="#000"/>
-                </pancakeView:PancakeView.Shadow>
+            <Frame Grid.Row="1" Grid.Column="0" VerticalOptions="FillAndExpand"
+                                     HorizontalOptions="FillAndExpand" CornerRadius="10"
+                                     Margin="20,10,20,10" BackgroundColor="White" BorderColor="Black"
+                                     >
+          
+
                 
-                <ScrollView Grid.Row="2" Grid.Column="0" VerticalOptions="FillAndExpand"
+                <ScrollView  VerticalOptions="FillAndExpand"
                         HorizontalOptions="FillAndExpand" VerticalScrollBarVisibility="Always"
                          >
                     <FlexLayout 
@@ -99,12 +101,12 @@
                                 >
                     </FlexLayout>
                 </ScrollView>
-            </pancakeView:PancakeView>
+            </Frame>
             
             
             <Frame Grid.Row="2" Grid.Column="0" CornerRadius="15" HasShadow="True"
                    BorderColor="DarkCyan" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                   Margin="10,0,10,0">
+                   Margin="20,0,20,0">
                 <StackLayout VerticalOptions="Fill" HorizontalOptions="FillAndExpand" Orientation="Vertical">
                     <Label Text="Anecdotes" TextColor="Black" FontAttributes="Bold" HorizontalTextAlignment="Center"
                            VerticalTextAlignment="Center" FontSize="Large" Margin="0"/>
@@ -180,7 +182,7 @@
                             
                         </Label>  
                     </Frame>
-                    <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True">
+                    <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True" >
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="DESACTIVER&#10;MON COMPTE"
                                TextColor="White" FontSize="Large">
                             

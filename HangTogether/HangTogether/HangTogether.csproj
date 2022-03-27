@@ -38,6 +38,18 @@
       <EmbeddedResource Include="mes_bg\add_loisirs.png" />
       <None Remove="mes_bg\ic_menu_user.png" />
       <EmbeddedResource Include="mes_bg\ic_menu_user.png" />
+      <None Remove="mes_bg\bg_choix_loisirs copy.jpeg" />
+      <EmbeddedResource Include="mes_bg\bg_choix_loisirs copy.jpeg" />
+      <None Remove="mes_bg\bg_profil.png" />
+      <EmbeddedResource Include="mes_bg\bg_profil.png" />
+      <None Remove="mes_bg\bg_signup_page.png" />
+      <EmbeddedResource Include="mes_bg\bg_signup_page.png" />
+      <None Remove="mes_bg\bg_welcome_page copy.jpeg" />
+      <EmbeddedResource Include="mes_bg\bg_welcome_page copy.jpeg" />
+      <None Remove="mes_bg\bubble_selected_bg_image copy.jpeg" />
+      <EmbeddedResource Include="mes_bg\bubble_selected_bg_image copy.jpeg" />
+      <None Remove="mes_bg\shadow_user_infos.9.png" />
+      <EmbeddedResource Include="mes_bg\shadow_user_infos.9.png" />
     </ItemGroup>
 
 

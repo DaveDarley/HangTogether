@@ -2,15 +2,16 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:HangTogether"
+             BackgroundImageSource="{local:ImageRessource HangTogether.mes_bg.bg_signup_page.png}"
              x:Class="HangTogether.SignUpUser">
 
 
 
-        <StackLayout BackgroundColor="#e6e6e6">
+        <StackLayout >
             <Grid>
                 <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
                     <Frame HeightRequest="300"  Padding="0" Margin="10,0,10,0" CornerRadius="40" HasShadow="True"
-                           BorderColor="DarkTurquoise"/> 
+                           BorderColor="DarkTurquoise" Opacity="0"/> 
                 </StackLayout>
                 
                 <Grid Padding="0" Margin="20,80,20,40"  HorizontalOptions="FillAndExpand">
@@ -20,7 +21,8 @@
 
                     <StackLayout Grid.Row="0">
 
-                        <Frame BackgroundColor="White" HasShadow="True" Padding="0" Margin="0" CornerRadius="15">
+                        <Frame BackgroundColor="White" HasShadow="True" Padding="0" Margin="0" CornerRadius="15" Opacity="0.9"
+                               BorderColor="Aqua">
 
                             <StackLayout>
                                 <StackLayout Margin="10">

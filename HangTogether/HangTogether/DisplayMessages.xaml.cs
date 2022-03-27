@@ -66,15 +66,15 @@ namespace HangTogether
          */
          void OnTapFindFriends(object o, EventArgs e)
         {
-            ProfilUser.GestionClickMenu("pote");
+           // ProfilUser.GestionClickMenu("pote");
         }
          void OnTapChooseInterests(object o, EventArgs e)
         {
-            ProfilUser.GestionClickMenu("loisirs");
+           // ProfilUser.GestionClickMenu("loisirs");
         }
          void OnTapViewMessages(object o, EventArgs e)
         {
-            ProfilUser.GestionClickMenu("messages");
+          //  ProfilUser.GestionClickMenu("messages");
         }
         async void OnTapDeactivateAccount(object o, EventArgs e)
         {

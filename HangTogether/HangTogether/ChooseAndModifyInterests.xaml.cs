@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HangTogether.ServerManager;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -40,9 +41,13 @@ namespace HangTogether
 
         private bool isMenuOpen = false;
 
-        public ChooseAndModifyInterests()
+        // LE USER EN QUESTION
+        private User user;
+
+        public ChooseAndModifyInterests(User activeUser)
         {
             InitializeComponent();
+            this.user = activeUser;
             CreateLoisirsFrame();
             addLoisirsToLayout();
             invisibleMenu();
@@ -207,6 +212,7 @@ namespace HangTogether
             addLoisirsToLayout();
         }
 
+        
         public void invisibleMenu()
         {
             this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest+50);
@@ -233,8 +239,11 @@ namespace HangTogether
             }
         }
         
-        // Lorsque un user ne trouve pas son loisirs dans la liste de loisirs
-        // il va l'ajouter lui meme (On peut qd meme pas enumerer tous les loisirs :) )
+        /*
+         * Fonction qui cree un nouveau frame lorsqu'un user ajoute un loisirs
+         * Cette fonction ajoute ce nouveau Frame dans la liste de loisirs selectionnes
+         * par le user(choixUser) mais aussi dans la liste de toutes les loisirs (allFrame).
+         */
         async void OnAddInterests(Object s, EventArgs e)
         {
             string loisirsAjoute = await DisplayPromptAsync("Ajout Loisirs", "Veuillez ajouter votre loisirs", keyboard: Keyboard.Text);
@@ -273,11 +282,20 @@ namespace HangTogether
         }
 
         
-         async void OnTapRecherche(object sender, EventArgs args)
+        /*
+         * Qd user va chercher la liste de personnes qui ont les memes
+         * centres d'interet que lui, on enregistre sa liste de loisirs
+         * dans la base de donnees, pour enregistre lui afficher que les gens
+         * que les gens qui ont des centre d'interet en commun avec lui.
+         */
+        async void OnTapRecherche(object sender, EventArgs args)
         {
             
             if (validateUserChoice())
             {
+                // choixUser contient la liste des choix du user 
+                DataBaseManager dataBaseManager = new DataBaseManager();
+                dataBaseManager.updateInfosUser(user,choixUser);
                 await Navigation.PushAsync(new DisplayPotentialFriends()); 
             }
             else
@@ -287,21 +305,23 @@ namespace HangTogether
 
         }
 
+         
+         
          /*
           * Dans ces 4 prochaines fonctions , je gere lorsque le
           * user clique sur un element du menu
           */
           void OnTapFindFriends(object o, EventArgs e)
          {
-             ProfilUser.GestionClickMenu("pote");
+             ProfilUser.GestionClickMenu("pote", user);
          }
            void OnTapChooseInterests(object o, EventArgs e)
          {
-             ProfilUser.GestionClickMenu("loisirs");
+             ProfilUser.GestionClickMenu("loisirs",user);
          }
            void OnTapViewMessages(object o, EventArgs e)
          {
-             ProfilUser.GestionClickMenu("messages");
+             ProfilUser.GestionClickMenu("messages",user);
          }
          async void OnTapDeactivateAccount(object o, EventArgs e)
          {
@@ -327,10 +347,7 @@ namespace HangTogether
         {
             var canUserGoToNextPage = true;
             var lesAnecdotesDuUser = this.anecdotesUser.Text;
-            if (choixUser.Count > 0)
-            {
-            }
-            else
+            if (choixUser.Count ==  0)
             {
                 canUserGoToNextPage = false;
             }
@@ -346,6 +363,7 @@ namespace HangTogether
             return canUserGoToNextPage;
         }
 
+        
 
         
     }

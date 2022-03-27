@@ -1,4 +1,8 @@
 using System;
+using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using HangTogether.ServerManager;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,94 +15,158 @@ namespace HangTogether
         {
             InitializeComponent();
         }
-       
-        
         
         /*
-         * Validation des infos entrees par le user
-         * Email et mdp
+         *Fonction qui s'occupe de valider l'email et le mot de passe du user
+         * lors du Log In;
+         * Tout d'abord elle appelle une fonction qui verifie que les infos mis dans les
+         * champs email, mdp sont du bon format et ensuite on verifie ces informations par
+         * rapport a la BD
          */
         async void ValidateInfosUser(object sender, EventArgs args)
         {
             if (IsUserCorrect())
             {
-                // m'envoie a la page recherche loisirs
-                Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests()) ;
+                DataBaseManager dataBaseManager = new DataBaseManager();
+                var allUser = await dataBaseManager.GetAllUsers();
+                
+                if (dataBaseManager.isUserValid(this.emailUser.Text,this.mdpUser.Text, allUser))
+                {
+                    var user = dataBaseManager.getUser(allUser, this.emailUser.Text);
+                    Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(user));
+                }
+                else
+                {
+                    if (!dataBaseManager.isEmailAlreadyInUsage(this.emailUser.Text, allUser))
+                    {
+                        this.mailError.Text = "Il n'existe aucun compte associe a ce courriel";
+                        this.mailError.IsVisible = true;
+                    }
+                    this.mdpError.Text = "Mot de passe invalide";
+                    this.mdpError.IsVisible = true;
+                }
             }
         }
         
         /*
-         * Cette fonction valide les infos entrees par le user a l'etap de
-         * sign in; Si infos correct on l'envoie a la page de LOISIRS
+         * Cette fonction valide les infos entrees par le user a l'etape de
+         * sign in; Cette fonction verifie juste que les champs ne sont pas
+         * laissés par le user
          */
         public bool IsUserCorrect()
         {
         
              var emailUser = this.emailUser.Text;
              var mdpUser = this.mdpUser.Text;
-        
-             if ( String.IsNullOrEmpty(emailUser) || String.IsNullOrEmpty(mdpUser))
+             var isUserExist = true;
+ 
+             if (String.IsNullOrEmpty(emailUser))
              {
-                 if (String.IsNullOrEmpty(emailUser))
-                 {
-                     var mailError = this.mailError;
-                     mailError.IsVisible = true;
-                 }
-                 else
-                 {
-                     var mailError = this.mailError;
-                     mailError.IsVisible = false;
-                 }
-        
-                 if (String.IsNullOrEmpty(mdpUser))
-                 {
-                     var mdpError = this.mdpError;
-                     mdpError.IsVisible = true;
-                 }
-                 else
-                 {
-                     var mdpError = this.mdpError;
-                     mdpError.IsVisible = false;
-                 }
-        
-                 return false;
+                 this.mailError.IsVisible = true;
+                 isUserExist = false;
              }
-             // Validate par base de données
              else
              {
-                 return true;
+                 this.mailError.IsVisible = false;
              }
-        
-        
+    
+             if (String.IsNullOrEmpty(mdpUser))
+             {
+                 this.mdpError.IsVisible = true;
+                 isUserExist = false;
+             }
+             else
+             {
+                 this.mdpError.IsVisible = false;
+             }
+
+             return isUserExist;
         }
         
+        
         /*
-         * Gestion du click sur mon label: Mdp oublié
-         * On envoie l'user sur la page de
-         * recouvrement de MDP;
-         * Mais Avant faut demander au user l'email sur lequel il veut
-         * recevoir 
+         * Lors du recouvrement du mdp d'un user, on verifie si l'email entré par le
+         * user pour le recouvrement est un email valide (i.e existe dans la BD)
+         * Si oui on lui envoie un email a cette adresse;
+         * Sinon peut etre un peit Toast??
          */
         async void OnTapForgetPassword(object sender, EventArgs args)
         {
-            // S'assurer que l'email est bien valide aussi (BD)
-            // Si pas validde on reste dans la meme page et on ft un petit toast
             string emailUser = await DisplayPromptAsync("Recover Password", "What's your email?");
-            if (String.IsNullOrEmpty(emailUser))
+            if (!String.IsNullOrEmpty(emailUser))
             {
-            }
-            else
-            {
-                await Navigation.PushAsync(new ForgottenPassword());
+                DataBaseManager dataBaseManager = new DataBaseManager();
+                var allUser = await dataBaseManager.GetAllUsers();
+                bool isUserValid = dataBaseManager.isEmailAlreadyInUsage(emailUser, allUser);
+                if (isUserValid)
+                {
+                    string verifCode = generateVerifCodeRandom();
+                    
+                    //https://www.c-sharpcorner.com/article/xamarin-forms-send-email-using-smtp2/
+                    try
+                    {
+                        MailMessage message = new MailMessage();
+                        SmtpClient smtp = new SmtpClient("smtp.gmail.com");
+                        message.From = new MailAddress("hangtogether.app@gmail.com");
+                        message.To.Add(new MailAddress(emailUser));
+                        message.Subject = "Recouvrement mot de passe App:HangTogether";
+                        message.Body = "Votre de code de verification est: "+ verifCode;
+                        smtp.Port = 587;
+                        smtp.Host = "smtp.gmail.com"; //for gmail host
+                        smtp.EnableSsl = true;
+                        smtp.UseDefaultCredentials = false;
+                        smtp.Credentials = new System.Net.NetworkCredential("hangtogether.app@gmail.com", "boxafkachcvptyrl");
+                        smtp.Send(message);
+
+                        RecoverPasswordUser userPasswordRecover = new RecoverPasswordUser(emailUser, verifCode);
+                       // dataBaseManager.adduserPasswordRecovery(userPasswordRecover);
+                        await Navigation.PushAsync(new ForgottenPassword(userPasswordRecover));
+                    }
+                    catch (Exception ex)
+                    {
+                        DisplayAlert("Erreur lors de l'envoie du code de verification", ex.Message, "OK");
+                    }
+                }
+                else
+                {
+                    // Toast email entre pour recouvrement mot de passe pas valide
+                }
             }
             
         }
+
+        /*
+         * Cette fonction genere de maniere ALEATOIRE
+         * une suite de 10 lettres
+         * Src: https://www.softwaretestinghelp.com/csharp-random-number/
+         */
+        public string generateVerifCodeRandom()
+        {
+            Random ran = new Random();
+             
+            String b = "abcdefghijklmnopqrstuvwxyz";
+            
+            int length = 10;
+             
+            String randomCodeVerification = "";
+             
+            for(int i =0; i<length; i++)
+            {
+                int a = ran.Next(26);
+                randomCodeVerification = randomCodeVerification + b.ElementAt(a);
+            }
+
+            return randomCodeVerification;
+        }
+        
         
         async void OnTapSignUp(object sender, EventArgs args)
         {
             await Navigation.PushAsync(new SignUpUser());
             
         }
+        
+        
 
 
 
