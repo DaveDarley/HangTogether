@@ -65,6 +65,9 @@ namespace HangTogether
                 var loisirs = user.loisirs.Split(',');
                 choixDeLutilisateur = new List<string>(loisirs);
                 choixUserEnFrameADessiner = CreateLoisirsFrame(loisirs);
+            }
+            if (user.anecdotes.Length > 0)
+            {
                 this.anecdotesUser.Text = user.anecdotes;
                 this.textePresentationUser = user.anecdotes;
             }

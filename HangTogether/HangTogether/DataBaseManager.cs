@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -111,6 +112,34 @@ namespace HangTogether
                 }  
             }
             return canUserConnect;
+        }
+
+        
+        /*
+         * Fonction qui prend en parametre un utilisateur et une liste d'utilisateur.
+         * Elle retourne une liste d'utilisateur qui ont au moins un interet en commun
+         * avec l'utilisateur.
+        */
+        
+        //src: https://www.delftstack.com/howto/csharp/check-for-an-element-inside-an-array-in-csharp/
+        public List<User> getUserWithSharedInterests(User userLookingForFriends, List<User> allUsers)
+        {
+            List<User> usersWithSharedInterests = new List<User>();
+            var loisirsUserLookingForFriends = userLookingForFriends.loisirs.Split(',');
+            foreach (var utilisateur in allUsers)
+            {
+                var loisirsUser = utilisateur.loisirs.Split(',');
+                for (int i = 0; i<loisirsUser.Length; i++)
+                {
+                    string loisir = loisirsUser[i];
+                    if (Array.Exists(loisirsUserLookingForFriends,x => x == loisir))
+                    {
+                        usersWithSharedInterests.Add(utilisateur);
+                        break;
+                    }
+                }
+            }
+            return usersWithSharedInterests;
         }
 
 

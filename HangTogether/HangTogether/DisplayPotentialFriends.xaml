@@ -37,20 +37,38 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 
-                <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
-                                    Grid.Row="0" Grid.Column="0" Padding="0,0,0,0" 
-                                    Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}"
-                                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                                    Margin="0,15,0,0"> 
+                <CarouselView Grid.Row="0" Grid.Column="0" x:Name="TheCarousel"
+                              AbsoluteLayout.LayoutBounds="0,0,1,1"
+                              AbsoluteLayout.LayoutFlags="All"
+                              ItemsSource="{Binding Profile}"
+                              Margin="15,15,15,0">
                     
-                    <swipeCardView:SwipeCardView 
+                    <CarouselView.ItemTemplate>
+                        <DataTemplate>
+                            
+           
+                    
+                    <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
+                                             Grid.Row="0" Grid.Column="0" Padding="0,0,0,0" 
+                                             Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}"
+                                             VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                             Margin="0,15,0,0" 
+                    >
+                    
+     
+                    
+                        
+                        
+                    
+                    
+                    <!--  <swipeCardView:SwipeCardView 
                                      x:Name="swipElem" ItemsSource="{Binding Profile}"
                                      HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                                      SupportedSwipeDirections="Right,Left" BackgroundColor="White"
                     > 
                         
                         <swipeCardView:SwipeCardView.ItemTemplate >
-                            <DataTemplate>
+                            <DataTemplate> -->
                                 <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="White">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
@@ -114,14 +132,20 @@
                                     
                                     
                                 </Grid>
-                            </DataTemplate>
+                           <!-- </DataTemplate>
         
                             
                         </swipeCardView:SwipeCardView.ItemTemplate>
                         
-                    </swipeCardView:SwipeCardView>
+                    </swipeCardView:SwipeCardView> -->
+                   
+                    
                 </pancakeView:PancakeView>
-                
+                            
+                        </DataTemplate>
+                    </CarouselView.ItemTemplate>
+                    
+                </CarouselView>
 
                 <Button Grid.Row="1" Grid.Column="0"  Text="ENVOYEZ UN MESSAGE" CornerRadius="15" HorizontalOptions="FillAndExpand"
                         Margin="20,30,20,10" BackgroundColor="DarkGray"/>
