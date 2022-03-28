@@ -14,7 +14,7 @@ namespace HangTogether
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChooseAndModifyInterests : ContentPage
     {
-        private string[] loisirsUser =
+        private string[] tsLesLoisirs =
         {
             "Video Games", "Artificial Intelligence","Theater",
             "Archery", "Caligraphy", "Travelling", "Photography",
@@ -30,11 +30,14 @@ namespace HangTogether
             "Wood burning", "Wood carving", "Sightseeing", "drawing"
         };
 
-        // List qui contient tous les loisirs du user sous forme de Frame
-        private List<Frame> allFrame = new List<Frame>();
+        // List qui contient tous les loisirs sous forme de Frame
+        private List<Frame> loisirsEnFrameADessiner = new List<Frame>();
 
-        // ici est stocké les choix de loisirs du User
-        private List<Frame> choixUser = new List<Frame>();
+        // List qui contient les loisirs selectionnées par le user
+        private List<Frame> choixUserEnFrameADessiner = new List<Frame>();
+
+        // List qui contient une liste de loisirs selectionnes par le user
+        private List<string> choixDeLutilisateur = new List<string>();
         
         // ici est stocké les anecdotes du user
         private string textePresentationUser;
@@ -47,19 +50,36 @@ namespace HangTogether
         public ChooseAndModifyInterests(User activeUser)
         {
             InitializeComponent();
-            this.user = activeUser;
-            CreateLoisirsFrame();
-            addLoisirsToLayout();
+            user = activeUser;
+            initializeListsOfInterests();
+            
+            addLoisirsToLayout(choixUserEnFrameADessiner);
             invisibleMenu();
         }
 
+
+        public void initializeListsOfInterests()
+        {
+            if (user.loisirs.Length > 0)
+            {
+                var loisirs = user.loisirs.Split(',');
+                choixDeLutilisateur = new List<string>(loisirs);
+                choixUserEnFrameADessiner = CreateLoisirsFrame(loisirs);
+                this.anecdotesUser.Text = user.anecdotes;
+                this.textePresentationUser = user.anecdotes;
+            }
+            loisirsEnFrameADessiner = CreateLoisirsFrame(tsLesLoisirs);
+        }
+        
+        
         /*
          * Fonction qui prend une liste de loisirs sous forme
-         * de String et crée une liste de Frame
+         * de String et retourne une liste de Frame
          */
-        public void CreateLoisirsFrame()
+        public List<Frame> CreateLoisirsFrame(string [] loisirs)
         {
-            for (int i = 0; i < loisirsUser.Length; i++)
+            List<Frame> frameADessinerSurlayout = new List<Frame>();
+            for (int i = 0; i < loisirs.Length; i++)
             {
                 Frame frame = new Frame()
                 {
@@ -70,12 +90,11 @@ namespace HangTogether
                     Margin = new Thickness(0,4,0,4),
                     Content = new Label()
                     {
-                        Text = loisirsUser[i],
+                        Text = loisirs[i],
                         TextColor = Color.Black,
                         HorizontalOptions = LayoutOptions.StartAndExpand,
                     }
                 };
-                
                 // TapEvent on frame :
                 var tapGestureRecognizer = new TapGestureRecognizer();
                 tapGestureRecognizer.Tapped += (s, e) => {
@@ -83,8 +102,9 @@ namespace HangTogether
                     OnTapFramFrame(s,e);
                 };
                 frame.GestureRecognizers.Add(tapGestureRecognizer);
-                allFrame.Add(frame);
+                frameADessinerSurlayout.Add(frame);
             }
+            return frameADessinerSurlayout;
         }
         
 
@@ -107,13 +127,36 @@ namespace HangTogether
                 RemoveUserChoice(monFrame);
             }
             else
-            {
+            {   // Utilisateur fait un choix de loisir
                 monFrame.BackgroundColor = Color.Black;
                 var monLabel = (Label) monFrame.Content;
                 monLabel.TextColor= Color.White;
-                choixUser.Add(monFrame);
+                
+                string loisirChoisi = monLabel.Text;
+                choixDeLutilisateur.Add(loisirChoisi);
+                
+                choixUserEnFrameADessiner.Add(monFrame);
+                updateInterestsUser(); // user a ajoute un loisir dans sa liste de loisirs alors on Update la BD
             }
         }
+        
+
+        /*
+         * Fonction qui s'occupe de mettre a jour la liste de loisirs
+         * du user (Qd user ajoute, selectionne ou deselectionne un loisir)
+         */
+        public async void updateInterestsUser()
+        {
+            DataBaseManager dataBaseManager = new DataBaseManager();
+            List<User> allUsers = await dataBaseManager.GetAllUsers();
+            User toUpdate = dataBaseManager.getUser(allUsers, user.email);
+            
+            toUpdate.loisirs = String.Join(",", choixDeLutilisateur.ToArray());
+            toUpdate.anecdotes = textePresentationUser;
+            
+            await dataBaseManager.UpdateUser(toUpdate);
+        }
+
 
         /*
          * Fonction qui permet d'enlever une frame dans la liste de
@@ -124,16 +167,19 @@ namespace HangTogether
         public void RemoveUserChoice(Frame toRemove)
         {
             var labelFrame = (Label)toRemove.Content;
-            string titreLoisir = labelFrame.Text;
+            string titreLoisirDeselectionne = labelFrame.Text;
             
-            for (int i = 0; i < choixUser.Count; i++)
+            for (int i = 0; i < choixUserEnFrameADessiner.Count; i++)
             {
-                var possibleFrameToRemove = (Label)choixUser[i].Content;
+                var possibleFrameToRemove = (Label)choixUserEnFrameADessiner[i].Content;
                 string titrePossibleFrameToRemove = possibleFrameToRemove.Text;
 
-                if (titreLoisir == titrePossibleFrameToRemove)
-                {
-                   choixUser.RemoveAt(i);
+                if (titreLoisirDeselectionne == titrePossibleFrameToRemove)
+                { 
+                    choixUserEnFrameADessiner.RemoveAt(i);
+                    choixDeLutilisateur.RemoveAt(i);
+                   
+                   updateInterestsUser(); // user a enleve un loisir dans sa liste de loisirs alors on Update la BD
                    return;
                 }
             }    
@@ -141,20 +187,79 @@ namespace HangTogether
 
 
         /*
-         * Fonction qui prend une liste de Frame et un FlexLayout
-         * et dessine tous les frames ,dont l'attribut IsVisble est true, sur le FlexLayout
+         * Cette fonction recoit en parametre la liste de choix de loisirs d'un user
+         * Si un loisir appartient a la liste de loisirs d'un user mais aussi appartient
+         * a la liste globale de loisirs (Allframe) on le dessine pas.
+         * Si un loisir appartient juste a Allframe et l'attribut IsVisible == true
+         * alors on le dessine.
+         * En dernier on parcours la liste de choix du User et on dessine tous les frames
+         * qu'elle contient
          */
-        public void addLoisirsToLayout()
+        public void addLoisirsToLayout(List<Frame> choixUsers)
         {
-            List<Frame> listInterests = allFrame;
             var layoutUser = this.layoutInterest;
-            for (int i = 0; i < listInterests.Count; i++)
+            if (choixUsers.Count > 0)
             {
-                if (listInterests[i].IsVisible)
+                // foreach (var availableInterests in loisirsEnFrameADessiner)
+                // {
+                //     foreach (var frameChooseByUser in choixUsers)
+                //     {
+                //         var contentFrame = (Label) availableInterests.Content;
+                //         var textFrame = contentFrame.Text;
+                //         var contentFrameChoiceUser = (Label) frameChooseByUser.Content;
+                //         var textFrameChoiceUser = contentFrameChoiceUser.Text;
+                //         if (textFrame != textFrameChoiceUser && availableInterests.IsVisible)
+                //         {
+                //             layoutUser.Children.Add(availableInterests);
+                //         }
+                //     
+                //     }
+                // }
+                // foreach (var choiceUser in choixUsers)
+                // {
+                //     var labelFrame = (Label)choiceUser.Content;
+                //     labelFrame.TextColor = Color.White;
+                //     choiceUser.BackgroundColor = Color.Black;
+                //     layoutUser.Children.Add(choiceUser);
+                // }
+                var frameChoiceUser = choixUserEnFrameADessiner;
+                foreach (var loisirs in loisirsEnFrameADessiner)
                 {
-                    layoutUser.Children.Add(listInterests[i]);
+                    var textFrameLoisirsDeDepart = ((Label) loisirs.Content).Text;
+                    for (int i = 0; i<frameChoiceUser.Count; i++)
+                    {
+                        var textFrameChoixUser = ((Label) frameChoiceUser[i].Content).Text;
+                        if (textFrameLoisirsDeDepart == textFrameChoixUser)
+                        {
+                            var labelFrame = (Label)loisirs.Content;
+                            labelFrame.TextColor = Color.White;
+                            loisirs.BackgroundColor = Color.Black;
+                            frameChoiceUser.RemoveAt(i);
+                        }
+                    }
+
+                    layoutUser.Children.Add(loisirs);
+                }
+                foreach (var choiceUser in frameChoiceUser)
+                {
+                    var labelFrame = (Label)choiceUser.Content;
+                    labelFrame.TextColor = Color.White;
+                    choiceUser.BackgroundColor = Color.Black;
+                    layoutUser.Children.Add(choiceUser);
+                }
+
+            }
+            else
+            {
+                foreach (var availableInterests in loisirsEnFrameADessiner)
+                {
+                    if (availableInterests.IsVisible)
+                    {
+                        layoutUser.Children.Add(availableInterests);
+                    }
                 }
             }
+            
         }
         
         /*
@@ -174,18 +279,18 @@ namespace HangTogether
             // Si user cherche rien on affiche TOUS les loisirs sur l'ecran
             if (String.IsNullOrEmpty(queryUser))
             {
-                for (int i = 0; i<allFrame.Count; i++)
+                for (int i = 0; i<loisirsEnFrameADessiner.Count; i++)
                 {
-                    allFrame[i].IsVisible = true;
+                    loisirsEnFrameADessiner[i].IsVisible = true;
                 }
-                addLoisirsToLayout(); 
+                addLoisirsToLayout(choixUserEnFrameADessiner); 
                 return;
             }
 
             //Cherchons le frame qui contient le query recherché par le user
-            for (int i = 0; i<allFrame.Count; i++)
+            for (int i = 0; i<loisirsEnFrameADessiner.Count; i++)
             {
-                var labelFrame = (Label) allFrame[i].Content;
+                var labelFrame = (Label) loisirsEnFrameADessiner[i].Content;
                 var textFrame = (labelFrame.Text).ToLower();
                 queryUser = queryUser.ToLower();
                 
@@ -193,7 +298,7 @@ namespace HangTogether
                 {
                     if (queryUser.Contains(textFrame))
                     {
-                        allFrame[i].IsVisible = true;
+                        loisirsEnFrameADessiner[i].IsVisible = true;
                         continue;
                     }
                 }
@@ -201,42 +306,15 @@ namespace HangTogether
                 {
                     if (textFrame.Contains(queryUser))
                     {
-                        allFrame[i].IsVisible = true;
+                        loisirsEnFrameADessiner[i].IsVisible = true;
                         continue;
                     }
                 }
 
-                allFrame[i].IsVisible = false;
+                loisirsEnFrameADessiner[i].IsVisible = false;
                 
             }
-            addLoisirsToLayout();
-        }
-
-        
-        public void invisibleMenu()
-        {
-            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest+50);
-        }
-        
-        /*
-         * Fonction qui s'occupe de l'apparition du menu
-         * sur l'ecran
-         */
-
-        async void OnTapMenu(Object o, EventArgs e)
-        {
-            if (isMenuOpen)
-            {
-                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
-                    1000);
-                isMenuOpen = false;
-            }
-            else
-            {
-                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
-                    1000);
-                isMenuOpen = true;
-            }
+            addLoisirsToLayout(choixUserEnFrameADessiner);
         }
         
         /*
@@ -246,7 +324,7 @@ namespace HangTogether
          */
         async void OnAddInterests(Object s, EventArgs e)
         {
-            string loisirsAjoute = await DisplayPromptAsync("Ajout Loisirs", "Veuillez ajouter votre loisirs", keyboard: Keyboard.Text);
+            string loisirsAjoute = await DisplayPromptAsync("Ajout de Loisirs", "Veuillez ajouter votre loisir", keyboard: Keyboard.Text);
             if (!String.IsNullOrEmpty(loisirsAjoute))
             {
                 Frame frame = new Frame()
@@ -275,17 +353,45 @@ namespace HangTogether
                 };
                 frame.GestureRecognizers.Add(tapGestureRecognizer);
                 // on ajout ce nouveau frame a la liste des anciens frames
-                allFrame.Add(frame);
-                choixUser.Add(frame);
-                addLoisirsToLayout();
+                loisirsEnFrameADessiner.Add(frame);
+                choixUserEnFrameADessiner.Add(frame);
+                choixDeLutilisateur.Add(loisirsAjoute);
+                updateInterestsUser(); // on update la liste de choix du user dans ma BD
+                addLoisirsToLayout(choixUserEnFrameADessiner);
             }
         }
+        
+        /*
+         * Qd user clique sur le boutton de recherche de nouveauPote;
+         * Il faut s'assurer que le User a fait au moins un choix de loisirs
+         * mais a aussi inscrit au moins une acdotes;
+         * On savegarde ensuite les loisirs choisies par le user mais aussi les
+         * anecdotes du User dans les variables qui leurs correspondent
+        */
+        public bool validateUserChoice()
+        {
+            var canUserGoToNextPage = true;
+            var lesAnecdotesDuUser = this.anecdotesUser.Text;
+            if (choixUserEnFrameADessiner.Count ==  0)
+            {
+                canUserGoToNextPage = false;
+            }
 
+            if (!String.IsNullOrEmpty(lesAnecdotesDuUser))
+            {
+                textePresentationUser = lesAnecdotesDuUser;
+            }
+            else
+            {
+                canUserGoToNextPage = false;
+            }
+            return canUserGoToNextPage;
+        }
         
         /*
          * Qd user va chercher la liste de personnes qui ont les memes
          * centres d'interet que lui, on enregistre sa liste de loisirs
-         * dans la base de donnees, pour enregistre lui afficher que les gens
+         * dans la base de donnees, pour ensuite lui afficher que les gens
          * que les gens qui ont des centre d'interet en commun avec lui.
          */
         async void OnTapRecherche(object sender, EventArgs args)
@@ -293,19 +399,46 @@ namespace HangTogether
             
             if (validateUserChoice())
             {
-                // choixUser contient la liste des choix du user 
-                DataBaseManager dataBaseManager = new DataBaseManager();
-                dataBaseManager.updateInfosUser(user,choixUser);
-                await Navigation.PushAsync(new DisplayPotentialFriends()); 
+                updateInterestsUser();
+                await Navigation.PushAsync(new DisplayPotentialFriends(user)); 
             }
             else
             {
-                await DisplayAlert ("Alert", "Veuillez indiquer au moins un loisir et une anecdote", "OK");
+                await DisplayAlert ("oh oh, on dirait une erreur!", "Veuillez indiquer au moins un loisir et une anecdote", "OK");
             }
 
         }
+        
+        
 
-         
+        
+        public void invisibleMenu()
+        {
+            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest+50);
+        }
+        
+        /*
+         * Fonction qui s'occupe de l'apparition du menu
+         * sur l'ecran
+         */
+
+        async void OnTapMenu(Object o, EventArgs e)
+        {
+            if (isMenuOpen)
+            {
+                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
+                    1000);
+                isMenuOpen = false;
+            }
+            else
+            {
+                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
+                    1000);
+                isMenuOpen = true;
+            }
+        }
+        
+        
          
          /*
           * Dans ces 4 prochaines fonctions , je gere lorsque le
@@ -336,32 +469,7 @@ namespace HangTogether
          
         
         
-        /*
-         * Qd user clique sur le boutton de recherche de nouveauPote;
-         * Il faut s'assurer que le User a fait au moins un choix de loisirs
-         * mais a aussi inscrit au moins une acdotes;
-         * On savegarde ensuite les loisirs choisies par le user mais aussi les
-         * anecdotes du User dans les variables qui leurs correspondent
-         */
-        public bool validateUserChoice()
-        {
-            var canUserGoToNextPage = true;
-            var lesAnecdotesDuUser = this.anecdotesUser.Text;
-            if (choixUser.Count ==  0)
-            {
-                canUserGoToNextPage = false;
-            }
 
-            if (!String.IsNullOrEmpty(lesAnecdotesDuUser))
-            {
-                textePresentationUser = lesAnecdotesDuUser;
-            }
-            else
-            {
-                canUserGoToNextPage = false;
-            }
-            return canUserGoToNextPage;
-        }
 
         
 

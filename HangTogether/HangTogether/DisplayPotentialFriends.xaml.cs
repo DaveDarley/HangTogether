@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HangTogether.ServerManager;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,7 +16,7 @@ namespace HangTogether
         public ObservableCollection<UserProfile> _Profiles = new ObservableCollection<UserProfile>();
 
         public bool isMenuOpen = false;
-        public DisplayPotentialFriends()
+        public DisplayPotentialFriends(User user)
         {
             InitializeComponent();
             CardBinding();
