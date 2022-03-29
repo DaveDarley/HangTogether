@@ -3,11 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
-             BackgroundImageSource="{hangTogether:ImageRessource HangTogether.mes_bg.bg_choix_loisirs copy.jpeg}"
-
+             BackgroundImageSource="{hangTogether:ImageRessource HangTogether.mes_bg.bg_choix_loisirs.jpeg}"
              x:Class="HangTogether.ChooseAndModifyInterests"
              >
-    
     
     <NavigationPage.TitleView >
         
@@ -20,10 +18,10 @@
             
             <pancakeView:PancakeView  WidthRequest="40" HeightRequest="40" 
                                       HorizontalOptions="End"
-                                      Margin="0,0,10,0" BackgroundColor="White" CornerRadius="5">
+                                      Margin="0,0,10,0" BackgroundColor="White" CornerRadius="5" x:Name="menuLogo">
                 
                 <pancakeView:PancakeView.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnTapMenu" />
+                    <TapGestureRecognizer Tapped="OnTapMenu" x:Name="tapMenu"/>
                 </pancakeView:PancakeView.GestureRecognizers>
                 
                 <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.ic_menu_user.png}" Aspect="AspectFill" />
@@ -34,6 +32,7 @@
     </NavigationPage.TitleView>
         
     <ContentPage.Content>
+        
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             
         <Grid>
@@ -83,12 +82,9 @@
                                      HorizontalOptions="FillAndExpand" CornerRadius="10"
                                      Margin="20,10,20,10" BackgroundColor="White" BorderColor="Black"
                                      >
-          
-
-                
                 <ScrollView  VerticalOptions="FillAndExpand"
-                        HorizontalOptions="FillAndExpand" VerticalScrollBarVisibility="Always"
-                         >
+                             HorizontalOptions="FillAndExpand" VerticalScrollBarVisibility="Always"
+                >
                     <FlexLayout 
                                 Wrap="Wrap"
                                 Direction="Row"
@@ -110,7 +106,7 @@
                 <StackLayout VerticalOptions="Fill" HorizontalOptions="FillAndExpand" Orientation="Vertical">
                     <Label Text="Anecdotes" TextColor="Black" FontAttributes="Bold" HorizontalTextAlignment="Center"
                            VerticalTextAlignment="Center" FontSize="Large" Margin="0"/>
-                    <Editor x:Name="anecdotesUser" Placeholder="Veuillez inscrire vos differentes anecdotes"
+                    <Editor x:Name="anecdotesUser" Placeholder="Veuillez inscrire vos anecdotes"
                            HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
                            Margin="0" TextChanged="Editor_TextChanged"/>
                 </StackLayout>
@@ -138,6 +134,7 @@
             HasShadow="true"
             HeightRequest="400"
             VerticalOptions="EndAndExpand"
+            AnchorX="0"
         >
             
             <StackLayout Orientation="Vertical" Margin="10,40,10,40" VerticalOptions="FillAndExpand">
@@ -154,7 +151,7 @@
                     
                     <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="TROUVER&#10;UN POTE"
-                               TextColor="White" FontSize="Large">
+                               TextColor="White">
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer>
@@ -164,7 +161,7 @@
                     </Frame>
                     <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="MODIFIER&#10;MES LOISIRS"
-                               TextColor="Black" FontSize="Large">
+                               TextColor="Black" >
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
@@ -174,7 +171,7 @@
                     </Frame>
                     <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="VOIR MES&#10;MESSAGES"
-                               TextColor="Black" FontSize="Large">
+                               TextColor="Black" >
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer>
@@ -184,7 +181,7 @@
                     </Frame>
                     <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True" >
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="DESACTIVER&#10;MON COMPTE"
-                               TextColor="White" FontSize="Large">
+                               TextColor="White" >
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer>

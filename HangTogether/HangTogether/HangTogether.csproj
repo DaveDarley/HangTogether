@@ -12,8 +12,8 @@
     
     <ItemGroup>
         <PackageReference Include="FirebaseDatabase.net" Version="4.0.7" />
-        <PackageReference Include="MLToolkit.Forms.SwipeCardView" Version="2.2.0" />
-        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+        <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.1" />
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
         <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.3.0.763-beta" />
     </ItemGroup>
 
@@ -50,6 +50,8 @@
       <EmbeddedResource Include="mes_bg\bubble_selected_bg_image copy.jpeg" />
       <None Remove="mes_bg\shadow_user_infos.9.png" />
       <EmbeddedResource Include="mes_bg\shadow_user_infos.9.png" />
+      <None Remove="mes_bg\bg_choix_loisirs.jpeg" />
+      <EmbeddedResource Include="mes_bg\bg_choix_loisirs.jpeg" />
     </ItemGroup>
 
 

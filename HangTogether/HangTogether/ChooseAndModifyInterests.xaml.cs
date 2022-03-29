@@ -52,11 +52,13 @@ namespace HangTogether
             initializeListsOfInterests();
             
             addLoisirsToLayout(choixUserEnFrameADessiner);
-            invisibleMenu();
+
+            frameMenu.AnchorY = Application.Current.MainPage.Height + 100 ;
+            //invisibleMenu();
         }
 
         /*
-         * Soit un User deja fait son choix de loisirs et anecdotes,
+         * Soit un User qui a deja fait son choix de loisirs et anecdotes,
          * lorsque l'utilisateur se reconnecte on recupere ses choix de la BD
          * et on les affiche de nouveau.
          */
@@ -205,7 +207,7 @@ namespace HangTogether
         /*
          * Cette fonction recoit en parametre la liste de choix de loisirs d'un user
          * Si un loisir appartient a la liste de loisirs d'un user mais aussi appartient
-         * a la liste globale de loisirs (Allframe) on le dessine pas.
+         * a la liste globale de loisirs (Allframe) on le dessine et on l'enleve de la liste de loisirs du user.
          * Si un loisir appartient juste a Allframe et l'attribut IsVisible == true
          * alors on le dessine.
          * En dernier on parcours la liste de choix du User et on dessine tous les frames
@@ -378,11 +380,13 @@ namespace HangTogether
             return canUserGoToNextPage;
         }
         
+        /*
+         * Fonction qui met a jour les anecdotes du user dans la BD au fur et a mesure
+         * que le user est entrain de taper ses anecdotes
+         */
         private void Editor_TextChanged(object sender, EventArgs e)
         {
-
             updateInterestsUser();
-
         }
         
         /*
@@ -393,7 +397,6 @@ namespace HangTogether
          */
         async void OnTapRecherche(object sender, EventArgs args)
         {
-            
             if (validateUserChoice())
             {
                 updateInterestsUser();
@@ -419,21 +422,45 @@ namespace HangTogether
          * sur l'ecran
          */
 
+        // J'utilise pas await pour gerer le cas ou user presse boutton 
+        // menu qd le menu est entrain de monter (ou descendre)
         async void OnTapMenu(Object o, EventArgs e)
         {
-            if (isMenuOpen)
+            if (this.frameMenu.AnchorY.Equals(Application.Current.MainPage.Height))
             {
-                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
-                    1000);
-                isMenuOpen = false;
+                await this.frameMenu.TranslateTo(0, Application.Current.MainPage.Height  - this.frameMenu.HeightRequest,
+                        1000);
             }
-            else
+
+            if (frameMenu.AnchorY.Equals(Application.Current.MainPage.Height  - 400 ))
             {
-                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
-                    1000);
-                isMenuOpen = true;
+                await frameMenu.TranslateTo(0, Application.Current.MainPage.Height , 1000);
             }
+
+            // if (isMenuOpen)
+            // {
+            //      await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
+            //         1000);
+            //      
+            //     isMenuOpen = false;
+            // }
+            // else
+            // {
+            //      this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
+            //         1000);
+            //     isMenuOpen = true;
+            // }
         }
+        
+        // private void Tap_Enabled(object sender, EventArgs e)
+        // {
+        //     tapMenu.Tapped += TapGestureRecognizer_Tapped;
+        // }
+        //
+        // private void Tap_Disabled(object sender, EventArgs e)
+        // {
+        //     tapMenu.Tapped -= TapGestureRecognizer_Tapped;
+        // }
         
         
          

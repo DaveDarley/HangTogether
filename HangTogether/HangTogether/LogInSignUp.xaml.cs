@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using HangTogether.ServerManager;
+using Xamarin.CommunityToolkit.Extensions;
+using Xamarin.CommunityToolkit.UI.Views.Options;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -88,7 +90,7 @@ namespace HangTogether
          * Lors du recouvrement du mdp d'un user, on verifie si l'email entré par le
          * user pour le recouvrement est un email valide (i.e existe dans la BD)
          * Si oui on lui envoie un email a cette adresse;
-         * Sinon peut etre un peit Toast??
+         * Sinon peut etre un peit Toast?? Et oui
          */
         async void OnTapForgetPassword(object sender, EventArgs args)
         {
@@ -128,8 +130,23 @@ namespace HangTogether
                     }
                 }
                 else
-                {
+                { // Toast courriel de recouvrement de mot de passe invalide
+                    var messageOptions = new MessageOptions
+                    {
+                        Message = "Courriel invalide",
+                        Foreground = Color.White,
+                        Font = Font.SystemFontOfSize(16),
+                        Padding = new Thickness(20)
+                    };
+
+                    var options = new ToastOptions
+                    {
+                        MessageOptions = messageOptions,
+                        CornerRadius = new Thickness(20, 20, 20, 20),
+                        BackgroundColor = Color.Gray
+                    };
                     // Toast email entre pour recouvrement mot de passe pas valide
+                    await this.DisplayToastAsync(options);
                 }
             }
             
@@ -166,10 +183,7 @@ namespace HangTogether
             
         }
         
+
         
-
-
-
-
     }
 }

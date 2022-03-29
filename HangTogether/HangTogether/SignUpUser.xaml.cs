@@ -25,6 +25,7 @@ namespace HangTogether
         /*
          * Fonction qui s'assure que l'email rentre par le user
          * lors de son enregistrement n'est pas deja en cours d'utilisation
+         * Si infos correct, on envoie le user a la page de recherche/modification loisirs
          */
         async void onClickSignUp(Object o, EventArgs e)
         {
@@ -50,7 +51,7 @@ namespace HangTogether
         
         /*
          * Fonction qui verifie si les infos rentrées par le user
-         * lors de son enregistrement sont dans le bon format
+         * lors de son enregistrement sont dans le bon FORMAT
          */
         public bool validateInfosUser()
         {

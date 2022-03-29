@@ -65,7 +65,10 @@ namespace HangTogether
         }
 
         
-
+        /*
+         * Fonction qui valide que le code de verification entre par le user
+         * est bien qui lui a ete envoye par courriel
+         */
         async void signInRecoverPassword(Object s, EventArgs e)
         {
             if (verifRecoveryPassword())

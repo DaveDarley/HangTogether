@@ -5,41 +5,38 @@
              BackgroundImageSource="{local:ImageRessource HangTogether.mes_bg.bg_signup_page.png}"
              x:Class="HangTogether.SignUpUser">
 
+<!-- BackgroundImageSource="{local:ImageRessource HangTogether.mes_bg.bg_signup_page.png}" -->
 
+        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
 
-        <StackLayout >
-            <Grid>
-                <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
-                    <Frame HeightRequest="300"  Padding="0" Margin="10,0,10,0" CornerRadius="40" HasShadow="True"
-                           BorderColor="DarkTurquoise" Opacity="0"/> 
-                </StackLayout>
+            
+            <!-- RowDefinition Height="*" alors la colonne prend sa hauteur en fonction de ses elements -->
                 
-                <Grid Padding="0" Margin="20,80,20,40"  HorizontalOptions="FillAndExpand">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+            <Grid Padding="0" Margin="0,80,0,0"  HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                    <StackLayout Grid.Row="0">
+                <StackLayout Grid.Row="0">
 
-                        <Frame BackgroundColor="White" HasShadow="True" Padding="0" Margin="0" CornerRadius="15" Opacity="0.9"
-                               BorderColor="Aqua">
+                    <Frame BackgroundColor="White" HasShadow="True" Padding="0" Margin="0" CornerRadius="25" Opacity="1"
+                           BorderColor="Aqua">
 
-                            <StackLayout>
-                                <StackLayout Margin="10">
-                                        <Label Text="SIGN UP" TextColor="Black" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="28"/>
-                                </StackLayout>
+                        <StackLayout>
+                            <StackLayout Margin="10">
+                                    <Label Text="SIGN UP" TextColor="Black" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="28"/>
+                            </StackLayout>
 
-                                <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                                             Padding="0,0,0,30">
+                            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                          BackgroundColor="White">
                                 <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" VerticalScrollBarVisibility="Always"
                                             HorizontalOptions="FillAndExpand" >
                    
-                                    <StackLayout BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                                                 >
+                                    <StackLayout BackgroundColor="White" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
 
 
                                         <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
-                                               Margin="10,30,10,0"  BorderColor="DarkGray">
+                                               Margin="10,0,10,0"  BorderColor="DarkGray">
                                             <StackLayout  Orientation="Horizontal" >
 
                                                 <Frame BackgroundColor="White" Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
@@ -57,7 +54,7 @@
 
 
                                         <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
-                                               Margin="10,15,10,0" BorderColor="DarkCyan">
+                                               Margin="10,20,10,0" BorderColor="DarkCyan">
                                             <StackLayout  Orientation="Horizontal" >
 
                                                 <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
@@ -74,7 +71,7 @@
 
 
                                         <Frame BackgroundColor="White" CornerRadius="10" HasShadow="True" HorizontalOptions="FillAndExpand"
-                                               Margin="10,15,10,0" BorderColor="DarkOrchid">
+                                               Margin="10,20,10,0" BorderColor="DarkOrchid">
                                             <StackLayout Orientation="Horizontal">
                                                 <Frame Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
                                                     <Image  Source="{local:ImageRessource HangTogether.mes_bg.dob.png}" Aspect="AspectFill" Margin="0"/>
@@ -88,7 +85,7 @@
                                         </Frame>
 
                                         <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
-                                               Margin="10,30,10,0"  BorderColor="DarkOrange">
+                                               Margin="10,20,10,0"  BorderColor="DarkOrange">
                                             <StackLayout  Orientation="Horizontal" >
 
                                                 <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
@@ -106,7 +103,7 @@
 
 
                                         <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True" HorizontalOptions="FillAndExpand"
-                                               Margin="10,15,10,0" BorderColor="DarkMagenta">
+                                               Margin="10,20,10,0" BorderColor="DarkMagenta">
                                             <StackLayout  Orientation="Horizontal" >
 
                                                 <Frame  Padding="0" Margin="5,0,0,0" HeightRequest="40" WidthRequest="40">
@@ -120,24 +117,30 @@
 
                                         <Label Text="Veuillez indiquer un mot de passe" TextColor="Red" FontAttributes="Bold" HorizontalOptions="StartAndExpand" FontSize="Small" VerticalTextAlignment="Center" 
                                                Margin="10,0,0,0" IsVisible="False" x:Name="mdpError"/>
-
-                                        <Button Margin="20,30,20,10" Text="SIGN UP" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"
-                                                Clicked="onClickSignUp"/>
-
-                                    </StackLayout> 
-                                </ScrollView> 
+                                 
                                     </StackLayout>
-
-
-
+                                </ScrollView> 
+                            </StackLayout> 
+                            
+                            
+                            <StackLayout Margin="50,10,50,10" BackgroundColor="White">
+                                <Button  Text="SIGN UP" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"
+                                        Clicked="onClickSignUp" FontAttributes="Bold" />
                             </StackLayout>
+                                    
 
-                        </Frame>
+                                
+                            
+                            
+                        </StackLayout>
 
-                    </StackLayout>
-                </Grid>
-                
+                    </Frame>
+
+                </StackLayout>
             </Grid>
+                
+            
+            
         </StackLayout>
 
 </ContentPage> 

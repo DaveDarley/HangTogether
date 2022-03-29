@@ -3,39 +3,43 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
              x:Class="HangTogether.LogInSignUp"
-             BackgroundImageSource="{hangTogether:ImageRessource HangTogether.mes_bg.bg_welcome_page copy.jpeg}"
+             BackgroundColor="GhostWhite"
 >
-
+<!-- BackgroundImageSource="{hangTogether:ImageRessource HangTogether.mes_bg.bg_welcome_page copy.jpeg}" -->
     <StackLayout >
         
-        <Grid>
-            <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
+        
+           <!-- <StackLayout Padding="0" Margin="0" HorizontalOptions="FillAndExpand">
                 <Frame HeightRequest="400"  Padding="0" Margin="10,10,10,0" CornerRadius="40" HasShadow="True"
                        BorderColor="Coral" Opacity="0"/> 
-            </StackLayout>
+            </StackLayout> -->
             
             <!-- Idee: Je met ma page de sign in dans un grid avec height="*" et je ne 
                 definie pas de height pour le Frame(Sign in) alors ca prend la hauteur en fontion
                 de la hauteur de ces elements. Si ecran diminue en hauteur elle prendra tujours la 
                 hauteur de ces elments mais le user devra scroll-->
+           
+           <!-- J'utilise un Grid avec Height="*" si hauteur depasse hauteur ecran
+                la colonne de mon Grid devient Scrollable-->
             
-            <Grid Padding="0" Margin="20,100,20,10" HorizontalOptions="FillAndExpand">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                
+        <Grid Padding="0" Margin="20,100,20,10" HorizontalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             
-                    <StackLayout Grid.Row="0">
-                        
-                        <Frame BackgroundColor="White"  HasShadow="True" Padding="0" Margin="0" CornerRadius="15" BorderColor="DarkGray">
+        
+                <StackLayout Grid.Row="0">
+                    
+                    <Frame BackgroundColor="White"  HasShadow="True" Padding="0" Margin="0" CornerRadius="15" BorderColor="DarkGray">
+                        <StackLayout>
+                            
+                            <StackLayout Margin="10">
+                                <Label Text="SIGN IN" TextColor="Black" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="28"/>
+                            </StackLayout>
+                            
                             <ScrollView>
                                 <StackLayout>
                                     
-                                        <StackLayout Margin="10">
-                                                <Label Text="SIGN IN" TextColor="Black" HorizontalOptions="CenterAndExpand" FontAttributes="Bold" FontSize="28"/>
-                                        </StackLayout>
-                                    
-                                        
                                     <Frame BackgroundColor="White" CornerRadius="10"  HasShadow="True"  HorizontalOptions="FillAndExpand"
                                            Margin="10,30,10,0"  BorderColor="DarkGray" >
                                         <StackLayout  Orientation="Horizontal" >
@@ -81,7 +85,7 @@
                                         
                                     </Label>
                               
-                                    <!-- Clicked="ValidateInfosUser" -->
+                                    
                                     <Button Margin="10,30,10,0" Text="SIGN IN" FontAttributes="Bold" BackgroundColor="HotPink" TextColor="White" CornerRadius="30"
                                             Clicked="ValidateInfosUser" />
                                     
@@ -99,14 +103,16 @@
                                     
                                 </StackLayout>
                             </ScrollView>
-                        </Frame>
                             
+                        </StackLayout>
+                    </Frame>
                         
-                </StackLayout>
-            </Grid>
-            
-            
+                    
+            </StackLayout>
         </Grid>
+            
+            
+        
     </StackLayout>
 
 </ContentPage>
