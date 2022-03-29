@@ -71,7 +71,7 @@
                 x:Name="frameMenu"
                 CornerRadius="20"
                 HasShadow="true"
-                HeightRequest="400"
+                HeightRequest="00"
                 VerticalOptions="EndAndExpand"
             >
             
@@ -89,7 +89,7 @@
                     
                     <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="TROUVER&#10;UN POTE"
-                               TextColor="White" FontSize="Large">
+                               TextColor="White">
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer>
@@ -100,7 +100,7 @@
                     
                     <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="MODIFIER&#10;MES LOISIRS"
-                               TextColor="Black" FontSize="Large">
+                               TextColor="Black">
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
@@ -111,7 +111,7 @@
                     
                     <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="VOIR MES&#10;MESSAGES"
-                               TextColor="Black" FontSize="Large">
+                               TextColor="Black">
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer>
@@ -122,7 +122,7 @@
                     
                     <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True">
                         <Label HorizontalOptions="Center" VerticalOptions="Center" Text="DESACTIVER&#10;MON COMPTE"
-                               TextColor="White" FontSize="Large">
+                               TextColor="White">
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer>

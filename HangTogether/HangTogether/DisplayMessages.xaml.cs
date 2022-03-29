@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HangTogether.ServerManager;
 using Xamarin.Forms;
 using Xamarin.Forms.PancakeView;
 using Xamarin.Forms.Xaml;
@@ -24,7 +25,9 @@ namespace HangTogether
         // le fermer
         private bool isMenuOpen = false;
 
-        public DisplayMessages()
+        private User user;
+
+        public DisplayMessages(User user)
         {
             InitializeComponent();
             invisibleMenu();
@@ -32,31 +35,38 @@ namespace HangTogether
             fullDictionary();
             getAllConversations();
             displayAllConvos();
+            this.user = user;
+
         }
         
-        
-        public void invisibleMenu()
+        public async void invisibleMenu()
         {
-            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest + 50);
+            // await DisplayAlert("mesure", frameMenu.TranslationY + "", "accept");
+            // Pk +40, jcomprends pas encore mais ca marche normale
+            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest +40);
+            //await DisplayAlert("mesure", frameMenu.TranslationY + "", "accept");
         }
         
         /*
          * Fonction qui s'occupe de l'apparition du menu
          * sur l'ecran
          */
+
+        // J'utilise pas await pour gerer le cas ou user presse boutton 
+        // menu qd le menu est entrain de monter (ou descendre)
         async void OnTapMenu(Object o, EventArgs e)
         {
-            if (isMenuOpen)
+            
+            if (frameMenu.TranslationY.Equals(frameMenu.HeightRequest +40))
             {
-                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
-                    1000);
-                isMenuOpen = false;
+                await this.frameMenu.TranslateTo(0, 0, 1000);
+                return;
             }
-            else
+
+            if (frameMenu.TranslationY.Equals(0 ))
             {
-                await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
-                    1000);
-                isMenuOpen = true;
+                await frameMenu.TranslateTo(0, frameMenu.TranslationY+frameMenu.HeightRequest+40 , 1000);
+                return;
             }
         }
         
@@ -66,15 +76,15 @@ namespace HangTogether
          */
          void OnTapFindFriends(object o, EventArgs e)
         {
-           // ProfilUser.GestionClickMenu("pote");
+            ProfilUser.GestionClickMenu("pote",user);
         }
          void OnTapChooseInterests(object o, EventArgs e)
         {
-           // ProfilUser.GestionClickMenu("loisirs");
+            ProfilUser.GestionClickMenu("loisirs",user);
         }
          void OnTapViewMessages(object o, EventArgs e)
         {
-          //  ProfilUser.GestionClickMenu("messages");
+            ProfilUser.GestionClickMenu("messages",user);
         }
         async void OnTapDeactivateAccount(object o, EventArgs e)
         {

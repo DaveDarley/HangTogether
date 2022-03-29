@@ -7,6 +7,7 @@ namespace HangTogether
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ProfilUser : ContentPage
     {
+        private User user;
         public ProfilUser()
         {
            // InitializeComponent();
@@ -30,7 +31,7 @@ namespace HangTogether
                  Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(user));
                  break;
              case   "messages":
-                 Application.Current.MainPage = new NavigationPage(new DisplayMessages());
+                 Application.Current.MainPage = new NavigationPage(new DisplayMessages(user));
                  break;
             }
         }

@@ -53,8 +53,8 @@ namespace HangTogether
             
             addLoisirsToLayout(choixUserEnFrameADessiner);
 
-            frameMenu.AnchorY = Application.Current.MainPage.Height + 100 ;
-            //invisibleMenu();
+            
+            invisibleMenu();
         }
 
         /*
@@ -412,9 +412,12 @@ namespace HangTogether
         
 
         
-        public void invisibleMenu()
+        public async void invisibleMenu()
         {
-            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest+50);
+           // await DisplayAlert("mesure", frameMenu.TranslationY + "", "accept");
+           // Pk +40, jcomprends pas encore mais ca marche normale
+            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest +40);
+            //await DisplayAlert("mesure", frameMenu.TranslationY + "", "accept");
         }
         
         /*
@@ -426,41 +429,20 @@ namespace HangTogether
         // menu qd le menu est entrain de monter (ou descendre)
         async void OnTapMenu(Object o, EventArgs e)
         {
-            if (this.frameMenu.AnchorY.Equals(Application.Current.MainPage.Height))
+            
+            if (frameMenu.TranslationY.Equals(frameMenu.HeightRequest +40))
             {
-                await this.frameMenu.TranslateTo(0, Application.Current.MainPage.Height  - this.frameMenu.HeightRequest,
-                        1000);
+                await this.frameMenu.TranslateTo(0, 0, 1000);
+                return;
             }
 
-            if (frameMenu.AnchorY.Equals(Application.Current.MainPage.Height  - 400 ))
+            if (frameMenu.TranslationY.Equals(0 ))
             {
-                await frameMenu.TranslateTo(0, Application.Current.MainPage.Height , 1000);
+                await frameMenu.TranslateTo(0, frameMenu.TranslationY+frameMenu.HeightRequest+40 , 1000);
+                return;
             }
-
-            // if (isMenuOpen)
-            // {
-            //      await this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY + this.frameMenu.HeightRequest,
-            //         1000);
-            //      
-            //     isMenuOpen = false;
-            // }
-            // else
-            // {
-            //      this.frameMenu.TranslateTo(0, this.frameMenu.TranslationY - this.frameMenu.HeightRequest,
-            //         1000);
-            //     isMenuOpen = true;
-            // }
         }
-        
-        // private void Tap_Enabled(object sender, EventArgs e)
-        // {
-        //     tapMenu.Tapped += TapGestureRecognizer_Tapped;
-        // }
-        //
-        // private void Tap_Disabled(object sender, EventArgs e)
-        // {
-        //     tapMenu.Tapped -= TapGestureRecognizer_Tapped;
-        // }
+
         
         
          
