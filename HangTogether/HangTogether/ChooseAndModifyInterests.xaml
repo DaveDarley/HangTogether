@@ -112,7 +112,7 @@
                            VerticalTextAlignment="Center" FontSize="Large" Margin="0"/>
                     <Editor x:Name="anecdotesUser" Placeholder="Veuillez inscrire vos differentes anecdotes"
                            HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                           Margin="0" />
+                           Margin="0" TextChanged="Editor_TextChanged"/>
                 </StackLayout>
                 
             </Frame>

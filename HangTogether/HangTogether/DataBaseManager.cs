@@ -125,17 +125,20 @@ namespace HangTogether
         public List<User> getUserWithSharedInterests(User userLookingForFriends, List<User> allUsers)
         {
             List<User> usersWithSharedInterests = new List<User>();
-            var loisirsUserLookingForFriends = userLookingForFriends.loisirs.Split(',');
+            var loisirsUserLookingForFriends = (! userLookingForFriends.loisirs.Contains(',')) ? new []{ userLookingForFriends.loisirs } : userLookingForFriends.loisirs.Split(',');
+            
             foreach (var utilisateur in allUsers)
             {
-                var loisirsUser = utilisateur.loisirs.Split(',');
+                var loisirsUser = (! utilisateur.loisirs.Contains(',')) ? new []{ utilisateur.loisirs } : utilisateur.loisirs.Split(',');
+                
                 for (int i = 0; i<loisirsUser.Length; i++)
                 {
                     string loisir = loisirsUser[i];
-                    if (Array.Exists(loisirsUserLookingForFriends,x => x == loisir))
+                    if (Array.Exists(loisirsUserLookingForFriends,x => x == loisir) && userLookingForFriends.email!=utilisateur.email)
                     {
                         usersWithSharedInterests.Add(utilisateur);
-                        break;
+                        i = loisirsUser.Length;
+                        // break;
                     }
                 }
             }

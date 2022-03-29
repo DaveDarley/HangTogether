@@ -38,13 +38,17 @@
                 </Grid.ColumnDefinitions>
                 
                 <CarouselView Grid.Row="0" Grid.Column="0" x:Name="TheCarousel"
-                              AbsoluteLayout.LayoutBounds="0,0,1,1"
-                              AbsoluteLayout.LayoutFlags="All"
                               ItemsSource="{Binding Profile}"
-                              Margin="15,15,15,0">
+                              PeekAreaInsets="00" Margin="0,20,0,10"
+                >
                     
-                    <CarouselView.ItemTemplate>
-                        <DataTemplate>
+                    <CarouselView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal"
+                                           ItemSpacing="20" />
+                    </CarouselView.ItemsLayout>
+                    
+                    <CarouselView.ItemTemplate >
+                        <DataTemplate >
                             
            
                     
@@ -85,10 +89,13 @@
                                         
                                         <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                                            <!-- <Label Text="NOM:" FontSize="Large" TextColor="Black" FontAttributes="Bold"/> -->
-                                            <Label Text="{Binding Titre}" FontSize="Large" FontAttributes="Bold"
+                                            <Label Text="{Binding titre}" FontSize="Large" FontAttributes="Bold"
                                                    TextColor="Black" Margin="10,0,0,0" HorizontalOptions="CenterAndExpand"/> 
                                         </StackLayout>
                                     </Frame>
+                                    
+                                    
+                                    <!-- BindableLayout.ItemsSource="{Binding sharedInterests}" -->
                                     
                                     <Frame Grid.Row="1" Grid.Column="0" Margin="20,15,20,0" HorizontalOptions="FillAndExpand"
                                            BorderColor="DarkCyan" CornerRadius="20" HasShadow="True">
@@ -106,7 +113,7 @@
                                                     Padding="8"
                                                     HorizontalOptions="FillAndExpand"
                                                     VerticalOptions="FillAndExpand"
-                                                    x:Name="layoutInterest"
+                                                    
                                                 >
                                                 </FlexLayout>
                                             </ScrollView>
@@ -124,8 +131,8 @@
                                                    FontAttributes="Bold"/>
                                             <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" VerticalScrollBarVisibility="Always"
                                                         HorizontalOptions="FillAndExpand">
-                                                <Label Text="{Binding Anecdote}" FontSize="22" TextColor="Black"
-                                                       HorizontalOptions="CenterAndExpand"/> 
+                                                <Label Text="{Binding anecdotes}" FontSize="22" TextColor="Black"
+                                                       HorizontalOptions="CenterAndExpand" /> 
                                             </ScrollView>
                                         </StackLayout>
                                     </Frame>
