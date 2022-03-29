@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
              x:Class="HangTogether.LogInSignUp"
-             BackgroundColor="GhostWhite"
+             BackgroundImageSource="{hangTogether:ImageRessource HangTogether.mes_bg.bg_log_in.png}"
 >
 <!-- BackgroundImageSource="{hangTogether:ImageRessource HangTogether.mes_bg.bg_welcome_page copy.jpeg}" -->
     <StackLayout >

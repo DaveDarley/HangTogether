@@ -71,11 +71,11 @@
                 x:Name="frameMenu"
                 CornerRadius="20"
                 HasShadow="true"
-                HeightRequest="00"
+                HeightRequest="200"
                 VerticalOptions="EndAndExpand"
             >
             
-            <StackLayout Orientation="Vertical" Margin="10,40,10,40" VerticalOptions="FillAndExpand">
+            <StackLayout Orientation="Vertical" Margin="10,0,0,40" VerticalOptions="FillAndExpand">
                 
                 <Grid VerticalOptions="FillAndExpand">
                     <Grid.ColumnDefinitions>

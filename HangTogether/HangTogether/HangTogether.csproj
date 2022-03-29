@@ -52,6 +52,12 @@
       <EmbeddedResource Include="mes_bg\shadow_user_infos.9.png" />
       <None Remove="mes_bg\bg_choix_loisirs.jpeg" />
       <EmbeddedResource Include="mes_bg\bg_choix_loisirs.jpeg" />
+      <None Remove="mes_bg\bg_sign_in.jpeg" />
+      <EmbeddedResource Include="mes_bg\bg_sign_in.jpeg" />
+      <None Remove="mes_bg\bg_log_in.png" />
+      <EmbeddedResource Include="mes_bg\bg_log_in.png" />
+      <None Remove="mes_bg\bg_recouvrement_mdp.png" />
+      <EmbeddedResource Include="mes_bg\bg_recouvrement_mdp.png" />
     </ItemGroup>
 
 
