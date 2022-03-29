@@ -58,6 +58,8 @@
       <EmbeddedResource Include="mes_bg\bg_log_in.png" />
       <None Remove="mes_bg\bg_recouvrement_mdp.png" />
       <EmbeddedResource Include="mes_bg\bg_recouvrement_mdp.png" />
+      <None Remove="mes_bg\bg_display_potential_friends.png" />
+      <EmbeddedResource Include="mes_bg\bg_display_potential_friends.png" />
     </ItemGroup>
 
 

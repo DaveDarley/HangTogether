@@ -3,23 +3,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
-
              x:Class="HangTogether.DisplayPotentialFriends">
+
     
-    <NavigationPage.TitleView>
-        <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+    <NavigationPage.TitleView >
+        
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+            
+            <Label Text="Envoie un message a ton nouveau pote" TextColor="Black" FontAttributes="Bold"
+                    HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand"
+                   VerticalTextAlignment="Center"/>
+            
             <pancakeView:PancakeView  WidthRequest="40" HeightRequest="40" 
                                       HorizontalOptions="End"
-                                      Margin="0,0,10,0" BackgroundColor="White">
+                                      Margin="10,0,10,0" BackgroundColor="White" CornerRadius="5" x:Name="menuLogo">
                 
                 <pancakeView:PancakeView.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnTapMenu" />
-                </pancakeView:PancakeView.GestureRecognizers> 
+                    <TapGestureRecognizer Tapped="OnTapMenu" x:Name="tapMenu"/>
+                </pancakeView:PancakeView.GestureRecognizers>
                 
-                <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.ic_menu.png}" Aspect="AspectFill" />
+                <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.ic_menu_user.png}" Aspect="AspectFill" />
             </pancakeView:PancakeView>
+            
         </StackLayout>
+        
     </NavigationPage.TitleView>
+    
+    
+    
+    <ContentPage.Content>
     
     <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
     <StackLayout>
@@ -38,8 +50,8 @@
                 
                 <CarouselView Grid.Row="0" Grid.Column="0" x:Name="TheCarousel"
                               ItemsSource="{Binding Profile}"
-                              PeekAreaInsets="00" Margin="0,20,0,10"
-                >
+                              PeekAreaInsets="00" Margin="0,20,0,10">
+
                     
                     <CarouselView.ItemsLayout>
                         <LinearItemsLayout Orientation="Horizontal"
@@ -55,24 +67,15 @@
                                              Grid.Row="0" Grid.Column="0" Padding="0,0,0,0" 
                                              Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}"
                                              VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                                             Margin="0,15,0,0" 
-                    >
-                    
-     
-                    
-                        
-                        
-                    
-                    
-                    <!--  <swipeCardView:SwipeCardView 
-                                     x:Name="swipElem" ItemsSource="{Binding Profile}"
-                                     HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                                     SupportedSwipeDirections="Right,Left" BackgroundColor="White"
-                    > 
-                        
-                        <swipeCardView:SwipeCardView.ItemTemplate >
-                            <DataTemplate> -->
-                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="White">
+                                             Margin="0,15,0,0">
+
+                    <StackLayout>
+<!-- src bgEntireGrid: https://stackoverflow.com/questions/47387836/background-image-for-grid-in-xamarin-forms -->
+
+                        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="White">
+                            <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.bg_display_potential_friends.png}" Aspect="AspectFill"
+                                   Grid.RowSpan="3" Grid.ColumnSpan="1"/>
+
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="200"/>
@@ -84,12 +87,12 @@
                                 
                                 
                                     <Frame Grid.Row="0" Grid.Column="0" Margin="20,20,20,0" HorizontalOptions="FillAndExpand"
-                                           BorderColor="Aquamarine" CornerRadius="20">
+                                           BorderColor="Aquamarine" CornerRadius="20" Opacity="0.85">
                                         
                                         <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                                            <!-- <Label Text="NOM:" FontSize="Large" TextColor="Black" FontAttributes="Bold"/> -->
                                             <Label Text="{Binding titre}" FontSize="Large" FontAttributes="Bold"
-                                                   TextColor="Black" Margin="10,0,0,0" HorizontalOptions="CenterAndExpand"/> 
+                                                   TextColor="Black"  Margin="10,0,0,0" HorizontalOptions="CenterAndExpand"/> 
                                         </StackLayout>
                                     </Frame>
                                     
@@ -97,7 +100,7 @@
                                     <!-- BindableLayout.ItemsSource="{Binding sharedInterests}" -->
                                     
                                     <Frame Grid.Row="1" Grid.Column="0" Margin="20,15,20,0" HorizontalOptions="FillAndExpand"
-                                           BorderColor="DarkCyan" CornerRadius="20" HasShadow="True">
+                                           BorderColor="DarkCyan" CornerRadius="20" HasShadow="True" Opacity="0.90">
                                         
                                         <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
                                             <Label Text="Loisir(s) en commun(s)" TextColor="Black" FontAttributes="Bold" HorizontalTextAlignment="Center" FontSize="Large"/>
@@ -150,12 +153,7 @@
                                     
                                     
                                 </Grid>
-                           <!-- </DataTemplate>
-        
-                            
-                        </swipeCardView:SwipeCardView.ItemTemplate>
-                        
-                    </swipeCardView:SwipeCardView> -->
+                    </StackLayout>
                    
                     
                 </pancakeView:PancakeView>
@@ -164,9 +162,20 @@
                     </CarouselView.ItemTemplate>
                     
                 </CarouselView>
+            
+            <Frame Grid.Row="1" Grid.Column="0" CornerRadius="30" BackgroundColor="MediumSlateBlue" Margin="25,30,25,10"
+                   VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <Label Text="ENVOYEZ UN MESSAGE" TextColor="White" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                       VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" x:Name="sendMessageToNewFriend">
+                </Label>
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTapSendMessage"></TapGestureRecognizer>
+                </Frame.GestureRecognizers>
+            </Frame>
+            
 
-                <Button Grid.Row="1" Grid.Column="0"  Text="ENVOYEZ UN MESSAGE" CornerRadius="15" HorizontalOptions="FillAndExpand"
-                        Margin="20,30,20,10" BackgroundColor="DarkGray"/>
+               <!-- <Button Grid.Row="1" Grid.Column="0"  Text="ENVOYEZ UN MESSAGE" CornerRadius="15" HorizontalOptions="FillAndExpand"
+                        Margin="20,30,20,10" BackgroundColor="DarkGray"/> -->
                 
 
                 
@@ -179,10 +188,7 @@
             CornerRadius="20"
             HasShadow="true"
             HeightRequest="200"
-            VerticalOptions="EndAndExpand"
-            
-            
-        >
+            VerticalOptions="EndAndExpand">
             
             <StackLayout Orientation="Vertical" Margin="10,0,10,0" VerticalOptions="FillAndExpand">
                 
@@ -247,4 +253,5 @@
         </Frame>
         </Grid>
     
+        </ContentPage.Content>
 </ContentPage>

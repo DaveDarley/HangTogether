@@ -14,19 +14,16 @@ namespace HangTogether
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DisplayPotentialFriends : ContentPage
     {
-        public List<User> userWithSharedinterests = new List<User>();
         public ObservableCollection<DisplayUser> _userToDisplayOnCard = new ObservableCollection<DisplayUser>();
         private User userLookingForNewFriends;
-        
-        
-        public bool isMenuOpen = false;
-        
+
         public DisplayPotentialFriends(User user)
         {
             InitializeComponent();
             BindingContext = this;
             userLookingForNewFriends = user;
             CardBinding();
+            
             // rentrer le menu en bas de l'ecran
             invisibleMenu();
         }
@@ -43,6 +40,11 @@ namespace HangTogether
                 : new []{userLookingForNewFriends.loisirs};
         }
 
+        async void OnTapSendMessage(Object o, EventArgs e)
+        {
+            
+        }
+
 
         public async void invisibleMenu()
         {
@@ -56,12 +58,8 @@ namespace HangTogether
          * Fonction qui s'occupe de l'apparition du menu
          * sur l'ecran
          */
-
-        // J'utilise pas await pour gerer le cas ou user presse boutton 
-        // menu qd le menu est entrain de monter (ou descendre)
         async void OnTapMenu(Object o, EventArgs e)
         {
-            
             if (frameMenu.TranslationY.Equals(frameMenu.HeightRequest +40))
             {
                 await this.frameMenu.TranslateTo(0, 0, 1000);
@@ -74,6 +72,7 @@ namespace HangTogether
                 return;
             }
         }
+        
         
         /*
          * Dans ces 4 prochaines fonctions , je gere lorsque le
@@ -105,8 +104,14 @@ namespace HangTogether
 
 
         /*
-         * Fonction qui s'occupe de mettre les informations
-         * qui seront affichées sur chaque carte
+         *Fonction qui recupere tous les users de ma DB et pour chaque user
+         * on parcours sa liste de loisirs. Si ce user a des loisirs en communs
+         * avec l'user qui recherche de nouveaux potes (user du constructeur de la classe)
+         * On enregistre ce user mais aussi les loisirs qu'il a en commun avec l'utilisateur
+         * qui recherche de nouveaux potes.
+         * Lorsqu'on compare les loisirs on transforme les string en LOWERCASE
+         * Si aucun utilisateur n'a pas de loisirs en commun avec le user qui recherche de nouveau pote
+         * on lui affiche une alert et on lui renvoie a la page "ChooseAndModifyInterests()"
          */
         public async void CardBinding()
         {
@@ -114,34 +119,42 @@ namespace HangTogether
             var allUsers = await dataBaseManager.GetAllUsers();
             List<User>userWithSharedInterests = dataBaseManager.getUserWithSharedInterests(userLookingForNewFriends, allUsers);
             
-            string[] interestsUserLookingForNewFriends = getInterestUserLookingForNewFriends();
-           // List<User> usersWithSameInterests = DisplayPotentialFriends.userWithSharedinterests;
-           // await DisplayAlert("Alert","size user with shared interests " + usersWithSameInterests.Count,"accept");
+            string[] interestsUserLookingForNewFriends = getInterestUserLookingForNewFriends().Select(s => s.ToLower()).ToArray();
 
-            foreach (var user in userWithSharedInterests)
+            if (userWithSharedInterests.Count > 0)
             {
-                List<string> loisirsEnCommun = new List<string>();
-                string titre = user.nom + " " + user.prenom;
-                string anecdotes = user.anecdotes;
-            
-                string[] loisirsUsers = (user.loisirs.Contains(',')) ? user.loisirs.Split(',') : new[]{user.loisirs};
-                foreach (var loisir in loisirsUsers)
+                foreach (var user in userWithSharedInterests)
                 {
-                    if (Array.Exists(interestsUserLookingForNewFriends, x => x == loisir))
+                    List<string> loisirsEnCommun = new List<string>();
+                    string titre = user.nom + " " + user.prenom;
+                    string anecdotes = user.anecdotes;
+            
+                    string[] loisirsUsers = (user.loisirs.Contains(',')) ? user.loisirs.Split(',') : new[]{user.loisirs};
+                    foreach (var loisir in loisirsUsers)
                     {
-                        loisirsEnCommun.Add(loisir);
+                        var loisirToCompare = loisir.ToLower();
+                        if (Array.Exists(interestsUserLookingForNewFriends, x => x == loisirToCompare))
+                        {
+                            loisirsEnCommun.Add(loisir);
+                        }
                     }
+                    DisplayUser userToDisplayOnCard = new DisplayUser(titre, loisirsEnCommun, anecdotes);
+                    _userToDisplayOnCard.Add(userToDisplayOnCard);
                 }
-                DisplayUser userToDisplayOnCard = new DisplayUser(titre, loisirsEnCommun, anecdotes);
-                _userToDisplayOnCard.Add(userToDisplayOnCard);
-                
+            }
+            else
+            {
+                await DisplayAlert("Recherche nouveau pote",
+                    "Aucun utilisateur a les memes interets que toi, Essaie d'elargir ta liste d'interets", "OK");
+                await Navigation.PushAsync(new ChooseAndModifyInterests(userLookingForNewFriends));
+                // on enleve page de DisplayPotentialFriends de la liste de NAVIGATIONPAGE
+                Navigation.RemovePage(Navigation.NavigationStack[1]);
             }
 
-            // List<Frame> test = new List<Frame>();
-            // DisplayUser dis = new DisplayUser("hmm 14",test,"eeee");
-            // _userToDisplayOnCard.Add(dis);
+
 
         }
+        
         
         public ObservableCollection<DisplayUser> Profile
         {
