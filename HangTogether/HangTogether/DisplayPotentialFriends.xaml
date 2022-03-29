@@ -113,8 +113,20 @@
                                                     Padding="8"
                                                     HorizontalOptions="FillAndExpand"
                                                     VerticalOptions="FillAndExpand"
-                                                    
+                                                    BindableLayout.ItemsSource="{Binding sharedInterests}"
                                                 >
+                                                    <BindableLayout.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Frame BackgroundColor="White" CornerRadius="30" HasShadow="True"
+                                                                   IsVisible="True" Margin="0,4,0,4"
+                                                                   >
+                                                                <Label Text="{Binding .}" 
+                                                                       TextColor="Black"
+                                                                       HorizontalOptions="StartAndExpand"/>
+                                                            </Frame>
+                                                        </DataTemplate>
+                                                    </BindableLayout.ItemTemplate>
+                                                    
                                                 </FlexLayout>
                                             </ScrollView>
                                             

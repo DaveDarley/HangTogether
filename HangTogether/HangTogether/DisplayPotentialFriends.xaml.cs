@@ -26,20 +26,11 @@ namespace HangTogether
             InitializeComponent();
             BindingContext = this;
             userLookingForNewFriends = user;
-            InitializePage();
             CardBinding();
             // rentrer le menu en bas de l'ecran
             InvisibleMenu();
         }
-        
-        
-        public async void InitializePage()
-        {
-            DataBaseManager dataBaseManager = new DataBaseManager();
-            var allUsers = await dataBaseManager.GetAllUsers();
-            userWithSharedinterests = dataBaseManager.getUserWithSharedInterests(userLookingForNewFriends, allUsers);
-            //await DisplayAlert("Alert","size user with shared interests " + userWithSharedinterests.Count,"accept");
-        }
+
         
         /*
          * Fonction qui retourne les loisirs du user qui recherche
@@ -105,50 +96,8 @@ namespace HangTogether
             }
         }
         
-        public List<Frame> CreateLoisirsFrame(string [] loisirs)
-        {
-            List<Frame> frameADessinerSurlayout = new List<Frame>();
-            for (int i = 0; i < loisirs.Length; i++)
-            {
-                Frame frame = new Frame()
-                {
-                    BackgroundColor = Color.White,
-                    CornerRadius = 30,
-                    HasShadow = true,
-                    IsVisible = true,
-                    Margin = new Thickness(0,4,0,4),
-                    Content = new Label()
-                    {
-                        Text = loisirs[i],
-                        TextColor = Color.Black,
-                        HorizontalOptions = LayoutOptions.StartAndExpand,
-                    }
-                };
-                frameADessinerSurlayout.Add(frame);
-            }
-            return frameADessinerSurlayout;
-        }
-        
-        
-        /*
-         * Fonction qui prend la liste prends une liste de loisirs en string,
-         * cree pour chaque loisirs une Frame et ajoute ce frame dans le champ
-         * Loisirs en communs de mon "CarouselView"
-         */
-        
-       /* public void addLoisirsToCommonInterests(List<Frame>commonInterests)
-        {
-            ObservableCollection<View> views = TheCarousel.VisibleViews;
-            PancakeView monPancake = views[0] as PancakeView;
-            Grid monGrid = monPancake.Children as Grid;
-            var LayoutInterest = (FlexLayout) monGrid.Children.Where(c => Grid.GetRow(c) == 2 && Grid.GetColumn(c)==0);
-            
-            foreach (var interests in commonInterests)
-            {
-                LayoutInterest.Children.Add(interests);
-            }
-        }*/
-       
+
+
 
         /*
          * Fonction qui s'occupe de mettre les informations
@@ -156,19 +105,21 @@ namespace HangTogether
          */
         public async void CardBinding()
         {
-            string[] interestsUserLookingForNewFriends = getInterestUserLookingForNewFriends();
-            List<User> usersWithSameInterests = userWithSharedinterests;
-            await DisplayAlert("Alert","size user with shared interests " + usersWithSameInterests.Count,"accept");
-
-            for (int i = 0; i<usersWithSameInterests.Count; i++)
-            {
-                // List<string> loisirsEnCommun = new List<string>();
-                // string titre = user.nom + " " + user.prenom;
-                // string anecdotes = user.anecdotes;
-                //
-                List<Frame> test = new List<Frame>();
+            DataBaseManager dataBaseManager = new DataBaseManager();
+            var allUsers = await dataBaseManager.GetAllUsers();
+            List<User>userWithSharedInterests = dataBaseManager.getUserWithSharedInterests(userLookingForNewFriends, allUsers);
             
-               /* string[] loisirsUsers = user.loisirs.Split(',');
+            string[] interestsUserLookingForNewFriends = getInterestUserLookingForNewFriends();
+           // List<User> usersWithSameInterests = DisplayPotentialFriends.userWithSharedinterests;
+           // await DisplayAlert("Alert","size user with shared interests " + usersWithSameInterests.Count,"accept");
+
+            foreach (var user in userWithSharedInterests)
+            {
+                List<string> loisirsEnCommun = new List<string>();
+                string titre = user.nom + " " + user.prenom;
+                string anecdotes = user.anecdotes;
+            
+                string[] loisirsUsers = (user.loisirs.Contains(',')) ? user.loisirs.Split(',') : new[]{user.loisirs};
                 foreach (var loisir in loisirsUsers)
                 {
                     if (Array.Exists(interestsUserLookingForNewFriends, x => x == loisir))
@@ -176,8 +127,7 @@ namespace HangTogether
                         loisirsEnCommun.Add(loisir);
                     }
                 }
-                List<Frame> frameOfInterestsInCommon = CreateLoisirsFrame(loisirsEnCommun.ToArray());*/
-                DisplayUser userToDisplayOnCard = new DisplayUser("titre"+i, test, "anecdotes");
+                DisplayUser userToDisplayOnCard = new DisplayUser(titre, loisirsEnCommun, anecdotes);
                 _userToDisplayOnCard.Add(userToDisplayOnCard);
                 
             }
@@ -198,14 +148,14 @@ namespace HangTogether
         }
         public class DisplayUser
         {
-            public DisplayUser(string titre, List<Frame>sharedInterests,string anecdotes)
+            public DisplayUser(string titre, List<string>sharedInterests,string anecdotes)
             {
                 this.titre = titre;
                 this.sharedInterests = sharedInterests;
                 this.anecdotes = anecdotes;
             }
             public string titre { get; set; }
-            public List<Frame> sharedInterests { get; set; }
+            public List<string> sharedInterests { get; set; }
             public string anecdotes { get; set; }
 
         }
