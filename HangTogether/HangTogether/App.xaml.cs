@@ -1,4 +1,5 @@
 ﻿using System;
+using HangTogether.ServerManager;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -11,8 +12,10 @@ namespace HangTogether
         private DataBaseManager dbManager;
         public App()
         {
-            dbManager = new DataBaseManager(); 
-            MainPage =  new NavigationPage(new LogInSignUp());
+           /* dbManager = new DataBaseManager(); 
+            MainPage =  new NavigationPage(new LogInSignUp());*/
+           User A = new User("", "", "", "", "", "", "");
+           MainPage = new MessageBetweenTwoUsers(A, A);
         }
 
         protected override void OnStart()

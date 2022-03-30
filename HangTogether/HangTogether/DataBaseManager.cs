@@ -60,6 +60,7 @@ namespace HangTogether
             }*/).ToList();
         }
 
+        
         /*
          * Fonction qui retourne un user de ma BD.
          * Cette fonction est appelée lorsqu'on est sur

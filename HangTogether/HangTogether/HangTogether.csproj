@@ -60,6 +60,10 @@
       <EmbeddedResource Include="mes_bg\bg_recouvrement_mdp.png" />
       <None Remove="mes_bg\bg_display_potential_friends.png" />
       <EmbeddedResource Include="mes_bg\bg_display_potential_friends.png" />
+      <None Remove="mes_bg\bg_message.jpeg" />
+      <EmbeddedResource Include="mes_bg\bg_message.jpeg" />
+      <None Remove="mes_bg\ic_send_message.png" />
+      <EmbeddedResource Include="mes_bg\ic_send_message.png" />
     </ItemGroup>
 
 
