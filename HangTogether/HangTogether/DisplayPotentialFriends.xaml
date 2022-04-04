@@ -124,7 +124,8 @@
                                                                    >
                                                                 <Label Text="{Binding .}" 
                                                                        TextColor="Black"
-                                                                       HorizontalOptions="StartAndExpand"/>
+                                                                       HorizontalOptions="StartAndExpand"
+                                                                       />
                                                             </Frame>
                                                         </DataTemplate>
                                                     </BindableLayout.ItemTemplate>

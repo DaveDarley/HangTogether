@@ -145,6 +145,24 @@ namespace HangTogether
             }
             return usersWithSharedInterests;
         }
+        
+        public async Task<User> getUserParticularUser(string email)
+        {
+            var user = from users in (await firebase
+                    .Child("Users")
+                    .OnceAsync<User>())
+                where (users.Object.email == email)
+                select new User(
+                    users.Object.nom,
+                    users.Object.prenom,
+                    users.Object.email,
+                    users.Object.mdp,
+                    users.Key,
+                    users.Object.loisirs,
+                    users.Object.anecdotes);
+            
+            return (User)user;
+        }
 
 
 

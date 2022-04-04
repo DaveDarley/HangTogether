@@ -2,19 +2,20 @@ namespace HangTogether
 {
     public class Message
     {
-        public Message(string fromEmail, string toEmail, string firstMessage, string sndMessage, string Key)
+        public Message(string fromEmail, string toEmail, string message, string Key, string timeStamp)
         {
             this.fromEmail = fromEmail;
             this.toEmail = toEmail;
-            this.firstMessage = firstMessage;
-            this.sndMessage = sndMessage;
+            this.message = message;
             this.Key = Key;
+            this.timeStamp = timeStamp;
         }
+
+        public string timeStamp { get; set; }
 
         public string fromEmail { get; set; }
         public string toEmail { get; set; }
-        public string firstMessage { get; set; }
-        public string sndMessage { get; set; }
+        public string message { get; set; }
         public string Key { get; set; }
         
     }

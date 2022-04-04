@@ -20,5 +20,21 @@ namespace HangTogether
             this.emetteurMessage = emetteurMessage;
             this.recepteurMessage = recepteurMessage;
         }
+        
+        /*
+         * Qd quelqu'un click sur send; on stoque le message dans la BD
+         */
+        public void sendMessage(object sender, EventArgs args)
+        {
+            var textToSend = this.textMessage.ToString();
+            var emetteurEmail = this.emetteurMessage.email;
+            var recepteurEmail = this.recepteurMessage.email;
+            var timeStamp = "101010100101"; // test
+            Message message = new Message(emetteurEmail, recepteurEmail, textToSend, "", timeStamp);
+            DataBaseMessagesManager dataBaseManager = new DataBaseMessagesManager();
+            dataBaseManager.addNewConversation(message);
+        }
+
+      
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HangTogether.ServerManager;
+using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
 using Xamarin.Forms.PancakeView;
 using Xamarin.Forms.Xaml;
@@ -40,9 +41,21 @@ namespace HangTogether
                 : new []{userLookingForNewFriends.loisirs};
         }
 
+        /*
+         * Qd on clique sur Envoyez un message;
+         * je cherche quel user est actuelement sur l'ecran(CarouselView.CurrentItem)
+         * et a partir de la je trouve le User en question 
+         */
         async void OnTapSendMessage(Object o, EventArgs e)
         {
             
+            DisplayUser userInDisplay = TheCarousel.CurrentItem as DisplayUser;
+            User userToSendMessage = userInDisplay.user;
+            
+            await Navigation.PushAsync(new DisplayMessages(this.userLookingForNewFriends,userToSendMessage));
+            
+            // Test:
+            //await this.DisplayToastAsync("J'ai clique sur : "+userToSendMessage.nom, 5000);
         }
 
 
@@ -128,6 +141,7 @@ namespace HangTogether
                     List<string> loisirsEnCommun = new List<string>();
                     string titre = user.nom + " " + user.prenom;
                     string anecdotes = user.anecdotes;
+                    
             
                     string[] loisirsUsers = (user.loisirs.Contains(',')) ? user.loisirs.Split(',') : new[]{user.loisirs};
                     foreach (var loisir in loisirsUsers)
@@ -138,7 +152,7 @@ namespace HangTogether
                             loisirsEnCommun.Add(loisir);
                         }
                     }
-                    DisplayUser userToDisplayOnCard = new DisplayUser(titre, loisirsEnCommun, anecdotes);
+                    DisplayUser userToDisplayOnCard = new DisplayUser(user,titre, loisirsEnCommun, anecdotes);
                     _userToDisplayOnCard.Add(userToDisplayOnCard);
                 }
             }
@@ -166,15 +180,18 @@ namespace HangTogether
         }
         public class DisplayUser
         {
-            public DisplayUser(string titre, List<string>sharedInterests,string anecdotes)
+            public DisplayUser(User user,string titre, List<string>sharedInterests,string anecdotes)
             {
                 this.titre = titre;
                 this.sharedInterests = sharedInterests;
                 this.anecdotes = anecdotes;
+                this.user = user;
             }
             public string titre { get; set; }
             public List<string> sharedInterests { get; set; }
             public string anecdotes { get; set; }
+
+            public User user { get; set; }
 
         }
 
