@@ -88,7 +88,7 @@ namespace HangTogether
             List<Message> convos = new List<Message>();
             foreach (var message in allMessages)
             {
-                if (message.fromEmail == from.email && message.toEmail == to.email)
+                if (message.toEmail == to.email && message.fromEmail == from.email)
                 {
                     convos.Add(message);
                 }
