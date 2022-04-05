@@ -119,7 +119,7 @@ namespace HangTogether
          * messages sur l'ecran du user. Dependemment de l'emetteur et le recepteur le message
          * se dessine de facon differente sur l'ecran (A gauche ou A droite).
          */
-        public void displayAllConvos(List<Message> messageToDisplayOnScreen)
+        public async void displayAllConvos(List<Message> messageToDisplayOnScreen)
         {
             var layoutUser = containerMessages; // layout sur lequel on dessine les messages
             
@@ -174,9 +174,13 @@ namespace HangTogether
                     }
                     
                     layoutUser.Children.Add(frameMessage);
+                    
+                    // put scrollview at the bottom the last message not working quite well
+                    await this.scrollMessages.ScrollToAsync(frameMessage,ScrollToPosition.MakeVisible,true);
 
                 }
-                
+               // await this.scrollMessages.ScrollToAsync(0,scrollMessages.Content.Height,true);
+
             }
         }
 

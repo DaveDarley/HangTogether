@@ -39,7 +39,7 @@
                     <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Padding="0"> 
                         <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.bg_message.jpeg}" Aspect="Fill"/>
                             <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" VerticalScrollBarVisibility="Always"
-                                        HorizontalOptions="FillAndExpand" >
+                                        HorizontalOptions="FillAndExpand" x:Name="scrollMessages">
                                 <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Orientation="Vertical" x:Name="containerMessages">
                                 </StackLayout>
                             </ScrollView>
