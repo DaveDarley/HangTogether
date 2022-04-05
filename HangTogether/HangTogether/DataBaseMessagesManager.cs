@@ -81,7 +81,8 @@ namespace HangTogether
          * Fonction qui retourne tous les conversations d'un user VERS un autre.
          * Qd je cherche dans ma table "Nouveaux Messages" si je suis le user A
          * je veux pas recuperer mes propres messages mais plutot les nouveaux messages
-         * que B m'a envoye
+         * que B m'a envoye ;
+         * Pas besoin de reparcourir ma liste total de messages et de les reafficher
          */
         public List<Message> getConvosFromOneUserToAnother(User from, User to, List<Message>allMessages)
         {
@@ -96,8 +97,45 @@ namespace HangTogether
             return convos;
         }
 
+        /*
+         * Fonction qui recupere pour un user quelcquonque
+         * tous les users avec lesquels il est deja rentre en contact(i.e ecrit ou recu un message)
+         */
+        public async Task<List<User>> getUserInContactsWithMe(User user)
+        {
+            List<string> emailUserInContactWithMe = new List<string>();
+            List<Message> allMessages = await GetAllMessages("Messages");
+            DataBaseManager dataBaseManager = new DataBaseManager();
+            List<User> allUsers = await dataBaseManager.GetAllUsers();
+            List<User> usersInContactWithMe = new List<User>();
+            
+            foreach (var messages in allMessages)
+            {
+                var emailToAdd = (messages.fromEmail == user.email)
+                    ? messages.toEmail
+                    : (messages.toEmail == user.email)
+                        ? messages.fromEmail
+                        : "";
 
-        
-        
+                if ((!string.IsNullOrEmpty(emailToAdd)) && (!emailUserInContactWithMe.Contains(emailToAdd)))
+                {
+                    emailUserInContactWithMe.Add(emailToAdd);
+                }
+            }
+
+            foreach (var User in allUsers)
+            {
+                if (emailUserInContactWithMe.Contains(User.email))
+                {
+                    usersInContactWithMe.Add(User);
+                }
+            }
+
+            return usersInContactWithMe;
+        }
+
+
+
+
     }
 }
