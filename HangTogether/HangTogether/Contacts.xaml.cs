@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;
+using Xamarin.CommunityToolkit.UI.Views;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -40,12 +41,29 @@ namespace HangTogether
             foreach (var user in usersInContactWithMe)
             {
                 var nbNouveauxMessages = await getNumberOfNewMessages(user, userGoingThroughHisContacts);
+                StackLayout finalStack = new StackLayout()
+                {
+                    Orientation = StackOrientation.Horizontal,
+                    Margin = new Thickness(15,10,15,10),
+                    Padding = new Thickness(0)
+                };
+
+                AvatarView avatar = new AvatarView()
+                {
+                    Text = user.nom.Substring(0,1),
+                    Color = CreateColor(),
+                    TextColor = Color.White,
+                    Padding = 0,
+                    FontAttributes = FontAttributes.Bold,
+                    HeightRequest = 20,
+                    WidthRequest = 20,
+                    VerticalOptions = LayoutOptions.Center
+                };
+                
                 StackLayout stack = new StackLayout()
                 {
                     Orientation = StackOrientation.Vertical,
-                    BackgroundColor = Color.White,
-                    Margin = new Thickness(0),
-                    Padding = new Thickness(0)
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
                 };
 
                 Label labelNom = new Label()
@@ -53,40 +71,44 @@ namespace HangTogether
                     Text = user.nom + " " + user.prenom,
                     HorizontalOptions = LayoutOptions.CenterAndExpand,
                     VerticalTextAlignment = TextAlignment.Center,
-                    TextColor = Color.Black
+                    TextColor = Color.Black,
+                    FontAttributes = FontAttributes.Bold,
+                    FontSize = 23
                 };
 
                 Label labelNouveauMessage = new Label()
                 {
                     Text = "Nouveau(x) Message(s): "+nbNouveauxMessages,
-                    TextColor = Color.LawnGreen,
+                    TextColor = Color.Gray,
                     HorizontalOptions = LayoutOptions.CenterAndExpand,
                     VerticalTextAlignment = TextAlignment.Center
                 };
 
-                BoxView monSeparateurTop = new BoxView()
+                if (avatar.Color == Color.White)
                 {
-                    Color = Color.Black, VerticalOptions = LayoutOptions.FillAndExpand, HeightRequest = 1
-                };
-                
+                    avatar.TextColor = Color.Black;
+                }
+
                 BoxView monSeparateurBottom = new BoxView()
                 {
-                    Color = Color.Black, VerticalOptions = LayoutOptions.FillAndExpand, HeightRequest = 1
+                    Color = Color.Gray, VerticalOptions = LayoutOptions.FillAndExpand, HeightRequest = 1
                 };
-                
-                stack.Children.Add(monSeparateurTop);
                 stack.Children.Add(labelNom); stack.Children.Add(labelNouveauMessage);
                 stack.Children.Add(monSeparateurBottom);
+                
+                finalStack.Children.Add(avatar);
+                finalStack.Children.Add(stack);
+                
                 
                 // TapEvent on frame :
                 var tapGestureRecognizer = new TapGestureRecognizer();
                 tapGestureRecognizer.Tapped += (s, e) => {
                     // handle the tap
-                    Navigation.PushAsync(new DisplayMessages(userGoingThroughHisContacts,user));
+                     Navigation.PushAsync(new DisplayMessages(userGoingThroughHisContacts,user));
                 };
                 stack.GestureRecognizers.Add(tapGestureRecognizer);
 
-                layout.Children.Add(stack);
+                layout.Children.Add(finalStack);
             }
         }
 
@@ -105,6 +127,17 @@ namespace HangTogether
             }
 
             return nbNouveauxMessages;
+        }
+        
+        
+        /*
+         * Generateur de random couleur pour mes avatars
+         */
+        private static Color CreateColor()
+        {
+            var rand = new Random();
+            Color c = Color.FromRgb(rand.Next(256), rand.Next(256), rand.Next(256));
+            return c;
         }
 
 

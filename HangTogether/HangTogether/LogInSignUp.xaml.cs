@@ -31,7 +31,7 @@ namespace HangTogether
             {
                 DataBaseManager dataBaseManager = new DataBaseManager();
                 var allUser = await dataBaseManager.GetAllUsers();
-                
+               // var hashedMdpEnterByUser = SecureMdp.encryptPassword(this.mdpUser.Text);
                 if (dataBaseManager.isUserValid(this.emailUser.Text,this.mdpUser.Text, allUser))
                 {
                     var user = dataBaseManager.getUser(allUser, this.emailUser.Text);
@@ -133,7 +133,7 @@ namespace HangTogether
                 { // Toast courriel de recouvrement de mot de passe invalide
                     var messageOptions = new MessageOptions
                     {
-                        Message = "Courriel invalide",
+                        Message = "Courriel de verification invalide",
                         Foreground = Color.White,
                         Font = Font.SystemFontOfSize(16),
                         Padding = new Thickness(20)
@@ -143,7 +143,7 @@ namespace HangTogether
                     {
                         MessageOptions = messageOptions,
                         CornerRadius = new Thickness(20, 20, 20, 20),
-                        BackgroundColor = Color.Gray
+                        BackgroundColor = Color.DarkGray
                     };
                     // Toast email entre pour recouvrement mot de passe pas valide
                     await this.DisplayToastAsync(options);

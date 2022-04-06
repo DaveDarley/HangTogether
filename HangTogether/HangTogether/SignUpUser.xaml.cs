@@ -40,7 +40,8 @@ namespace HangTogether
                 }
                 else
                 {
-                    User user = new User(this.nom.Text, this.prenom.Text, this.email.Text, this.mdp.Text,"","","");
+                    string hashedMdp = SecureMdp.encryptPassword(this.mdp.Text);
+                    User user = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"","","");
                     await dataBaseManager.AddUser(user);
                     Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(user));
                 }

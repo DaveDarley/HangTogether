@@ -17,18 +17,23 @@ namespace HangTogether
     {
         private User userFrom;
         private User userTo;
-        private string nomUserTo { get; }
+        private string nomUserTo;
+
+        public string Title { get; set; }
+
         private  System.Timers.Timer aTimer; // initialiser a chaque instance de cette classe
         
         
         public DisplayMessages(User userSendingMessage, User userReceivingMessages)
         {
             InitializeComponent();
-            BindingContext = this;
-            userFrom = userSendingMessage;
+           // BindingContext = this;
+           userFrom = userSendingMessage;
             userTo = userReceivingMessages;
             nomUserTo = userTo.nom + " " + userTo.prenom;
-            
+            Title = nomUserTo;
+            this.BindingContext = this;
+           // this.nomRecepteurMessage.SetBinding(Label.TextProperty, nomUserTo);
             whenUserConnected(); //au debut on recupere ts les messages entre les 2 users dans ma DB(s'il y en a)
            // SetTimer();
            wait_Tick();

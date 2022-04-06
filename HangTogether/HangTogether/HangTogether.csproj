@@ -12,9 +12,7 @@
     
     <ItemGroup>
         <PackageReference Include="FirebaseDatabase.net" Version="4.0.7" />
-        <PackageReference Include="Ooui" Version="0.14.16" />
-        <PackageReference Include="Ooui.AspNetCore" Version="0.14.16" />
-        <PackageReference Include="Ooui.Forms" Version="0.14.16" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
         <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.1" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
         <PackageReference Include="Xamarin.Forms.PancakeView" Version="2.3.0.763-beta" />
@@ -67,6 +65,8 @@
       <EmbeddedResource Include="mes_bg\bg_message.jpeg" />
       <None Remove="mes_bg\ic_send_message.png" />
       <EmbeddedResource Include="mes_bg\ic_send_message.png" />
+      <None Remove="mes_bg\bg_contacts.jpg" />
+      <EmbeddedResource Include="mes_bg\bg_contacts.jpg" />
     </ItemGroup>
 
 

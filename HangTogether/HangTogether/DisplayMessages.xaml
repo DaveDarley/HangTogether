@@ -6,18 +6,19 @@
     
     <NavigationPage.TitleView >
         
-        <StackLayout HorizontalOptions="Start" VerticalOptions="FillAndExpand">
-            <Frame HasShadow="True"  CornerRadius="30" >
-                <Label Text="Fuck you !!" TextColor="Black" FontAttributes="Bold"
-                       HorizontalTextAlignment="Center" HorizontalOptions="StartAndExpand"
-                       VerticalTextAlignment="Center"/>  
-            </Frame>
+        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            
+            <Label  Text="{Binding Title}" TextColor="Black" FontAttributes="Bold"
+                    FontSize="Large" HorizontalTextAlignment="Center" HorizontalOptions="CenterAndExpand"
+                    VerticalTextAlignment="Center" VerticalOptions="CenterAndExpand"/>
+            
         </StackLayout>
         
     </NavigationPage.TitleView>
     
+    
+    
     <ContentPage.Content>
-
         
        <Grid> 
             <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="0"

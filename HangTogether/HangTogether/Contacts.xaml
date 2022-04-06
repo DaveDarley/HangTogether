@@ -1,20 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:hangTogether="clr-namespace:HangTogether;assembly=HangTogether"
+             xmlns:pancakeView="clr-namespace:Xamarin.Forms.PancakeView;assembly=Xamarin.Forms.PancakeView"
              x:Class="HangTogether.Contacts">
+    
+    <NavigationPage.TitleView >
+        
+        
+        <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+            
+            <Label Text="Mes Contacts" TextColor="Black" FontAttributes="Bold"
+                   FontSize="Large" HorizontalTextAlignment="Center" HorizontalOptions="FillAndExpand"
+                   VerticalTextAlignment="Center"/>
+            
+            <pancakeView:PancakeView  WidthRequest="40" HeightRequest="40" 
+                                      HorizontalOptions="End"
+                                      Margin="0,0,10,0" BackgroundColor="White" CornerRadius="5" x:Name="menuLogo">
+                
+              <!--  <pancakeView:PancakeView.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTapMenu"/>
+                </pancakeView:PancakeView.GestureRecognizers> -->
+                
+                <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.ic_menu_user.png}" Aspect="AspectFill" />
+            </pancakeView:PancakeView>
+            
+        </StackLayout>
+        
+    </NavigationPage.TitleView>
+    
+    
     <ContentPage.Content>
         
+        <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="LightGray" Margin="0,25,0,0" Padding="0"
+               CornerRadius="30" >
 
-        <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="White" Margin="0" Padding="0">
-                <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Orientation="Vertical">
-                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                                 Orientation="Vertical" x:Name="containerContacts" Margin="0" Padding="0">
-                        
-                    </StackLayout>
-            </ScrollView>
+                
+                    <ScrollView Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Margin="0,10,0,0">
+                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                                         Orientation="Vertical" x:Name="containerContacts" Margin="0" Padding="0">
+                                
+                            </StackLayout>
+                    </ScrollView>
+   
         </Frame>
-        
         
     </ContentPage.Content>
 </ContentPage>
