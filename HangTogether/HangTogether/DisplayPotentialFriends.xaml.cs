@@ -160,15 +160,18 @@ namespace HangTogether
             {
                 await DisplayAlert("Recherche nouveau pote",
                     "Aucun utilisateur a les memes interets que toi, Essaie d'elargir ta liste d'interets", "OK");
-                await Navigation.PushAsync(new ChooseAndModifyInterests(userLookingForNewFriends));
-                // on enleve page de DisplayPotentialFriends de la liste de NAVIGATIONPAGE
-                Navigation.RemovePage(Navigation.NavigationStack[1]);
+
+                await Application.Current.MainPage.Navigation.PopAsync();
+                
+                /*  await Navigation.PushAsync(new ChooseAndModifyInterests(userLookingForNewFriends));
+                  // on enleve page de DisplayPotentialFriends de la liste de NAVIGATIONPAGE
+                  Navigation.RemovePage(Navigation.NavigationStack[1]); */
             }
 
 
 
         }
-        
+       
         
         public ObservableCollection<DisplayUser> Profile
         {

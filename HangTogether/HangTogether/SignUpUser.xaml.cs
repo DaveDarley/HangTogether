@@ -40,8 +40,11 @@ namespace HangTogether
                 }
                 else
                 {
-                    string hashedMdp = SecureMdp.encryptPassword(this.mdp.Text);
-                    User user = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"","","");
+                    Byte[] saltToEncryptMdp = SecureMdp.getSaltForEncryption();
+                    string saltToEncryptMdpToSaveInDB = SecureMdp.byteArraySaltToString(saltToEncryptMdp);
+                    string hashedMdp = SecureMdp.encryptPassword(this.mdp.Text, saltToEncryptMdp);
+                    User user = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"","","",saltToEncryptMdpToSaveInDB);
+                    
                     await dataBaseManager.AddUser(user);
                     Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(user));
                 }

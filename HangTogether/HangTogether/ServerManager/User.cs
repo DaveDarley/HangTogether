@@ -6,7 +6,7 @@ namespace HangTogether.ServerManager
 {
     public class User
     {
-        public User(string nom, string prenom, string email, string mdp,string Key,string loisirs, string anecdotes)
+        public User(string nom, string prenom, string email, string mdp,string Key,string loisirs, string anecdotes, string saltToEncryptMdp)
         {
             this.nom = nom;
             this.prenom = prenom;
@@ -15,6 +15,7 @@ namespace HangTogether.ServerManager
             this.Key = Key;
             this.loisirs = loisirs;
             this.anecdotes = anecdotes;
+            this.saltToEncryptMdp = saltToEncryptMdp;
         }
 
         public string nom { get; set; }
@@ -27,6 +28,8 @@ namespace HangTogether.ServerManager
         public string Key { get; set; } //To Store ID
 
         public string anecdotes { get; set; }
+
+        public string saltToEncryptMdp { get; set; }
 
 
     }

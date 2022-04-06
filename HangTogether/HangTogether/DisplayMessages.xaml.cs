@@ -27,20 +27,16 @@ namespace HangTogether
         public DisplayMessages(User userSendingMessage, User userReceivingMessages)
         {
             InitializeComponent();
-           // BindingContext = this;
            userFrom = userSendingMessage;
             userTo = userReceivingMessages;
             nomUserTo = userTo.nom + " " + userTo.prenom;
             Title = nomUserTo;
             this.BindingContext = this;
-           // this.nomRecepteurMessage.SetBinding(Label.TextProperty, nomUserTo);
             whenUserConnected(); //au debut on recupere ts les messages entre les 2 users dans ma DB(s'il y en a)
            // SetTimer();
            wait_Tick();
         }
         
-        //public string nomUserTo { get; }
-
         /*
          * Fonction qui s'occupe d'aller recuperer tous les ANCIENS messages entre 2 users pour les afficher.
          */
@@ -51,6 +47,24 @@ namespace HangTogether
             List<Message> messagesBetweenUserSendingAndUserReceiving =
                 dataBaseMessagesManager.getConvos(userFrom, userTo, listMessagesTotal);
             displayAllConvos(messagesBetweenUserSendingAndUserReceiving);
+            
+            /*
+             * Vrai prob: Les nouveaux messages recu qd le user etait pas connectes sont dans 2 tables (Messages et Nouveaux Messages);
+             * Alors on affiche ceux dans la table Messages et on efface les repetitions qui sont dans la table
+             * "Nouveaux Messages"
+             */
+            List<Message> nouveauxMessages = await dataBaseMessagesManager.GetAllMessages("Nouveaux Messages");
+            
+            List<Message> nouveauxMessagesBetweenUserSendingAndUserReceiving =
+                dataBaseMessagesManager.getConvosFromOneUserToAnother(userTo, userFrom, nouveauxMessages);
+                
+            if (nouveauxMessagesBetweenUserSendingAndUserReceiving.Count > 0)
+            {
+                foreach (var message in nouveauxMessagesBetweenUserSendingAndUserReceiving)
+                {
+                    await dataBaseMessagesManager.deleteMessageFromNonReadMEssages(message);
+                }
+            }
 
         }
 

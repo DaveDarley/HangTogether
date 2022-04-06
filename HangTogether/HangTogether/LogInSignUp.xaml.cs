@@ -31,7 +31,7 @@ namespace HangTogether
             {
                 DataBaseManager dataBaseManager = new DataBaseManager();
                 var allUser = await dataBaseManager.GetAllUsers();
-               // var hashedMdpEnterByUser = SecureMdp.encryptPassword(this.mdpUser.Text);
+                
                 if (dataBaseManager.isUserValid(this.emailUser.Text,this.mdpUser.Text, allUser))
                 {
                     var user = dataBaseManager.getUser(allUser, this.emailUser.Text);

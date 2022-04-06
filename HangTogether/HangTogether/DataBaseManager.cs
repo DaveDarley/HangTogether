@@ -51,7 +51,7 @@ namespace HangTogether
             return (await firebase
                 .Child("Users")
                 .OnceAsync<User>()).Select(item => new User(
-                item.Object.nom, item.Object.prenom, item.Object.email, item.Object.mdp ,item.Key,item.Object.loisirs, item.Object.anecdotes)
+                item.Object.nom, item.Object.prenom, item.Object.email, item.Object.mdp ,item.Key,item.Object.loisirs, item.Object.anecdotes, item.Object.saltToEncryptMdp)
            /* {
                 nom = item.Object.nom,
                 prenom = item.Object.prenom,
@@ -68,7 +68,7 @@ namespace HangTogether
          */
         public User getUser(List<User> mesUsers, string emailUser)
         {
-            User monUser = new User("", "", "", "","","","");
+            User monUser = new User("", "", "", "","","","", "");
             foreach (var user in mesUsers)
             {
                 if (user.email == emailUser)
@@ -101,13 +101,21 @@ namespace HangTogether
          * On verifie si l'email et le mdp entre par le user lors de l'etape de
          * sign in existe dans la BD mais aussi est ce qu'ils appartiennent les 2
          * a la meme entrée; Si oui le user est valide.
+         *
+         * Idee: Pour chaque user ,j'utilise le salt du user et le mdp passe en
+         * parametre et j'encrypte le mdp; Si le resultat de l'encryption de ce mdp
+         * et l'email appartient a un meme user alors le user est valide.
          */
         public bool isUserValid(string emailUser, string mdp, List<User> mesUsers)
         {
             bool canUserConnect = false;
             foreach (var user in mesUsers)
             {
-                if (user.email == emailUser && user.mdp == mdp)
+                string saltUser = user.saltToEncryptMdp;
+                Byte[] saltUserInByteArray = SecureMdp.stringToByteArraySalt(saltUser);
+                String mdpEncrypt = SecureMdp.encryptPassword(mdp, saltUserInByteArray);
+                
+                if (user.email == emailUser && user.mdp == mdpEncrypt)
                 {
                     canUserConnect =  true;
                 }  
