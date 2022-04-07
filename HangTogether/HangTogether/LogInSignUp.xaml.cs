@@ -94,7 +94,7 @@ namespace HangTogether
          */
         async void OnTapForgetPassword(object sender, EventArgs args)
         {
-            string emailUser = await DisplayPromptAsync("Recover Password", "What's your email?");
+            string emailUser = await DisplayPromptAsync("Recouvrement de Mot de passe", "Quel est votre courriel?");
             if (!String.IsNullOrEmpty(emailUser))
             {
                 DataBaseManager dataBaseManager = new DataBaseManager();
@@ -121,7 +121,7 @@ namespace HangTogether
                         smtp.Send(message);
 
                         RecoverPasswordUser userPasswordRecover = new RecoverPasswordUser(emailUser, verifCode);
-                       // dataBaseManager.adduserPasswordRecovery(userPasswordRecover);
+                        // dataBaseManager.adduserPasswordRecovery(userPasswordRecover);
                         await Navigation.PushAsync(new ForgottenPassword(userPasswordRecover));
                     }
                     catch (Exception ex)
@@ -180,7 +180,6 @@ namespace HangTogether
         async void OnTapSignUp(object sender, EventArgs args)
         {
             await Navigation.PushAsync(new SignUpUser());
-            
         }
         
 

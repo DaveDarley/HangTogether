@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HangTogether.ServerManager;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -48,13 +49,15 @@ namespace HangTogether
         public ChooseAndModifyInterests(User activeUser)
         {
             InitializeComponent();
+            /*var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
+            this.frameMenu.HeightRequest = mainDisplayInfo.Height / 3;*/
+            
             user = activeUser;
             initializeListsOfInterests();
             
             addLoisirsToLayout(choixUserEnFrameADessiner);
-
             
-            invisibleMenu();
+           // invisibleMenu();
         }
 
         /*
@@ -409,39 +412,43 @@ namespace HangTogether
 
         }
         
-        
 
         
-        public async void invisibleMenu()
-        {
-           // await DisplayAlert("mesure", frameMenu.TranslationY + "", "accept");
-           // Pk +40, jcomprends pas encore mais ca marche normale
-            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest +40);
-            //await DisplayAlert("mesure", frameMenu.TranslationY + "", "accept");
-        }
         
         /*
          * Fonction qui s'occupe de l'apparition du menu
          * sur l'ecran
+         * SRC: http://xamaringuyshow.com/2020/06/21/xamarin-forms-bottom-slider/
          */
 
-        // J'utilise pas await pour gerer le cas ou user presse boutton 
-        // menu qd le menu est entrain de monter (ou descendre)
         async void OnTapMenu(Object o, EventArgs e)
         {
-            
-            if (frameMenu.TranslationY.Equals(frameMenu.HeightRequest +40))
-            {
-                await this.frameMenu.TranslateTo(0, 0, 1000);
-                return;
-            }
-
-            if (frameMenu.TranslationY.Equals(0 ))
-            {
-                await frameMenu.TranslateTo(0, frameMenu.TranslationY+frameMenu.HeightRequest+40 , 1000);
-                return;
-            }
+           var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
+           if (frameMenu.HeightRequest == 0)
+           {
+               Action<double> callback = input => frameMenu.HeightRequest = input;
+               double startHeight = 0;
+               double endHeight = /*mainDisplayInfo.Height*/Application.Current.MainPage.Height/3;
+               uint rate = 32;
+               uint length = 500;
+               Easing easing = Easing.CubicOut;
+               frameMenu.Animate("anim", callback, startHeight, endHeight, rate, length, easing);
+               return;
+           }
+           else
+           {
+               Action<double> callback = input => frameMenu.HeightRequest = input;
+               double startHeight = /*mainDisplayInfo.Height*/ Application.Current.MainPage.Height/3;
+               double endiendHeight = 0;
+               uint rate = 32;
+               uint length = 500;
+               Easing easing = Easing.SinOut;
+               frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
+           }
+           
         }
+        
+        
 
         
         

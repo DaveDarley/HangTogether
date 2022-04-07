@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.UI.Views;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -139,6 +140,69 @@ namespace HangTogether
             Color c = Color.FromRgb(rand.Next(256), rand.Next(256), rand.Next(256));
             return c;
         }
+        
+                /*
+         * Fonction qui s'occupe de l'apparition du menu
+         * sur l'ecran
+         * SRC: http://xamaringuyshow.com/2020/06/21/xamarin-forms-bottom-slider/
+         */
+
+        async void OnTapMenu(Object o, EventArgs e)
+        {
+           var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
+           if (frameMenu.HeightRequest == 0)
+           {
+               Action<double> callback = input => frameMenu.HeightRequest = input;
+               double startHeight = 0;
+               double endHeight = /*mainDisplayInfo.Height*/Application.Current.MainPage.Height/3;
+               uint rate = 32;
+               uint length = 500;
+               Easing easing = Easing.CubicOut;
+               frameMenu.Animate("anim", callback, startHeight, endHeight, rate, length, easing);
+               return;
+           }
+           else
+           {
+               Action<double> callback = input => frameMenu.HeightRequest = input;
+               double startHeight = /*mainDisplayInfo.Height*/ Application.Current.MainPage.Height/3;
+               double endiendHeight = 0;
+               uint rate = 32;
+               uint length = 500;
+               Easing easing = Easing.SinOut;
+               frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
+           }
+           
+        }
+        
+        
+
+        
+        
+         
+         /*
+          * Dans ces 4 prochaines fonctions , je gere lorsque le
+          * user clique sur un element du menu
+          */
+          void OnTapFindFriends(object o, EventArgs e)
+         {
+             ProfilUser.GestionClickMenu("pote", userGoingThroughHisContacts);
+         }
+           void OnTapChooseInterests(object o, EventArgs e)
+         {
+             ProfilUser.GestionClickMenu("loisirs",userGoingThroughHisContacts);
+         }
+           void OnTapViewMessages(object o, EventArgs e)
+         {
+             ProfilUser.GestionClickMenu("messages",userGoingThroughHisContacts);
+         }
+         async void OnTapDeactivateAccount(object o, EventArgs e)
+         {
+             bool desactiverCompte = await DisplayAlert ("Desactivation Compte", "Etes vous sur de vouloir desactiver votre compte", "Oui", "Non");
+             if (desactiverCompte)
+             {
+                 ProfilUser.GestionClickMenu("delete",userGoingThroughHisContacts);
+             }
+         }
 
 
     }

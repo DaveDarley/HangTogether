@@ -48,9 +48,12 @@
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 
-                <CarouselView Grid.Row="0" Grid.Column="0" x:Name="TheCarousel"
+            <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Vertical" HorizontalOptions="FillAndExpand"
+                         VerticalOptions="FillAndExpand">
+                <CarouselView  x:Name="TheCarousel"
                               ItemsSource="{Binding Profile}"
-                              PeekAreaInsets="0" Margin="10,20,10,10">
+                              PeekAreaInsets="0" Margin="10,20,10,10"
+                              IndicatorView="indicatorView">
 
                     
                     <CarouselView.ItemsLayout>
@@ -154,7 +157,11 @@
                                     
                                     
                                 </Grid>
+
+
                     </StackLayout>
+                        
+                        
                    
                     
                 </pancakeView:PancakeView>
@@ -163,11 +170,20 @@
                     </CarouselView.ItemTemplate>
                     
                 </CarouselView>
+                
+                <IndicatorView x:Name="indicatorView"
+                               IndicatorColor="LightGray"
+                               SelectedIndicatorColor="DarkGray"
+                               HorizontalOptions="Center"
+                               Margin="0,20,0,0"/>
+                
+            </StackLayout>
+            
             
             <Frame Grid.Row="1" Grid.Column="0" CornerRadius="30" BackgroundColor="MediumSlateBlue" Margin="25,30,25,10"
                    VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <Label Text="ENVOYEZ UN MESSAGE" TextColor="White" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                       VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" x:Name="sendMessageToNewFriend">
+                       HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" x:Name="sendMessageToNewFriend">
                 </Label>
                 <Frame.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnTapSendMessage"></TapGestureRecognizer>
@@ -184,14 +200,11 @@
 
     </StackLayout>
         
-        <Frame 
-            x:Name="frameMenu"
-            CornerRadius="20"
-            HasShadow="true"
-            HeightRequest="200"
-            VerticalOptions="EndAndExpand">
+        <pancakeView:PancakeView  VerticalOptions="EndAndExpand"  x:Name="frameMenu" CornerRadius="20" HorizontalOptions="FillAndExpand" HeightRequest="0"
+                                  BackgroundColor="White"> 
+
             
-            <StackLayout Orientation="Vertical" Margin="10,0,10,0" VerticalOptions="FillAndExpand">
+            <StackLayout Orientation="Vertical" Margin="10,10,10,10" VerticalOptions="FillAndExpand">
                 
                 <Grid VerticalOptions="FillAndExpand">
                     <Grid.ColumnDefinitions>
@@ -203,55 +216,52 @@
                         <RowDefinition Height="0.5*" />
                     </Grid.RowDefinitions>
                     
-                    <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True">
-                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="TROUVER&#10;UN POTE"
+                    <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
+                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="TROUVER&#10;UN POTE"
                                TextColor="White">
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer>
-                            </Label.GestureRecognizers>
+                            </Label.GestureRecognizers> 
                             
                         </Label>   
                     </Frame>
-                    
-                    <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True">
-                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="MODIFIER&#10;MES LOISIRS"
-                               TextColor="Black">
+                    <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
+                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="MODIFIER&#10;MES LOISIRS"
+                               TextColor="Black" >
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
-                            </Label.GestureRecognizers>
+                            </Label.GestureRecognizers> 
                             
                         </Label>  
                     </Frame>
-                    
-                    <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True">
-                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="VOIR MES&#10;MESSAGES"
-                               TextColor="Black">
+                    <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
+                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="VOIR MES&#10;MESSAGES"
+                               TextColor="Black" >
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer>
-                            </Label.GestureRecognizers>
+                            </Label.GestureRecognizers> 
                             
                         </Label>  
                     </Frame>
-                    
-                    <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True">
-                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="DESACTIVER&#10;MON COMPTE"
-                               TextColor="White">
+                    <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
+                        <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="DESACTIVER&#10;MON COMPTE"
+                               TextColor="White" >
                             
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer>
-                            </Label.GestureRecognizers>
+                            </Label.GestureRecognizers> 
                             
                         </Label>  
                     </Frame>
-                    
                 </Grid>
                 
             </StackLayout>
             
-        </Frame>
+ 
+        </pancakeView:PancakeView> 
         </Grid>
     
         </ContentPage.Content>

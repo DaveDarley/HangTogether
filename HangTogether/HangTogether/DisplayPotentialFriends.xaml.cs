@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.PancakeView;
 using Xamarin.Forms.Xaml;
@@ -24,9 +25,6 @@ namespace HangTogether
             BindingContext = this;
             userLookingForNewFriends = user;
             CardBinding();
-            
-            // rentrer le menu en bas de l'ecran
-            invisibleMenu();
         }
 
         
@@ -48,24 +46,12 @@ namespace HangTogether
          */
         async void OnTapSendMessage(Object o, EventArgs e)
         {
-            
             DisplayUser userInDisplay = TheCarousel.CurrentItem as DisplayUser;
             User userToSendMessage = userInDisplay.user;
             
             await Navigation.PushAsync(new DisplayMessages(this.userLookingForNewFriends,userToSendMessage));
-            
-            // Test:
-            //await this.DisplayToastAsync("J'ai clique sur : "+userToSendMessage.nom, 5000);
         }
 
-
-        public async void invisibleMenu()
-        {
-            // await DisplayAlert("mesure", frameMenu.TranslationY + "", "accept");
-            // Pk +40, jcomprends pas encore mais ca marche normale
-            this.frameMenu.TranslationY +=   (this.frameMenu.HeightRequest +40);
-            //await DisplayAlert("mesure", frameMenu.TranslationY + "", "accept");
-        }
         
         /*
          * Fonction qui s'occupe de l'apparition du menu
@@ -73,16 +59,27 @@ namespace HangTogether
          */
         async void OnTapMenu(Object o, EventArgs e)
         {
-            if (frameMenu.TranslationY.Equals(frameMenu.HeightRequest +40))
+            var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
+            if (frameMenu.HeightRequest == 0)
             {
-                await this.frameMenu.TranslateTo(0, 0, 1000);
+                Action<double> callback = input => frameMenu.HeightRequest = input;
+                double startHeight = 0;
+                double endHeight = /*mainDisplayInfo.Height*/Application.Current.MainPage.Height/3;
+                uint rate = 32;
+                uint length = 500;
+                Easing easing = Easing.CubicOut;
+                frameMenu.Animate("anim", callback, startHeight, endHeight, rate, length, easing);
                 return;
             }
-
-            if (frameMenu.TranslationY.Equals(0 ))
+            else
             {
-                await frameMenu.TranslateTo(0, frameMenu.TranslationY+frameMenu.HeightRequest+40 , 1000);
-                return;
+                Action<double> callback = input => frameMenu.HeightRequest = input;
+                double startHeight = /*mainDisplayInfo.Height*/ Application.Current.MainPage.Height/3;
+                double endiendHeight = 0;
+                uint rate = 32;
+                uint length = 500;
+                Easing easing = Easing.SinOut;
+                frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
             }
         }
         

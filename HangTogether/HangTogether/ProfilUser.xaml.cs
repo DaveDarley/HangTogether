@@ -16,7 +16,7 @@ namespace HangTogether
          * Ici je gere ou aller lorsque le user
          * a cliqué sur un element du menu
          */
-        public static async  void GestionClickMenu(string elementClique, User user)
+        public static async void GestionClickMenu(string elementClique, User user)
         {
             switch (elementClique)
             {
