@@ -84,8 +84,14 @@ namespace HangTogether
                 // C'est bien un user valide qui change son mdp
                 if (verifCodeSendToUser == verifCodeEnterByUser)
                 {
+                    
+                    Byte[] saltToEncryptMdp = SecureMdp.getSaltForEncryption();
+                    string saltToEncryptMdpToSaveInDB = SecureMdp.byteArraySaltToString(saltToEncryptMdp);
+                    string hashedMdp = SecureMdp.encryptPassword(this.nouveauMdp.Text, saltToEncryptMdp);
+                    
                     // change mdp de ce user dans l'autre table
-                    toUpdate.mdp = this.nouveauMdp.Text;
+                    toUpdate.mdp = hashedMdp;
+                    toUpdate.saltToEncryptMdp = saltToEncryptMdpToSaveInDB;
                     await dataBaseManager.UpdateUser(toUpdate);
                     Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(toUpdate));
                 }
