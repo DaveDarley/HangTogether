@@ -12,10 +12,7 @@ namespace HangTogether
         private DataBaseManager dbManager;
         public App()
         {
-            dbManager = new DataBaseManager(); 
             MainPage =  new NavigationPage(new LogInSignUp());
-           // User a = new User("", "", "", "", "", "","");
-           //  MainPage = new DisplayMessages(a);
         }
 
         protected override void OnStart()

@@ -10,10 +10,6 @@ namespace HangTogether
         private User user;
         public ProfilUser()
         {
-           // InitializeComponent();
-            
-
-            
         }
 
         /*
@@ -31,9 +27,12 @@ namespace HangTogether
                  Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(user));
                  break;
              case   "messages":
-                 //await Navigation.PushAsync(new Contacts(user));
                  Application.Current.MainPage = new NavigationPage(new Contacts(user));
-
+                 break;
+             case("delete"):
+                 DataBaseManager dataBaseManager = new DataBaseManager();
+                 dataBaseManager.deleteUser(user);
+                 Application.Current.MainPage = new NavigationPage(new LogInSignUp());
                  break;
             }
         }

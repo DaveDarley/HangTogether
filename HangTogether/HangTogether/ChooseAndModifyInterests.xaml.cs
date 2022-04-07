@@ -467,8 +467,7 @@ namespace HangTogether
              bool desactiverCompte = await DisplayAlert ("Desactivation Compte", "Etes vous sur de vouloir desactiver votre compte", "Oui", "Non");
              if (desactiverCompte)
              {
-                 // Supprmimer user de la base de données
-                 Application.Current.MainPage = new NavigationPage(new LogInSignUp());
+                 ProfilUser.GestionClickMenu("delete",user);
              }
          }
          

@@ -144,6 +144,7 @@ namespace HangTogether
             
             if (messageToDisplayOnScreen.Count > 0)
             {
+                Frame lastFrameToScrollTo = new Frame();
                 foreach (var message in messageToDisplayOnScreen)
                 {
                     var stackLayout = new StackLayout()
@@ -193,14 +194,30 @@ namespace HangTogether
                     }
                     
                     layoutUser.Children.Add(frameMessage);
-                    
+                    lastFrameToScrollTo = frameMessage;
                     // put scrollview at the bottom the last message not working quite well
-                    await this.scrollMessages.ScrollToAsync(frameMessage,ScrollToPosition.MakeVisible,true);
-
                 }
+                await this.scrollMessages.ScrollToAsync(lastFrameToScrollTo,ScrollToPosition.MakeVisible,true);
+
                // await this.scrollMessages.ScrollToAsync(0,scrollMessages.Content.Height,true);
 
             }
+        }
+        
+        /*
+         * Function qui gere lorsque le user clique sur la fleche de retour
+         * PK: Je veux update (si necessaire) les infos de cette page
+         * lorsque user retourne sur la page.
+         */
+        protected override bool OnBackButtonPressed()
+        {
+
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                Application.Current.MainPage = new NavigationPage(new Contacts(userFrom));
+            });
+
+            return true;
         }
 
         

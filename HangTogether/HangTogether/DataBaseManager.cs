@@ -39,6 +39,15 @@ namespace HangTogether
                 .PutAsync(user); 
         }
 
+        /*
+         * Qd un user desactive son compte , on l'efface de la DB
+         */
+        public async Task deleteUser(User user)
+        {
+            await firebase.Child("Users").Child(user.Key).DeleteAsync(); 
+
+        }
+
 
         /*
          * Fonction qui recupere tous les users de mon DB
