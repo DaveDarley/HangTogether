@@ -35,15 +35,22 @@
         
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             
-        <Grid>
-            <Grid.RowDefinitions>
+            <!-- Gestion du click du user qd menu ouvert -->
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTapBg"/>
+            </Grid.GestureRecognizers>
+            
+            <!-- Lorsque le menu est ouvert j'enleve toutes les interactions de ce grid 
+                 avec IsEnabled=false-->
+            <Grid x:Name="gridLoisirs">
+                <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="150"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             
             <Frame Grid.Row="0" Grid.Column="0" Margin="30,5,30,0" CornerRadius="15"
@@ -98,13 +105,15 @@
             
             <Frame Grid.Row="2" Grid.Column="0" CornerRadius="15" HasShadow="True"
                    BorderColor="DarkCyan" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                   Margin="20,0,20,0" Padding="15,5,15,0">
-                <StackLayout VerticalOptions="Fill" HorizontalOptions="FillAndExpand" Orientation="Vertical">
+                   Margin="20,0,20,0" Padding="15,2,15,0" HeightRequest="0" x:Name="frameAnecdotes"
+                   >
+                
+                <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Orientation="Vertical">
                     <Label Text="Anecdotes" TextColor="Black" FontAttributes="Bold" HorizontalTextAlignment="Center"
-                           VerticalTextAlignment="Center" FontSize="Large" Margin="0"/>
+                           VerticalTextAlignment="Center" Margin="0" Padding="0"/>
                     <Editor x:Name="anecdotesUser" Placeholder="Veuillez inscrire vos anecdotes"
                            HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                           Margin="0" TextChanged="Editor_TextChanged"/>
+                           Margin="0" TextChanged="Editor_TextChanged" />
                 </StackLayout>
             </Frame>
             

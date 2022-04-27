@@ -102,31 +102,16 @@ namespace HangTogether
                 bool isUserValid = dataBaseManager.isEmailAlreadyInUsage(emailUser, allUser);
                 if (isUserValid)
                 {
-                    string verifCode = generateVerifCodeRandom();
-                    
-                    //https://www.c-sharpcorner.com/article/xamarin-forms-send-email-using-smtp2/
-                    try
+                    string verifCode = VerificationEmail.verifEmail(emailUser);
+                    if (!String.IsNullOrEmpty(verifCode) && verifCode != "Erreur lors de l'envoie du code de verification")
                     {
-                        MailMessage message = new MailMessage();
-                        SmtpClient smtp = new SmtpClient("smtp.gmail.com");
-                        message.From = new MailAddress("hangtogether.app@gmail.com");
-                        message.To.Add(new MailAddress(emailUser));
-                        message.Subject = "Recouvrement mot de passe App:HangTogether";
-                        message.Body = "Votre de code de verification est: "+ verifCode;
-                        smtp.Port = 587;
-                        smtp.Host = "smtp.gmail.com"; //for gmail host
-                        smtp.EnableSsl = true;
-                        smtp.UseDefaultCredentials = false;
-                        smtp.Credentials = new System.Net.NetworkCredential("hangtogether.app@gmail.com", "boxafkachcvptyrl");
-                        smtp.Send(message);
-
                         RecoverPasswordUser userPasswordRecover = new RecoverPasswordUser(emailUser, verifCode);
                         // dataBaseManager.adduserPasswordRecovery(userPasswordRecover);
                         await Navigation.PushAsync(new ForgottenPassword(userPasswordRecover));
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        DisplayAlert("Erreur lors de l'envoie du code de verification", ex.Message, "OK");
+                        await DisplayAlert("Code de vérification recouvrement mot de passe", "Erreur lors de l'envoie du code de vérification, veuillez réessayer", "OK");
                     }
                 }
                 else
@@ -152,29 +137,6 @@ namespace HangTogether
             
         }
 
-        /*
-         * Cette fonction genere de maniere ALEATOIRE
-         * une suite de 10 lettres
-         * Src: https://www.softwaretestinghelp.com/csharp-random-number/
-         */
-        public string generateVerifCodeRandom()
-        {
-            Random ran = new Random();
-             
-            String b = "abcdefghijklmnopqrstuvwxyz";
-            
-            int length = 10;
-             
-            String randomCodeVerification = "";
-             
-            for(int i =0; i<length; i++)
-            {
-                int a = ran.Next(26);
-                randomCodeVerification = randomCodeVerification + b.ElementAt(a);
-            }
-
-            return randomCodeVerification;
-        }
         
         
         async void OnTapSignUp(object sender, EventArgs args)

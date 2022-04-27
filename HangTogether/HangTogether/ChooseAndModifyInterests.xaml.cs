@@ -39,25 +39,22 @@ namespace HangTogether
 
         // List qui contient une liste de loisirs selectionnes par le user
         public List<string> choixDeLutilisateur = new List<string>();
-
-
-        private bool isMenuOpen = false;
-
+        
         // LE USER EN QUESTION
         private User user;
 
         public ChooseAndModifyInterests(User activeUser)
         {
             InitializeComponent();
-            /*var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
-            this.frameMenu.HeightRequest = mainDisplayInfo.Height / 3;*/
+            frameAnecdotes.HeightRequest =
+                DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.15;
+            
+            DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
             
             user = activeUser;
             initializeListsOfInterests();
             
             addLoisirsToLayout(choixUserEnFrameADessiner);
-            
-           // invisibleMenu();
         }
 
         /*
@@ -266,7 +263,7 @@ namespace HangTogether
          * le searchBar et affiche dans le flexLayout les
          * Frames qui correspond a la recherche (s'il y en a)
          *
-         * Losrque User tape texte dans le searchbar, on parcours notre liste de frame
+         * Lorsque User tape texte dans le searchbar, on parcours notre liste de frame
          * si le texte du frame contient le query du user (ou query contient texte du frame) on met le frame.IsVisible
          * a true sinon on le met a false.
          */
@@ -411,48 +408,65 @@ namespace HangTogether
             }
 
         }
-        
 
-        
-        
+
         /*
-         * Fonction qui s'occupe de l'apparition du menu
-         * sur l'ecran
-         * SRC: http://xamaringuyshow.com/2020/06/21/xamarin-forms-bottom-slider/
+         * Fonction qui s'occupe de baisser le menu lorsque le user clique n'importe ou
+         * sur l'ecran:
+         * Si GridLoisirs.IsEnabled = false c-a-d mon menu est sur l'ecran alors je descends
+         * le menu est j'active les interactions avec les users
          */
+        async void OnTapBg(Object o, EventArgs e)
+        {
+            if (!this.gridLoisirs.IsEnabled)
+            {
+                Action<double> callback = input => frameMenu.HeightRequest = input;
+                double startHeight = /*mainDisplayInfo.Height*/ Application.Current.MainPage.Height/3;
+                double endiendHeight = 0;
+                uint rate = 32;
+                uint length = 500;
+                Easing easing = Easing.SinOut;
+                frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
+                this.gridLoisirs.IsEnabled = true;
+            }
+        }
 
+
+        /*
+         * Fonction qui s'occupe de l'apparition et de la disparition du menu sur l'ecran
+         * SRC: http://xamaringuyshow.com/2020/06/21/xamarin-forms-bottom-slider/
+         * SRC: https://stackoverflow.com/questions/32494482/disable-user-interaction-to-current-page
+         * SRC: https://social.msdn.microsoft.com/Forums/en-US/4db8de72-a7c0-4431-b09b-4f8da19de0dd/how-to-check-if-anything-happened-in-the-app-like-screen-was-touched?forum=xamarinios
+         */
         async void OnTapMenu(Object o, EventArgs e)
         {
-           var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
            if (frameMenu.HeightRequest == 0)
            {
                Action<double> callback = input => frameMenu.HeightRequest = input;
                double startHeight = 0;
-               double endHeight = /*mainDisplayInfo.Height*/Application.Current.MainPage.Height/3;
+               double endHeight = Application.Current.MainPage.Height/3;
                uint rate = 32;
                uint length = 500;
                Easing easing = Easing.CubicOut;
                frameMenu.Animate("anim", callback, startHeight, endHeight, rate, length, easing);
+               this.gridLoisirs.IsEnabled = false;// empecher a ce que user clique en bg lorsque le menu apparait 
                return;
            }
            else
            {
                Action<double> callback = input => frameMenu.HeightRequest = input;
-               double startHeight = /*mainDisplayInfo.Height*/ Application.Current.MainPage.Height/3;
+               double startHeight = Application.Current.MainPage.Height/3;
                double endiendHeight = 0;
                uint rate = 32;
                uint length = 500;
                Easing easing = Easing.SinOut;
                frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
+               this.gridLoisirs.IsEnabled = true; // je rends les interactions (event) du grid possible
            }
            
         }
         
         
-
-        
-        
-         
          /*
           * Dans ces 4 prochaines fonctions , je gere lorsque le
           * user clique sur un element du menu
@@ -478,6 +492,32 @@ namespace HangTogether
              }
          }
          
+         
+         /*
+          * Fonction qui s'occupe de la dimension de la case anecdotes dependemments de l'orientation
+          * de l'ecran
+          * Alternative : mettre * dans grid et non Auto
+          * Src: https://stackoverflow.com/questions/61937146/find-device-orientation-not-app-orientation-using-xamarin-forms
+          */
+         public void OnMainDisplayInfoChanged(object sender, DisplayInfoChangedEventArgs e)
+         {
+             frameMenu.HeightRequest = 0; // si le menu etait ouvert qd on rotate le tlf, il doit devenir fermer
+             if (e.DisplayInfo.Orientation.ToString() == "Portrait")
+             {
+                 frameAnecdotes.HeightRequest =
+                     DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.25;
+                 anecdotesUser.HeightRequest =
+                     DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.22;
+                 return;
+             }
+             if (e.DisplayInfo.Orientation.ToString() == "Landscape")
+             {
+                 frameAnecdotes.HeightRequest =
+                     DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.2;
+                 anecdotesUser.HeightRequest =
+                     DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.18;
+             }
+         }
          
         
         

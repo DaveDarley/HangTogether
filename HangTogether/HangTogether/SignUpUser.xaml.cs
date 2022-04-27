@@ -40,13 +40,26 @@ namespace HangTogether
                 }
                 else
                 {
-                    Byte[] saltToEncryptMdp = SecureMdp.getSaltForEncryption();
-                    string saltToEncryptMdpToSaveInDB = SecureMdp.byteArraySaltToString(saltToEncryptMdp);
-                    string hashedMdp = SecureMdp.encryptPassword(this.mdp.Text, saltToEncryptMdp);
-                    User user = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"","","",saltToEncryptMdpToSaveInDB);
+                    // Deuxieme Verfication user:
+                    string codeVerifUserToCheck = VerificationEmail.verifEmail(this.email.Text);
+                    string codeVerifUser = await DisplayPromptAsync("Vérification Email", "Veuillez entrer le code recu par courriel");
+                    if (!String.IsNullOrEmpty(codeVerifUser) && codeVerifUserToCheck == codeVerifUser) // user correct
+                    {
+                        // Encryption du mot de passe du user pour ne pas l'enregistrer tel quel dans la BD
+                        Byte[] saltToEncryptMdp = SecureMdp.getSaltForEncryption();
+                        string saltToEncryptMdpToSaveInDB = SecureMdp.byteArraySaltToString(saltToEncryptMdp);
+                        string hashedMdp = SecureMdp.encryptPassword(this.mdp.Text, saltToEncryptMdp);
+                        User user = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"","","",saltToEncryptMdpToSaveInDB);
                     
-                    await dataBaseManager.AddUser(user);
-                    Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(user));
+                        await dataBaseManager.AddUser(user);
+                        Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(user));
+                    
+                    }
+                    else
+                    {
+                        await DisplayAlert ("Vérification courriel", "Erreur lors de la vérification de votre courriel, veuillez réessayer", "OK");
+                    }
+
                 }
             }
         }
@@ -66,6 +79,7 @@ namespace HangTogether
             var mdpUser = this.mdp.Text;
             var dob = this.startDatePicker;
             var isInfosValid = true;
+            string codeVerifUser;
  
 
             if (String.IsNullOrEmpty(nomUser))
