@@ -35,14 +35,16 @@
         
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             
-            <!-- Gestion du click du user qd menu ouvert -->
-            <Grid.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnTapBg"/>
-            </Grid.GestureRecognizers>
+                <!-- Gestion du click du user qd menu ouvert -->
+                <Grid.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnTapBg"/>
+                </Grid.GestureRecognizers>
+
             
             <!-- Lorsque le menu est ouvert j'enleve toutes les interactions de ce grid 
                  avec IsEnabled=false-->
             <Grid x:Name="gridLoisirs">
+                
                 <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>

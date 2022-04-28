@@ -428,6 +428,7 @@ namespace HangTogether
                 Easing easing = Easing.SinOut;
                 frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
                 this.gridLoisirs.IsEnabled = true;
+                this.gridLoisirs.Opacity = 1;
             }
         }
 
@@ -450,6 +451,7 @@ namespace HangTogether
                Easing easing = Easing.CubicOut;
                frameMenu.Animate("anim", callback, startHeight, endHeight, rate, length, easing);
                this.gridLoisirs.IsEnabled = false;// empecher a ce que user clique en bg lorsque le menu apparait 
+               this.gridLoisirs.Opacity = 0.5;
                return;
            }
            else
@@ -462,6 +464,7 @@ namespace HangTogether
                Easing easing = Easing.SinOut;
                frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
                this.gridLoisirs.IsEnabled = true; // je rends les interactions (event) du grid possible
+               this.gridLoisirs.Opacity = 1;
            }
            
         }
@@ -502,6 +505,8 @@ namespace HangTogether
          public void OnMainDisplayInfoChanged(object sender, DisplayInfoChangedEventArgs e)
          {
              frameMenu.HeightRequest = 0; // si le menu etait ouvert qd on rotate le tlf, il doit devenir fermer
+             gridLoisirs.IsEnabled = true; // si menu ouvert alors arriere unclickable, si on rotate l'ecran alors menu descends mais 
+             // bg reste tjrs non clickable, alors on le re-rend clickable
              if (e.DisplayInfo.Orientation.ToString() == "Portrait")
              {
                  frameAnecdotes.HeightRequest =

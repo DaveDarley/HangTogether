@@ -69,6 +69,7 @@ namespace HangTogether
                 uint length = 500;
                 Easing easing = Easing.CubicOut;
                 frameMenu.Animate("anim", callback, startHeight, endHeight, rate, length, easing);
+                this.stackBgMenu.IsEnabled = false;
                 return;
             }
             else
@@ -80,6 +81,7 @@ namespace HangTogether
                 uint length = 500;
                 Easing easing = Easing.SinOut;
                 frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
+                this.stackBgMenu.IsEnabled = true;
             }
         }
         
@@ -106,6 +108,28 @@ namespace HangTogether
             if (desactiverCompte)
             {
                 ProfilUser.GestionClickMenu("delete",userLookingForNewFriends);
+            }
+        }
+        
+        /*
+         * Fonction qui s'occupe de baisser le menu lorsque le user clique n'importe ou
+         * sur l'ecran:
+         * Si GridLoisirs.IsEnabled = false c-a-d mon menu est sur l'ecran alors je descends
+         * le menu est j'active les interactions avec les users
+         */
+        async void OnTapBg(Object o, EventArgs e)
+        {
+            if (!this.stackBgMenu.IsEnabled)
+            {
+                DisplayAlert("test", "g clique sur l'ecran pr baisser le menu", "ok");
+                Action<double> callback = input => frameMenu.HeightRequest = input;
+                double startHeight = Application.Current.MainPage.Height/3;
+                double endiendHeight = 0;
+                uint rate = 32;
+                uint length = 500;
+                Easing easing = Easing.SinOut;
+                frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
+                this.stackBgMenu.IsEnabled = true;
             }
         }
         
