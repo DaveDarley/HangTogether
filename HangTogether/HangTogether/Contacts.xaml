@@ -35,7 +35,8 @@
         
             <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="LightGray" Margin="0,25,0,0" Padding="0"
                    CornerRadius="30" >
-
+                <RefreshView IsRefreshing="{Binding IsRefreshing}"
+                             Command="{Binding RefreshCommand}">
                     
                         <ScrollView Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Margin="0,10,0,0">
                                 <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
@@ -43,6 +44,7 @@
                                     
                                 </StackLayout>
                         </ScrollView>
+                </RefreshView>
        
             </Frame>
             

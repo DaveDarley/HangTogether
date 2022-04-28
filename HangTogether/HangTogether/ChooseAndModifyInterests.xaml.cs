@@ -428,7 +428,6 @@ namespace HangTogether
                 Easing easing = Easing.SinOut;
                 frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
                 this.gridLoisirs.IsEnabled = true;
-                this.gridLoisirs.Opacity = 1;
             }
         }
 
@@ -451,7 +450,6 @@ namespace HangTogether
                Easing easing = Easing.CubicOut;
                frameMenu.Animate("anim", callback, startHeight, endHeight, rate, length, easing);
                this.gridLoisirs.IsEnabled = false;// empecher a ce que user clique en bg lorsque le menu apparait 
-               this.gridLoisirs.Opacity = 0.5;
                return;
            }
            else
@@ -464,7 +462,6 @@ namespace HangTogether
                Easing easing = Easing.SinOut;
                frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
                this.gridLoisirs.IsEnabled = true; // je rends les interactions (event) du grid possible
-               this.gridLoisirs.Opacity = 1;
            }
            
         }

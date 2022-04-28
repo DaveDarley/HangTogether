@@ -60,7 +60,7 @@ namespace HangTogether
             return (await firebase
                 .Child("Users")
                 .OnceAsync<User>()).Select(item => new User(
-                item.Object.nom, item.Object.prenom, item.Object.email, item.Object.mdp ,item.Key,item.Object.loisirs, item.Object.anecdotes, item.Object.saltToEncryptMdp)
+                item.Object.nom, item.Object.prenom, item.Object.email, item.Object.mdp ,item.Key,item.Object.loisirs, item.Object.anecdotes, item.Object.saltToEncryptMdp, item.Object.isUserReadMessage)
            /* {
                 nom = item.Object.nom,
                 prenom = item.Object.prenom,
@@ -77,7 +77,7 @@ namespace HangTogether
          */
         public User getUser(List<User> mesUsers, string emailUser)
         {
-            User monUser = new User("", "", "", "","","","", "");
+            User monUser = new User("", "", "", "","","","", "","");
             foreach (var user in mesUsers)
             {
                 if (user.email == emailUser)

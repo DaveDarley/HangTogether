@@ -10,6 +10,15 @@ using Xamarin.Forms;
 using Xamarin.Forms.PancakeView;
 using Xamarin.Forms.Xaml;
 
+/*
+ * Idee principale sur le fonctionnement:
+ * Soit userFrom le user qui envoie le message et userTo celui qui recoit le message
+ * Si qd userFrom communique avec userTo et que userTo en ligne , je sauvegarde les messages dans ma table "Nouveaux messages"
+ * et je les affiche sur l'ecran de userTo
+ * Si userTo pas en ligne alors je sauvegarde les messages dans ma liste total de messages et ensuite qd il retourne en ligne
+ * je parcours cette liste total de messages et je lui affiche tous ces conversations entre userFrom et lui
+ */
+
 namespace HangTogether
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
@@ -27,18 +36,39 @@ namespace HangTogether
         public DisplayMessages(User userSendingMessage, User userReceivingMessages)
         {
             InitializeComponent();
-           userFrom = userSendingMessage;
+            userFrom = userSendingMessage;
             userTo = userReceivingMessages;
+            updateStatusUser("y");
             nomUserTo = userTo.nom + " " + userTo.prenom;
             Title = nomUserTo;
             this.BindingContext = this;
             whenUserConnected(); //au debut on recupere ts les messages entre les 2 users dans ma DB(s'il y en a)
-           // SetTimer();
-           wait_Tick();
+            // SetTimer();
+            // wait_Tick();
         }
-        
+
         /*
-         * Fonction qui s'occupe d'aller recuperer tous les ANCIENS messages entre 2 users pour les afficher.
+         * Fonction qui spécifie si l'user avec lequel je suis entrain de communiquer
+         * est en ligne ou pas.
+         * Si il est pas en ligne je stocke les messages que je lui ai envoye dans "Nouveaux Messages"
+         * PK:
+         * Pas besoin de recuperer ts les messages que je lui ai envoye depuis le debut de notre conversation et
+         * verifier ensuite si l'attribut lu du message est vrai ou pas qd . Le nb de nouveaux messages depuis le debut de
+         * notre conversation peut etre dans les milliers or le nb de nouveaux messages ne sera pas si important
+         */
+        public async void updateStatusUser(string status)
+        {
+            DataBaseManager dataBaseManager = new DataBaseManager();
+            User toUpdate = userFrom;
+            string statusToUpdate = status;
+            toUpdate.isUserReadMessage = statusToUpdate;
+            this.userFrom = toUpdate;
+            await dataBaseManager.UpdateUser(toUpdate);
+        }
+
+        /*
+         * Fonction qui s'occupe d'aller recuperer tous les ANCIENS messages entre 2 users pour les afficher
+         * qd le user se connecte (monte sur la page de messages)
          */
         public async void whenUserConnected()
         {
@@ -47,12 +77,14 @@ namespace HangTogether
             List<Message> messagesBetweenUserSendingAndUserReceiving =
                 dataBaseMessagesManager.getConvos(userFrom, userTo, listMessagesTotal);
             displayAllConvos(messagesBetweenUserSendingAndUserReceiving);
-            
-            /*
-             * Vrai prob: Les nouveaux messages recu qd le user etait pas connectes sont dans 2 tables (Messages et Nouveaux Messages);
-             * Alors on affiche ceux dans la table Messages et on efface les repetitions qui sont dans la table
-             * "Nouveaux Messages"
-             */
+            //
+            // /*
+            //  * Vrai prob: Les nouveaux messages recu qd le user etait pas connectes sont dans 2 tables (Messages et Nouveaux Messages);
+            //  * Alors on affiche ceux dans la table Messages et on efface les repetitions qui sont dans la table
+            //  * "Nouveaux Messages" OU
+            //  * On affiche pas ceux de nouveaux messages et on les efface direct 
+            //  */
+            //
             List<Message> nouveauxMessages = await dataBaseMessagesManager.GetAllMessages("Nouveaux Messages");
             
             List<Message> nouveauxMessagesBetweenUserSendingAndUserReceiving =
@@ -62,37 +94,49 @@ namespace HangTogether
             {
                 foreach (var message in nouveauxMessagesBetweenUserSendingAndUserReceiving)
                 {
-                    await dataBaseMessagesManager.deleteMessageFromNonReadMEssages(message);
+                    if (message.fromEmail == userTo.email && message.toEmail == userFrom.email)
+                    {
+                        await dataBaseMessagesManager.deleteMessageFromNonReadMEssages(message);
+                    }
+
+                   
                 }
             }
-
+            wait_Tick();
+            //SetTimer();
         }
 
         /*
          * Chaque une seconde on verifie si n'y a pas eu de nouveaux
          * messages ajoutés dans ma Table : Nouveaux Messages
          */
-      /*  private  void SetTimer()
-        {
-            // Create a timer with a one second interval.
-            aTimer = new System.Timers.Timer(5000);
-            // Hook up the Elapsed event for the timer. 
-            aTimer.Elapsed += wait_Tick;
-            aTimer.AutoReset = true;
-            aTimer.Enabled = true;
-        }*/
+        // private  void SetTimer()
+        // {
+        //     // Create a timer with a one second interval.
+        //     aTimer = new System.Timers.Timer(10000);
+        //     // Hook up the Elapsed event for the timer. 
+        //     aTimer.Elapsed += wait_Tick;
+        //    // aTimer.AutoReset = true;
+        //    // aTimer.Enabled = true;
+        //    aTimer.Start();
+        // }
         
         /*
          * User A ecrit a User B ; le message de A est stocke dans ma table "Nouveaux Messages" de ma
          * DB ; Et ensuite on affiche le message
+         *
+         * Verification si j'ai des nouveaux messages pour moi:
          */
         private  async void  wait_Tick(/*Object sender, ElapsedEventArgs e*/)
         {
-            while(true){
+            while(true)
+            {
+
+               // DisplayAlert("Test", "Status user qui recoit messages: " + userTo.isUserReadMessage, "ok");
                 DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
                 List<Message> nouveauxMessages = await dataBaseMessagesManager.GetAllMessages("Nouveaux Messages");
                 
-                // recupereation des nouveaux messages entre A et B; pas besoin de parcourir tous les messages pour afficher
+                // recuperation des nouveaux messages entre A et B; pas besoin de parcourir tous les messages pour afficher
                 // le dernier message; la on recupere les derniers messages de A vers B directement.
                 List<Message> nouveauxMessagesBetweenUserSendingAndUserReceiving =
                     dataBaseMessagesManager.getConvosFromOneUserToAnother(userTo, userFrom, nouveauxMessages);
@@ -105,17 +149,20 @@ namespace HangTogether
                     displayAllConvos(nouveauxMessagesBetweenUserSendingAndUserReceiving);
                     foreach (var message in nouveauxMessagesBetweenUserSendingAndUserReceiving)
                     {
-                        await dataBaseMessagesManager.deleteMessageFromNonReadMEssages(message);
+                        if (userFrom.isUserReadMessage == "y" && userTo.isUserReadMessage == "y")
+                        {
+                            await dataBaseMessagesManager.deleteMessageFromNonReadMEssages(message);
+                        } 
                     }
                 }
-            }
+           }
 
         }
         
         /*
          * Qd utilisateur clique sur send, on envoie le message dans la BD.
          * Le message est mis dans ma liste de message total mais aussi dans ma liste
-         * de nouveaux messages jusqu'a ce que le user receptrice le lise.
+         * de nouveaux messages (si user en ligne).
          */
         private void  OnSendMessage(Object sender, EventArgs e)
         {
@@ -208,16 +255,30 @@ namespace HangTogether
          * Function qui gere lorsque le user clique sur la fleche de retour
          * PK: Je veux update (si necessaire) les infos de cette page
          * lorsque user retourne sur la page.
+         *
+         * Prob: Fonction juste sur android
          */
-        protected override bool OnBackButtonPressed()
+        
+        // protected override bool OnBackButtonPressed()
+        // {
+        //     Device.BeginInvokeOnMainThread(async () =>
+        //     {
+        //         //aTimer.Stop();
+        //         updateStatusUser("n");
+        //         DisplayAlert("Status user",
+        //             "J'ai quitte messages , alors mon status doit etre: " + userFrom.isUserReadMessage, "ok");
+        //         Application.Current.MainPage = new NavigationPage(new Contacts(userFrom));
+        //     });
+        //
+        //     return true;
+        // }
+        
+        //https://stackoverflow.com/questions/57662491/detect-back-arrow-press-of-the-navigationpage-in-xamarin-forms
+        protected override void OnDisappearing()
         {
-
-            Device.BeginInvokeOnMainThread(async () =>
-            {
-                Application.Current.MainPage = new NavigationPage(new Contacts(userFrom));
-            });
-
-            return true;
+            base.OnDisappearing();
+            updateStatusUser("n");
+            Application.Current.MainPage = new NavigationPage(new Contacts(userFrom));
         }
 
         

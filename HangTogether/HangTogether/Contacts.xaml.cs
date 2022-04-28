@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.CommunityToolkit.UI.Views;
@@ -16,11 +17,31 @@ namespace HangTogether
     public partial class Contacts : ContentPage
     {
         private User userGoingThroughHisContacts;
+        
+                private bool _isRefreshing;  
+                private Command _refreshViewCommand;  
+                
         public Contacts(User userConsultingContacts)
         {
             InitializeComponent();
             this.userGoingThroughHisContacts = userConsultingContacts;
             getListUserInContactWithMe(userGoingThroughHisContacts);
+        }
+        
+        public bool IsRefreshing  
+        {  
+            get => _isRefreshing; 
+        }  
+  
+        public Command RefreshViewCommand  
+        {  
+            get  
+            {  
+                return _refreshViewCommand ?? (_refreshViewCommand = new Command(() =>  
+                {  
+                    this.getListUserInContactWithMe(userGoingThroughHisContacts);  
+                }));  
+            }  
         }
 
         public async void getListUserInContactWithMe(User userLookingInContacts)
@@ -105,7 +126,9 @@ namespace HangTogether
                 var tapGestureRecognizer = new TapGestureRecognizer();
                 tapGestureRecognizer.Tapped += (s, e) => {
                     // handle the tap
-                     Navigation.PushAsync(new DisplayMessages(userGoingThroughHisContacts,user));
+                    test(user);
+                     // Navigation.PushAsync(new DisplayMessages(userGoingThroughHisContacts,user));
+                     //Navigation.RemovePage(Navigation.NavigationStack[1]);
                 };
                 stack.GestureRecognizers.Add(tapGestureRecognizer);
 
@@ -113,7 +136,13 @@ namespace HangTogether
             }
         }
 
-        
+        public async void test(User user)
+        {
+            await Navigation.PushAsync(new DisplayMessages(userGoingThroughHisContacts,user));
+
+        }
+
+
         public async Task<int> getNumberOfNewMessages(User userSendingMessage, User userGoingThroughContacts)
         {
             int nbNouveauxMessages = 0;

@@ -6,7 +6,7 @@ namespace HangTogether.ServerManager
 {
     public class User
     {
-        public User(string nom, string prenom, string email, string mdp,string Key,string loisirs, string anecdotes, string saltToEncryptMdp)
+        public User(string nom, string prenom, string email, string mdp,string Key,string loisirs, string anecdotes, string saltToEncryptMdp, string isUserReadMessage)
         {
             this.nom = nom;
             this.prenom = prenom;
@@ -16,6 +16,7 @@ namespace HangTogether.ServerManager
             this.loisirs = loisirs;
             this.anecdotes = anecdotes;
             this.saltToEncryptMdp = saltToEncryptMdp;
+            this.isUserReadMessage = isUserReadMessage;
         }
 
         public string nom { get; set; }
@@ -30,6 +31,8 @@ namespace HangTogether.ServerManager
         public string anecdotes { get; set; }
 
         public string saltToEncryptMdp { get; set; }
+
+        public string isUserReadMessage { get; set; }
 
 
     }
