@@ -32,6 +32,7 @@ namespace HangTogether
         */
         public async void addNonReadMessages(Message nouveauMessage)
         {
+            
             await firebaseClient
                 .Child("Nouveaux Messages")
                 .PostAsync(nouveauMessage);

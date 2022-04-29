@@ -138,6 +138,8 @@ namespace HangTogether
 
         public async void test(User user)
         {
+           // DisplayMessages newConvos = new DisplayMessages(userGoingThroughHisContacts, user);
+            
             await Navigation.PushAsync(new DisplayMessages(userGoingThroughHisContacts,user));
 
         }

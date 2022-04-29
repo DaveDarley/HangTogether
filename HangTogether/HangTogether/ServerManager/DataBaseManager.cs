@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Firebase.Database;
 using Firebase.Database.Query;
@@ -27,6 +28,17 @@ namespace HangTogether
             await firebase
                 .Child("Users")
                 .PostAsync(user);
+        }
+        
+        /*
+         * Fonction qui met un event listenners sur une table
+         */
+        private void CheckChanges()
+        {
+            firebase
+                .Child("Nouveaux Messages")
+                .AsObservable<Message>()
+                .Subscribe(d => Console.WriteLine(d.Key));
         }
 
         /*

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using Firebase.Database;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
@@ -24,8 +27,8 @@ namespace HangTogether
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class DisplayMessages : ContentPage
     {
-        private User userFrom;
-        private User userTo;
+        public User userFrom;
+        public  User userTo;
         private string nomUserTo;
 
         public string Title { get; set; }
@@ -36,6 +39,7 @@ namespace HangTogether
         public DisplayMessages(User userSendingMessage, User userReceivingMessages)
         {
             InitializeComponent();
+            CheckChanges();
             userFrom = userSendingMessage;
             userTo = userReceivingMessages;
             updateStatusUser("y");
@@ -110,29 +114,54 @@ namespace HangTogether
          * Chaque une seconde on verifie si n'y a pas eu de nouveaux
          * messages ajoutés dans ma Table : Nouveaux Messages
          */
-        // private  void SetTimer()
+        // private async void SetTimer()
         // {
-        //     // Create a timer with a one second interval.
-        //     aTimer = new System.Timers.Timer(10000);
-        //     // Hook up the Elapsed event for the timer. 
-        //     aTimer.Elapsed += wait_Tick;
-        //    // aTimer.AutoReset = true;
-        //    // aTimer.Enabled = true;
-        //    aTimer.Start();
+        //     // // Create a timer with a two second interval.
+        //     // aTimer = new System.Timers.Timer(5000);
+        //     // // Hook up the Elapsed event for the timer. 
+        //     // aTimer.Elapsed += IsUserOnline;
+        //     // aTimer.AutoReset = true;
+        //     // aTimer.Enabled = true;
+        //
+        //     DisplayAlert("ok", "ooo", "OK");
+        //     while (userTo.isUserReadMessage == "n")
+        //     {
+        //         var delayTask = Task.Delay(5000);
+        //         DisplayAlert("ok", "oojfdnjko", "OK");
+        //         await delayTask; // wait until at least 5s elapsed since delayTask created 
+        //     }
+        //     wait_Tick();
         // }
-        
+        //
+        // public void IsUserOnline(Object sender, ElapsedEventArgs e)
+        // {
+        //     
+        //     DisplayAlert("test", "UserTo est pas en ligne", "ok");
+        //     if (userTo.isUserReadMessage == "y")
+        //     {
+        //         DisplayAlert("test", "UserTo est en ligne", "ok");
+        //         aTimer.Stop();
+        //         aTimer.Dispose();
+        //         wait_Tick();
+        //         
+        //     }
+        // }
+
         /*
          * User A ecrit a User B ; le message de A est stocke dans ma table "Nouveaux Messages" de ma
          * DB ; Et ensuite on affiche le message
          *
          * Verification si j'ai des nouveaux messages pour moi:
          */
+        
+        /*
+         * Source: https://stackoverflow.com/questions/69038949/can-firebasedatabase-net-xamarin-form-mobile-update-and-notify-real-time-data
+         */
         private  async void  wait_Tick(/*Object sender, ElapsedEventArgs e*/)
         {
-            while(true)
+            while(userFrom.isUserReadMessage == "y")
             {
-
-               // DisplayAlert("Test", "Status user qui recoit messages: " + userTo.isUserReadMessage, "ok");
+                var delayTask = Task.Delay(5000);
                 DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
                 List<Message> nouveauxMessages = await dataBaseMessagesManager.GetAllMessages("Nouveaux Messages");
                 
@@ -149,14 +178,11 @@ namespace HangTogether
                     displayAllConvos(nouveauxMessagesBetweenUserSendingAndUserReceiving);
                     foreach (var message in nouveauxMessagesBetweenUserSendingAndUserReceiving)
                     {
-                        if (userFrom.isUserReadMessage == "y" && userTo.isUserReadMessage == "y")
-                        {
-                            await dataBaseMessagesManager.deleteMessageFromNonReadMEssages(message);
-                        } 
+                        await dataBaseMessagesManager.deleteMessageFromNonReadMEssages(message);
                     }
                 }
-           }
-
+                await delayTask;
+            }
         }
         
         /*
@@ -249,6 +275,28 @@ namespace HangTogether
                // await this.scrollMessages.ScrollToAsync(0,scrollMessages.Content.Height,true);
 
             }
+        }
+        
+        private  void CheckChanges()
+        {
+            FirebaseClient firebase = new FirebaseClient("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+            firebase.Child("Nouveaux Messages")
+                .AsObservable<Message>()
+                .Subscribe(obs =>
+                {
+                    switch (obs.EventType)
+                    {
+                        case Firebase.Database.Streaming.FirebaseEventType.InsertOrUpdate:
+                            var m = obs.Object;
+                            DisplayAlert("Test Events Firebase", "Message ajoute: " + m.message, "ok");
+
+                            break;
+                        case Firebase.Database.Streaming.FirebaseEventType.Delete:
+                            var m2 = obs.Object;
+                            DisplayAlert("Test Events Firebase", "Message supprime: " + m2.message, "ok");
+                            break;
+                    }
+                });
         }
         
         /*
