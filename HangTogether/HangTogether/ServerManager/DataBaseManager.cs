@@ -7,6 +7,7 @@ using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
 using Xamarin.Forms;
 
+// utilisation firestore et c# : https://pieterdlinde.medium.com/netcore-and-cloud-firestore-94628943eb3c
 namespace HangTogether
 {
     public class DataBaseManager
@@ -14,7 +15,10 @@ namespace HangTogether
         public static FirestoreDb firebase;
         public DataBaseManager()
         {
-            firebase = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+            
+            string filepath = "/Users/davejoseph/Downloads/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json";
+            System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
+            firebase = FirestoreDb.Create("hangtogether-edc71");
 
         }
         

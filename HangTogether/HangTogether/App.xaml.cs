@@ -15,8 +15,6 @@ namespace HangTogether
         {
            // TableLoisirsManager.createInterestsCollection(); // initialisation de ma table Loisirs
             MainPage =  new NavigationPage(new LogInSignUp());
-            TableLoisirsManager tableLoisirsManager = new TableLoisirsManager();
-            tableLoisirsManager.createInterestsCollection();
         }
 
         protected override void OnStart()

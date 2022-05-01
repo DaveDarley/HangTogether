@@ -26,6 +26,8 @@ namespace HangTogether.ServerManager
         public  FirestoreDb db;
         public TableLoisirsManager()
         {
+            string filepath = "/Users/davejoseph/Downloads/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json";
+            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
             db = FirestoreDb.Create("hangtogether-edc71");
         }
 
