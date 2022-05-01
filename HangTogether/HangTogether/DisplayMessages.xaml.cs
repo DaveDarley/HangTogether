@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using Firebase.Database;
+using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
@@ -30,44 +31,51 @@ namespace HangTogether
         public User userFrom;
         public  User userTo;
         private string nomUserTo;
-
+        private DataBaseMessagesManager dataBaseMessagesManager;
         public string Title { get; set; }
-
-        private  System.Timers.Timer aTimer; // initialiser a chaque instance de cette classe
         
         
         public DisplayMessages(User userSendingMessage, User userReceivingMessages)
         {
             InitializeComponent();
+            dataBaseMessagesManager = new DataBaseMessagesManager();
             userFrom = userSendingMessage;
             userTo = userReceivingMessages;
-            updateStatusUser("y");
             nomUserTo = userTo.nom + " " + userTo.prenom;
             Title = nomUserTo;
             this.BindingContext = this;
             whenUserConnected(); //au debut on recupere ts les messages entre les 2 users dans ma DB(s'il y en a)
-            // SetTimer();
-            // wait_Tick();
+            listenOnNewMessages();
         }
 
         /*
-         * Fonction qui spécifie si l'user avec lequel je suis entrain de communiquer
-         * est en ligne ou pas.
-         * Si il est pas en ligne je stocke les messages que je lui ai envoye dans "Nouveaux Messages"
-         * PK:
-         * Pas besoin de recuperer ts les messages que je lui ai envoye depuis le debut de notre conversation et
-         * verifier ensuite si l'attribut lu du message est vrai ou pas qd . Le nb de nouveaux messages depuis le debut de
-         * notre conversation peut etre dans les milliers or le nb de nouveaux messages ne sera pas si important
+         * A chaque nouveau message ajouté a ma table "Messages", ce listener sera lancé
+         * et donc pour le user recepteur du message on met l'attribut lu = "y";
+         * Vu que le champ lu du message a changé, on le met aussi a jour dans la BD
          */
-        public async void updateStatusUser(string status)
+        public async void listenOnNewMessages()
         {
-            DataBaseManager dataBaseManager = new DataBaseManager();
-            User toUpdate = userFrom;
-            string statusToUpdate = status;
-            toUpdate.isUserReadMessage = statusToUpdate;
-            this.userFrom = toUpdate;
-            await dataBaseManager.UpdateUser(toUpdate);
+            FirestoreDb db = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+            CollectionReference citiesRef = db.Collection("Messages");
+            Query query = db.Collection("Messages");
+
+            FirestoreChangeListener listener = query.Listen(snapshot =>
+            {
+                List<Message> messagesRecu = new List<Message>();
+                foreach (DocumentSnapshot documentSnapshot in snapshot.Documents)
+                {
+                    Message message = documentSnapshot.ConvertTo<Message>();
+                    if (message.toEmail == userFrom.email && message.fromEmail == userTo.email)
+                    {
+                        message.lu = "y";
+                        dataBaseMessagesManager.updateConversation(message);
+                        messagesRecu.Add(message);
+                        displayAllConvos(messagesRecu);
+                    }
+                }
+            });
         }
+
 
         /*
          * Fonction qui s'occupe d'aller recuperer tous les ANCIENS messages entre 2 users pour les afficher
@@ -76,89 +84,21 @@ namespace HangTogether
         public async void whenUserConnected()
         {
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
-            List<Message> listMessagesTotal = await dataBaseMessagesManager.GetAllMessages("Messages");
-            List<Message> messagesBetweenUserSendingAndUserReceiving =
-                dataBaseMessagesManager.getConvos(userFrom, userTo, listMessagesTotal);
-            displayAllConvos(messagesBetweenUserSendingAndUserReceiving);
-            //
-            // /*
-            //  * Vrai prob: Les nouveaux messages recu qd le user etait pas connectes sont dans 2 tables (Messages et Nouveaux Messages);
-            //  * Alors on affiche ceux dans la table Messages et on efface les repetitions qui sont dans la table
-            //  * "Nouveaux Messages" OU
-            //  * On affiche pas ceux de nouveaux messages et on les efface direct 
-            //  */
-            //
-            List<Message> nouveauxMessages = await dataBaseMessagesManager.GetAllMessages("Nouveaux Messages");
-            
-            List<Message> nouveauxMessagesBetweenUserSendingAndUserReceiving =
-                dataBaseMessagesManager.getConvosFromOneUserToAnother(userTo, userFrom, nouveauxMessages);
-                
-            if (nouveauxMessagesBetweenUserSendingAndUserReceiving.Count > 0)
-            {
-                foreach (var message in nouveauxMessagesBetweenUserSendingAndUserReceiving)
-                {
-                    if (message.fromEmail == userTo.email && message.toEmail == userFrom.email)
-                    {
-                        await dataBaseMessagesManager.deleteMessageFromNonReadMEssages(message);
-                    }
-
-                   
-                }
-            }
-            wait_Tick();
-            //SetTimer();
-        }
-
-        /*
-         * Idee:
-         * Qd user en ligne ==> c-a-d il est sur la page de conversation , je check chaque 5s si l'utilisateur avec lequel
-         * il est entrain de communiquer lui a envoyé un nouveau message.
-         * Qd il quitte la page de conversation, il redevient Hors-ligne
-         */
-        /*
-         * Source: https://stackoverflow.com/questions/69038949/can-firebasedatabase-net-xamarin-form-mobile-update-and-notify-real-time-data
-         */
-        private  async void  wait_Tick()
-        {
-            while(userFrom.isUserReadMessage == "y")
-            {
-                var delayTask = Task.Delay(5000);
-                DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
-                List<Message> nouveauxMessages = await dataBaseMessagesManager.GetAllMessages("Nouveaux Messages");
-                
-                // recuperation des nouveaux messages entre A et B; pas besoin de parcourir tous les messages pour afficher
-                // le dernier message; la on recupere les derniers messages de A vers B directement.
-                List<Message> nouveauxMessagesBetweenUserSendingAndUserReceiving =
-                    dataBaseMessagesManager.getConvosFromOneUserToAnother(userTo, userFrom, nouveauxMessages);
-                
-                
-                // Vu que User A a recupere les nouveaux messages de B vers A , alors on
-                // efface ts les messages de B a A de ma table "Nouveaux Messages"
-                if (nouveauxMessagesBetweenUserSendingAndUserReceiving.Count > 0)
-                {
-                    displayAllConvos(nouveauxMessagesBetweenUserSendingAndUserReceiving);
-                    foreach (var message in nouveauxMessagesBetweenUserSendingAndUserReceiving)
-                    {
-                        await dataBaseMessagesManager.deleteMessageFromNonReadMEssages(message);
-                    }
-                }
-                await delayTask;
-            }
+            List<Message> listMessagesTotal = await dataBaseMessagesManager.getAllMessages(userFrom,userTo);
+            displayAllConvos(listMessagesTotal);
         }
         
         /*
-         * Qd utilisateur clique sur send, on envoie le message dans la BD.
-         * Le message est mis dans ma liste de message total mais aussi dans ma liste
-         * de nouveaux messages (si user en ligne).
+         * Qd utilisateur clique sur send, on envoie le message dans la BD et on
+         * l'affiche sur l'ecran de l'emetteur du message
          */
         private void  OnSendMessage(Object sender, EventArgs e)
         {
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
             var textToSend = this.message.Text;
             var dateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-            Message message = new Message(userFrom.email, userTo.email, textToSend, "", dateTime);
+            Message message = new Message(userFrom.email, userTo.email, textToSend, "", dateTime,"n");
             dataBaseMessagesManager.addNewConversation(message);
-            dataBaseMessagesManager.addNonReadMessages(message);
             
             // Je dois dessiner le message sur l'ecran de l'emetteur du message:
             List<Message> messageToDisplay = new List<Message>();
@@ -262,12 +202,12 @@ namespace HangTogether
         // }
         
         //https://stackoverflow.com/questions/57662491/detect-back-arrow-press-of-the-navigationpage-in-xamarin-forms
-        protected override void OnDisappearing()
-        {
-            base.OnDisappearing();
-            updateStatusUser("n");
-            Application.Current.MainPage = new NavigationPage(new Contacts(userFrom));
-        }
+        // protected override void OnDisappearing()
+        // {
+        //     base.OnDisappearing();
+        //     updateStatusUser("n");
+        //     Application.Current.MainPage = new NavigationPage(new Contacts(userFrom));
+        // }
 
         
     }

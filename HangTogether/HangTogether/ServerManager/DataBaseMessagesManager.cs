@@ -5,6 +5,7 @@ using Firebase.Database;
 using Firebase.Database.Query;
 using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
+using Realms;
 
 namespace HangTogether
 {
@@ -20,84 +21,53 @@ namespace HangTogether
         //la BD
         public async void addNewConversation(Message conversation)
         {
-            await firebaseClient
-                .Child("Messages")
-                .PostAsync(conversation);
+            DocumentReference messageRef = firebaseClient.Collection("Messages").Document();
+            conversation.Key = messageRef.Id;
+            await messageRef.SetAsync(conversation);
         }
 
         /*
-         * Idee: Soit user A ecrit a User B, on ajoute les nouveaux messages
-         * Dans une nouvelle Table; qd User B recupere ce message, on l'efface de
-         * ma table de nouveaux Messages. Comme ca pas besoin de de parcourir ma liste entier
-         * de message pour trouver le nouveau message
-        */
-        public async void addNonReadMessages(Message nouveauMessage)
+         * Fonction qui s'occupe de mettre a jour un message dans ma BD
+         * particulierement mettre a jour le champ lu
+         */
+        public async void updateConversation(Message conversation)
         {
-            
-            await firebaseClient
-                .Child("Nouveaux Messages")
-                .PostAsync(nouveauMessage);
+            DocumentReference messagesRef = firebaseClient.Collection("Messages").Document(conversation.Key);
+            await messagesRef.SetAsync(conversation);
         }
 
         /*
-         * Qd user B lit le nouveau Message qui lui etait destine, on efface le nouveau
-         * message de la liste de Nouveaux Messages
+         * Fonction qui recupere tous les messages entre 2 users;
+         * Pour tous les messages destines a l'user qui a appelé cette fonction (firstUser)
+         * on met l'attribut lu des messages a "y"
          */
-        public async Task deleteMessageFromNonReadMEssages(Message message)
+        public async Task<List<Message>> getAllMessages(User firstUser, User sndUser)
         {
-            await firebaseClient.Child("Nouveaux Messages").Child(message.Key).DeleteAsync(); 
+            List<Message> messages = new List<Message>();
+            Query allMessagesQuery = firebaseClient.Collection("Messages");
+            QuerySnapshot allMessagesQuerySnapshot = await allMessagesQuery.GetSnapshotAsync();
+            foreach (DocumentSnapshot documentSnapshot in allMessagesQuerySnapshot.Documents)
+            {
+                Message message = documentSnapshot.ConvertTo<Message>();
+                if (message.fromEmail == firstUser.email && message.toEmail == sndUser.email 
+                    || message.fromEmail == sndUser.email && message.toEmail == firstUser.email)
+                {
+                    if (message.fromEmail == sndUser.email && message.toEmail == firstUser.email)
+                    {
+                        message.lu = "y";
+                        updateConversation(message);
+                    }
+                    messages.Add(message);
+                }
+            }
+
+            return messages;
         }
-        
-        // A faire: Ameliorer les 2 fonctions qui suivent:
-        
-        /*
-         * Fonction qui retourne tous les messages de la table qui lui est passé en parametre
-         * 2 tables possibles: Messages ou Nouveaux Messages
-         */
-        public async Task<List<Message>> GetAllMessages(string nomTable)
-        {
-            return (await firebaseClient
-                .Child(nomTable)
-                .OnceAsync<Message>()).Select(item => new Message(
-                    item.Object.fromEmail, item.Object.toEmail, item.Object.message, item.Key ,item.Object.timeStamp)).ToList();
-        }
+
+
+
        
-        /*
-         * Fonction qui retourne tous les conversations entre 2 users en particulier.
-         */
-        public List<Message> getConvos(User from, User to, List<Message>allMessages)
-        {
-            List<Message> convos = new List<Message>();
-            foreach (var message in allMessages)
-            {
-                if (message.fromEmail == from.email && message.toEmail == to.email
-                    || message.fromEmail == to.email && message.toEmail == from.email)
-                {
-                    convos.Add(message);
-                }
-            }
-            return convos;
-        }
         
-        /*
-         * Fonction qui retourne tous les conversations d'un user VERS un autre.
-         * Qd je cherche dans ma table "Nouveaux Messages" si je suis le user A
-         * je veux pas recuperer mes propres messages mais plutot les nouveaux messages
-         * que B m'a envoye ;
-         * Pas besoin de reparcourir ma liste total de messages et de les reafficher
-         */
-        public List<Message> getConvosFromOneUserToAnother(User from, User to, List<Message>allMessages)
-        {
-            List<Message> convos = new List<Message>();
-            foreach (var message in allMessages)
-            {
-                if (message.toEmail == to.email && message.fromEmail == from.email)
-                {
-                    convos.Add(message);
-                }
-            }
-            return convos;
-        }
 
         /*
          * Fonction qui recupere pour un user quelcquonque
