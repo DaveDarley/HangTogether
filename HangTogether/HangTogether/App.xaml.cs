@@ -1,4 +1,5 @@
 ﻿using System;
+using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -12,7 +13,10 @@ namespace HangTogether
         private DataBaseManager dbManager;
         public App()
         {
+           // TableLoisirsManager.createInterestsCollection(); // initialisation de ma table Loisirs
             MainPage =  new NavigationPage(new LogInSignUp());
+            TableLoisirsManager tableLoisirsManager = new TableLoisirsManager();
+            tableLoisirsManager.createInterestsCollection();
         }
 
         protected override void OnStart()

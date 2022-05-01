@@ -17,11 +17,11 @@ namespace HangTogether
     public partial class Contacts : ContentPage
     {
         private User userGoingThroughHisContacts;
-                
+        private DataBaseMessagesManager _dataBaseMessagesManager;       
         public Contacts(User userConsultingContacts)
         {
-            
             InitializeComponent();
+            _dataBaseMessagesManager = new DataBaseMessagesManager();
             this.userGoingThroughHisContacts = userConsultingContacts;
             getListUserInContactWithMe(userGoingThroughHisContacts);
 
@@ -137,17 +137,7 @@ namespace HangTogether
 
         public async Task<int> getNumberOfNewMessages(User userSendingMessage, User userGoingThroughContacts)
         {
-            int nbNouveauxMessages = 0;
-            DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
-            List<Message> nouveauxMessagesNonLu = await dataBaseMessagesManager.GetAllMessages("Nouveaux Messages");
-            foreach (var message in nouveauxMessagesNonLu)
-            {
-                if (message.fromEmail == userSendingMessage.email && message.toEmail == userGoingThroughContacts.email)
-                {
-                    nbNouveauxMessages++;
-                }
-            }
-
+            int nbNouveauxMessages = await _dataBaseMessagesManager.getNumberOfNewMessages(userSendingMessage, userGoingThroughContacts);
             return nbNouveauxMessages;
         }
         

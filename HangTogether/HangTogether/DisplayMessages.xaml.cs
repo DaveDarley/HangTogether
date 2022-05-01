@@ -1,12 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
-using Firebase.Database;
 using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;

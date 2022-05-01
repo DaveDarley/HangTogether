@@ -149,10 +149,8 @@ namespace HangTogether
         public async void CardBinding()
         {
             DataBaseManager dataBaseManager = new DataBaseManager();
-            var allUsers = await dataBaseManager.GetAllUsers();
-            List<User>userWithSharedInterests = dataBaseManager.getUserWithSharedInterests(userLookingForNewFriends, allUsers);
-            
-            string[] interestsUserLookingForNewFriends = getInterestUserLookingForNewFriends().Select(s => s.ToLower()).ToArray();
+            List<User>userWithSharedInterests = await dataBaseManager.getUserWithSharedInterests(userLookingForNewFriends);
+            List<Loisir> interestsUserLookingForNewFriends = await dataBaseManager.getInterestsUser(userLookingForNewFriends);
 
             if (userWithSharedInterests.Count > 0)
             {
@@ -161,15 +159,14 @@ namespace HangTogether
                     List<string> loisirsEnCommun = new List<string>();
                     string titre = user.nom + " " + user.prenom;
                     string anecdotes = user.anecdotes;
+
+                    List<Loisir> loisirsUserWithSharedInterests = await dataBaseManager.getInterestsUser(user);
                     
-            
-                    string[] loisirsUsers = (user.loisirs.Contains(',')) ? user.loisirs.Split(',') : new[]{user.loisirs};
-                    foreach (var loisir in loisirsUsers)
+                    foreach (var loisir in loisirsUserWithSharedInterests)
                     {
-                        var loisirToCompare = loisir.ToLower();
-                        if (Array.Exists(interestsUserLookingForNewFriends, x => x == loisirToCompare))
+                        if (interestsUserLookingForNewFriends.Contains(loisir))
                         {
-                            loisirsEnCommun.Add(loisir);
+                            loisirsEnCommun.Add(loisir.nom);
                         }
                     }
                     DisplayUser userToDisplayOnCard = new DisplayUser(user,titre, loisirsEnCommun, anecdotes);

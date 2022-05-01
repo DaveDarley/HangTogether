@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Google.Cloud.Firestore;
-using Firebase.Database;
 
 namespace HangTogether.ServerManager
 {
@@ -24,10 +23,10 @@ namespace HangTogether.ServerManager
             "Wood burning", "Wood carving", "Sightseeing", "drawing"
         };
         
-        public static FirestoreDb db;
+        public  FirestoreDb db;
         public TableLoisirsManager()
         {
-            db = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+            db = FirestoreDb.Create("hangtogether-edc71");
         }
 
         /*
@@ -35,26 +34,35 @@ namespace HangTogether.ServerManager
          * et donc j'appele cette fonction pour créer ma table de loisirs(C'est la seule fois que cette
          * fonction sera appelé)
          */
-        public static void createInterestsObjects()
+        public  List<Loisir> createInterestsObjects()
         {
             List<Loisir> loisirs = new List<Loisir>();
             for (int i = 0; i<tsLesLoisirs.Length; i++) {
                 loisirs.Add(new Loisir(tsLesLoisirs[i].ToUpper()));
             }
-            createInterestsCollection(loisirs);
+            return loisirs;
         }
         
-        //NB: Impossible d'avoir 2 loisirs avec le meme nom alors j'utilise ca comme 
-        //id de ma table loisirs
-        public static async void createInterestsCollection(List<Loisir> allInterests)
+        /*
+         * Fonction qui s'occupe d'initialiser ma table de Loisirs dans ma BD si elle
+         * n'existe pas encore
+         */
+        public  async void createInterestsCollection()
         {
-            foreach (var interest in allInterests)
+            Query isLoisirsTableExists = db.Collection("Loisirs").Limit(1);
+            QuerySnapshot isLoisirsTableExistsSnapshot = await isLoisirsTableExists.GetSnapshotAsync();
+            if (isLoisirsTableExistsSnapshot.Documents.Count == 0)
             {
-                // DocumentReference addedDocRef = db.Collection("cities").Document();
-                // Console.WriteLine("Added document with ID: {0}.", addedDocRef.Id);
-                DocumentReference addedDocRef = db.Collection("Loisirs").Document(interest.nom);
-                await addedDocRef.SetAsync(interest);
-            } 
+                List<Loisir> allInterests = createInterestsObjects();
+                foreach (var interest in allInterests)
+                {
+                    // DocumentReference addedDocRef = db.Collection("cities").Document();
+                    // Console.WriteLine("Added document with ID: {0}.", addedDocRef.Id);
+                    DocumentReference addedDocRef = db.Collection("Loisirs").Document(interest.nom);
+                    await addedDocRef.SetAsync(interest);
+                }
+            }
+ 
         }
 
         

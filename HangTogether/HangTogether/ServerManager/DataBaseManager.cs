@@ -2,10 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Firebase.Database;
-using Firebase.Database.Query;
 using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
 using Xamarin.Forms;
@@ -48,7 +45,7 @@ namespace HangTogether
          */
         public async Task deleteUser(User user)
         {
-            await firebase.Child("Users").Child(user.Key).DeleteAsync(); 
+            //await firebase.Child("Users").Child(user.Key).DeleteAsync(); 
 
         }
 
@@ -147,23 +144,23 @@ namespace HangTogether
         */
         
         //src: https://www.delftstack.com/howto/csharp/check-for-an-element-inside-an-array-in-csharp/
-        public List<User> getUserWithSharedInterests(User userLookingForFriends, List<User> allUsers)
+        public async Task<List<User>> getUserWithSharedInterests(User userLookingForFriends)
         {
+            List<Loisir> interestsUserLookingForFriends = await getInterestsUser(userLookingForFriends);
             List<User> usersWithSharedInterests = new List<User>();
-            var loisirsUserLookingForFriends = (! userLookingForFriends.loisirs.Contains(',')) ? new []{ userLookingForFriends.loisirs } : userLookingForFriends.loisirs.Split(',');
             
-            foreach (var utilisateur in allUsers)
+            Query allUsers = firebase.Collection("Users");
+            QuerySnapshot allUsersQuerySnapshot = await allUsers.GetSnapshotAsync();
+            foreach (DocumentSnapshot documentSnapshot in allUsersQuerySnapshot.Documents)
             {
-                var loisirsUser = (! utilisateur.loisirs.Contains(',')) ? new []{ utilisateur.loisirs } : utilisateur.loisirs.Split(',');
-                
-                for (int i = 0; i<loisirsUser.Length; i++)
+                User user = documentSnapshot.ConvertTo<User>();
+                List<Loisir> loisirsPotentialFriends = await getInterestsUser(user);
+                foreach (var loisirsUser in loisirsPotentialFriends)
                 {
-                    string loisir = loisirsUser[i];
-                    if (Array.Exists(loisirsUserLookingForFriends,x => x == loisir) && userLookingForFriends.email!=utilisateur.email)
+                    if (interestsUserLookingForFriends.Contains(loisirsUser))
                     {
-                        usersWithSharedInterests.Add(utilisateur);
-                        i = loisirsUser.Length;
-                        // break;
+                        usersWithSharedInterests.Add(user);
+                        break;
                     }
                 }
             }

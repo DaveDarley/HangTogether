@@ -1,11 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Firebase.Database;
-using Firebase.Database.Query;
 using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
-using Realms;
 
 namespace HangTogether
 {
@@ -75,35 +72,41 @@ namespace HangTogether
          */
         public async Task<List<User>> getUserInContactsWithMe(User user)
         {
-            List<string> emailUserInContactWithMe = new List<string>();
-            List<Message> allMessages = await GetAllMessages("Messages");
             DataBaseManager dataBaseManager = new DataBaseManager();
-            List<User> allUsers = await dataBaseManager.GetAllUsers();
-            List<User> usersInContactWithMe = new List<User>();
+            List<User> userInContactWithMe = new List<User>();
             
-            foreach (var messages in allMessages)
+            Query allMessagesQuery = firebaseClient.Collection("Messages");
+            QuerySnapshot allMessagesQuerySnapshot = await allMessagesQuery.GetSnapshotAsync();
+            foreach (DocumentSnapshot documentSnapshot in allMessagesQuerySnapshot.Documents)
             {
-                var emailToAdd = (messages.fromEmail == user.email)
-                    ? messages.toEmail
-                    : (messages.toEmail == user.email)
-                        ? messages.fromEmail
-                        : "";
-
-                if ((!string.IsNullOrEmpty(emailToAdd)) && (!emailUserInContactWithMe.Contains(emailToAdd)))
+                Message message = documentSnapshot.ConvertTo<Message>();
+                if (message.fromEmail == user.email)
                 {
-                    emailUserInContactWithMe.Add(emailToAdd);
+                   userInContactWithMe.Add(await dataBaseManager.getUser(message.toEmail)); 
+                }
+                if (message.toEmail == user.email)
+                {
+                    userInContactWithMe.Add(await dataBaseManager.getUser(message.fromEmail)); 
+                }
+            }
+            return userInContactWithMe;
+        }
+
+        public async Task<int> getNumberOfNewMessages(User userSendingMessages, User userGoingThroughContacts)
+        {
+            int nbNouveauxMessages = 0;
+            Query allMessagesQuery = firebaseClient.Collection("Messages");
+            QuerySnapshot allMessagesQuerySnapshot = await allMessagesQuery.GetSnapshotAsync();
+            foreach (DocumentSnapshot documentSnapshot in allMessagesQuerySnapshot.Documents)
+            {
+                Message message = documentSnapshot.ConvertTo<Message>();
+                if (message.fromEmail == userSendingMessages.email && message.toEmail == userGoingThroughContacts.email && message.lu == "n")
+                {
+                    nbNouveauxMessages++;
                 }
             }
 
-            foreach (var User in allUsers)
-            {
-                if (emailUserInContactWithMe.Contains(User.email))
-                {
-                    usersInContactWithMe.Add(User);
-                }
-            }
-
-            return usersInContactWithMe;
+            return nbNouveauxMessages;
         }
 
 
