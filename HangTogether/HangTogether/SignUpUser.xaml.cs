@@ -32,8 +32,8 @@ namespace HangTogether
             if (validateInfosUser())
             {
                 DataBaseManager dataBaseManager = new DataBaseManager();
-                var allUser = await dataBaseManager.GetAllUsers();
-                if (dataBaseManager.isEmailAlreadyInUsage(this.email.Text, allUser))
+                User user = await dataBaseManager.getUser(this.email.Text);
+                if (!(user is null))
                 {
                     this.emailError.Text = "Il existe deja un compte avec ce courriel";
                     this.emailError.IsVisible = true;
@@ -49,10 +49,10 @@ namespace HangTogether
                         Byte[] saltToEncryptMdp = SecureMdp.getSaltForEncryption();
                         string saltToEncryptMdpToSaveInDB = SecureMdp.byteArraySaltToString(saltToEncryptMdp);
                         string hashedMdp = SecureMdp.encryptPassword(this.mdp.Text, saltToEncryptMdp);
-                        User user = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"","","",saltToEncryptMdpToSaveInDB,"n");
+                        User nouveauUser = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"","","",saltToEncryptMdpToSaveInDB);
                     
-                        await dataBaseManager.AddUser(user);
-                        Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(user));
+                        await dataBaseManager.AddUser(nouveauUser);
+                        Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(nouveauUser));
                     
                     }
                     else

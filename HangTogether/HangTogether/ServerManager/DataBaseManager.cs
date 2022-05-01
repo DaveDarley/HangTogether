@@ -6,6 +6,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Firebase.Database;
 using Firebase.Database.Query;
+using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
 using Xamarin.Forms;
 
@@ -13,10 +14,10 @@ namespace HangTogether
 {
     public class DataBaseManager
     {
-        FirebaseClient firebase;
+        private static FirestoreDb firebase;
         public DataBaseManager()
         {
-            firebase = new FirebaseClient("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+            firebase = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
 
         }
         
@@ -25,21 +26,11 @@ namespace HangTogether
          */
         public async Task AddUser(User user)
         {
-            await firebase
-                .Child("Users")
-                .PostAsync(user);
+            DocumentReference newDoc = firebase.Collection("Users").Document();
+            user.id = newDoc.Id;
+            await newDoc.SetAsync(user);
         }
-        
-        /*
-         * Fonction qui met un event listenners sur une table
-         */
-        private void CheckChanges()
-        {
-            firebase
-                .Child("Nouveaux Messages")
-                .AsObservable<Message>()
-                .Subscribe(d => Console.WriteLine(d.Key));
-        }
+
 
         /*
          * Fonction qui s'occupe de mettre a jour les infos
@@ -47,8 +38,9 @@ namespace HangTogether
          */
         public async Task UpdateUser(User user)
         {
-            await firebase.Child("Users").Child(user.Key)
-                .PutAsync(user); 
+            DocumentReference userRef = firebase.Collection("Users").Document(user.id);
+            await userRef.SetAsync(user);
+
         }
 
         /*
@@ -60,86 +52,46 @@ namespace HangTogether
 
         }
 
-
-        /*
-         * Fonction qui recupere tous les users de mon DB
-         * Peut etre preferable de retourner un user en particulier et non toutes
-         * la base de données??
-         * Utilisation Proxy si l'info a deja ete recherche dans la BD
-         */
-        public async Task<List<User>> GetAllUsers()
-        {
-            return (await firebase
-                .Child("Users")
-                .OnceAsync<User>()).Select(item => new User(
-                item.Object.nom, item.Object.prenom, item.Object.email, item.Object.mdp ,item.Key,item.Object.loisirs, item.Object.anecdotes, item.Object.saltToEncryptMdp, item.Object.isUserReadMessage)
-           /* {
-                nom = item.Object.nom,
-                prenom = item.Object.prenom,
-                email = item.Object.email,
-                mdp = item.Object.mdp
-            }*/).ToList();
-        }
-
         
         /*
          * Fonction qui retourne un user de ma BD.
-         * Cette fonction est appelée lorsqu'on est sur
-         * que cet user existe dans la BD
+         * Voir Firestore documentation;
+         * Peut aussi etre utilise pour savoir si l'email est en utilisation:
+         * Si le user retourne est null alors aucun user n'a deja cet email
          */
-        public User getUser(List<User> mesUsers, string emailUser)
+        public async Task<User> getUser(string emailUser)
         {
-            User monUser = new User("", "", "", "","","","", "","");
-            foreach (var user in mesUsers)
+            User user = null;
+            // recuperation du document dont le champ email == emailUser
+            Query capitalQuery = firebase.Collection("Users").WhereEqualTo("email", emailUser);
+            QuerySnapshot capitalQuerySnapshot = await capitalQuery.GetSnapshotAsync();
+            foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
             {
-                if (user.email == emailUser)
-                {
-                    monUser = user;
-                }
+                user = documentSnapshot.ConvertTo<User>();
             }
-            return monUser;
+
+            return user;
         }
 
-        /*
-         * Fonction qui verifie lors du sign up d'un nouveau user , s'il n'existe
-         * pas deja un user avec l'email que le nouveau user essaie de sign
-         */
-        public bool isEmailAlreadyInUsage(string emailUser, List<User> mesUsers)
-        {
-            bool isEmailInUsage = false;
-            foreach (var user in mesUsers)
-            {
-                if (user.email == emailUser)
-                {
-                    isEmailInUsage = true;
-                }  
-            }
-            return isEmailInUsage;
-        }
-        
         
         /*
-         * On verifie si l'email et le mdp entre par le user lors de l'etape de
-         * sign in existe dans la BD mais aussi est ce qu'ils appartiennent les 2
-         * a la meme entrée; Si oui le user est valide.
-         *
-         * Idee: Pour chaque user ,j'utilise le salt du user et le mdp passe en
-         * parametre et j'encrypte le mdp; Si le resultat de l'encryption de ce mdp
-         * et l'email appartient a un meme user alors le user est valide.
+         * Avant d'appeler cette fonction je recupere le user qui a l'email entre par le user
+         * qui essaie de se connecter, je compare ensuite le mdp entré par le user avec le le mdp
+         * du user entré en parametre. Si les 2 mdp correspondent alors c'est le bon user.
          */
-        public bool isUserValid(string emailUser, string mdp, List<User> mesUsers)
+        public bool isUserValid(User user, string mdp)
         {
             bool canUserConnect = false;
-            foreach (var user in mesUsers)
+            if (!(user is null))
             {
                 string saltUser = user.saltToEncryptMdp;
                 Byte[] saltUserInByteArray = SecureMdp.stringToByteArraySalt(saltUser);
                 String mdpEncrypt = SecureMdp.encryptPassword(mdp, saltUserInByteArray);
-                
-                if (user.email == emailUser && user.mdp == mdpEncrypt)
+            
+                if (user.mdp == mdpEncrypt)
                 {
                     canUserConnect =  true;
-                }  
+                }
             }
             return canUserConnect;
         }

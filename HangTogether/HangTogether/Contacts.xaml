@@ -35,17 +35,18 @@
         
             <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="LightGray" Margin="0,25,0,0" Padding="0"
                    CornerRadius="30" >
-                <RefreshView IsRefreshing="{Binding IsRefreshing}"
-                             Command="{Binding RefreshCommand}">
-                    
-                        <ScrollView Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Margin="0,10,0,0">
-                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                                             Orientation="Vertical" x:Name="containerContacts" Margin="0" Padding="0">
+                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+                    <Label Text="Pull Down to refresh" VerticalOptions="Fill" HorizontalOptions="CenterAndExpand" TextColor="Black"
+                           Margin="0,5,0,0" Padding="0" FontSize="Large" FontAttributes="Bold"/>
+                    <RefreshView Refreshing="OnRefreshContacts" x:Name="refreshContacts">
+                        <ScrollView Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Margin="0,5,0,0">
+                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                                         Orientation="Vertical" x:Name="containerContacts" Margin="0" Padding="0">
                                     
-                                </StackLayout>
+                            </StackLayout>
                         </ScrollView>
-                </RefreshView>
-       
+                    </RefreshView>
+                </StackLayout>
             </Frame>
             
             <!-- Menu User -->

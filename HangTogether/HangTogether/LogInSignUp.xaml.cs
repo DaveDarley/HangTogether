@@ -30,16 +30,16 @@ namespace HangTogether
             if (IsUserCorrect())
             {
                 DataBaseManager dataBaseManager = new DataBaseManager();
-                var allUser = await dataBaseManager.GetAllUsers();
+                User user = await dataBaseManager.getUser(this.emailUser.Text);
+                var isUserValid = dataBaseManager.isUserValid(user, this.mdpUser.Text);
                 
-                if (dataBaseManager.isUserValid(this.emailUser.Text,this.mdpUser.Text, allUser))
+                if (isUserValid)
                 {
-                    var user = dataBaseManager.getUser(allUser, this.emailUser.Text);
                     Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(user));
                 }
                 else
                 {
-                    if (!dataBaseManager.isEmailAlreadyInUsage(this.emailUser.Text, allUser))
+                    if (user is null)
                     {
                         this.mailError.Text = "Il n'existe aucun compte associe a ce courriel";
                         this.mailError.IsVisible = true;
@@ -90,7 +90,7 @@ namespace HangTogether
          * Lors du recouvrement du mdp d'un user, on verifie si l'email entré par le
          * user pour le recouvrement est un email valide (i.e existe dans la BD)
          * Si oui on lui envoie un email a cette adresse;
-         * Sinon peut etre un peit Toast?? Et oui
+         * Sinon peut etre un petit Toast?? Et oui
          */
         async void OnTapForgetPassword(object sender, EventArgs args)
         {
@@ -98,9 +98,8 @@ namespace HangTogether
             if (!String.IsNullOrEmpty(emailUser))
             {
                 DataBaseManager dataBaseManager = new DataBaseManager();
-                var allUser = await dataBaseManager.GetAllUsers();
-                bool isUserValid = dataBaseManager.isEmailAlreadyInUsage(emailUser, allUser);
-                if (isUserValid)
+                var user = await dataBaseManager.getUser(emailUser);
+                if (!(user is null))
                 {
                     string verifCode = VerificationEmail.verifEmail(emailUser);
                     if (!String.IsNullOrEmpty(verifCode) && verifCode != "Erreur lors de l'envoie du code de verification")

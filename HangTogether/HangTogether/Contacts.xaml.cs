@@ -17,38 +17,29 @@ namespace HangTogether
     public partial class Contacts : ContentPage
     {
         private User userGoingThroughHisContacts;
-        
-                private bool _isRefreshing;  
-                private Command _refreshViewCommand;  
                 
         public Contacts(User userConsultingContacts)
         {
+            
             InitializeComponent();
             this.userGoingThroughHisContacts = userConsultingContacts;
             getListUserInContactWithMe(userGoingThroughHisContacts);
-        }
-        
-        public bool IsRefreshing  
-        {  
-            get => _isRefreshing; 
-        }  
-  
-        public Command RefreshViewCommand  
-        {  
-            get  
-            {  
-                return _refreshViewCommand ?? (_refreshViewCommand = new Command(() =>  
-                {  
-                    this.getListUserInContactWithMe(userGoingThroughHisContacts);  
-                }));  
-            }  
+
         }
 
+        /*
+         * Lorsqu'un user arrive sur cette page pour voir ses contacts et si il y en a ses nouveaux messages:
+         * On recherche tous les contacts avec lequel il est en contact:
+         * Avant de les afficher a l'écran on efface les contacts qui etaient affichés avant
+         * Pk: Si un contact qui etait affiche avant recoit un nouveau message faut le reafficher avec le
+         * nombre de nouveaux messages qu'il a 
+         */
+        
         public async void getListUserInContactWithMe(User userLookingInContacts)
         {
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
-            List<User> usersInContactWithMe =
-                await dataBaseMessagesManager.getUserInContactsWithMe(userLookingInContacts);
+            List<User> usersInContactWithMe =  await dataBaseMessagesManager.getUserInContactsWithMe(userLookingInContacts);;
+            containerContacts.Children.Clear();
             displayAllContacts(usersInContactWithMe);
         }
 
@@ -121,27 +112,26 @@ namespace HangTogether
                 finalStack.Children.Add(avatar);
                 finalStack.Children.Add(stack);
                 
-                
                 // TapEvent on frame :
                 var tapGestureRecognizer = new TapGestureRecognizer();
                 tapGestureRecognizer.Tapped += (s, e) => {
                     // handle the tap
-                    test(user);
-                     // Navigation.PushAsync(new DisplayMessages(userGoingThroughHisContacts,user));
-                     //Navigation.RemovePage(Navigation.NavigationStack[1]);
+                    OnTapContacts(user);
                 };
                 stack.GestureRecognizers.Add(tapGestureRecognizer);
 
                 layout.Children.Add(finalStack);
+                
             }
         }
 
-        public async void test(User user)
+        /*
+         * Pk je clear avant :
+         */
+        public async void OnTapContacts(User user)
         {
-           // DisplayMessages newConvos = new DisplayMessages(userGoingThroughHisContacts, user);
-            
+            containerContacts.Children.Clear();
             await Navigation.PushAsync(new DisplayMessages(userGoingThroughHisContacts,user));
-
         }
 
 
@@ -172,7 +162,7 @@ namespace HangTogether
             return c;
         }
         
-                /*
+        /*
          * Fonction qui s'occupe de l'apparition du menu
          * sur l'ecran
          * SRC: http://xamaringuyshow.com/2020/06/21/xamarin-forms-bottom-slider/
@@ -236,5 +226,11 @@ namespace HangTogether
          }
 
 
+         private void OnRefreshContacts(object sender, EventArgs e)
+         {
+             this.getListUserInContactWithMe(userGoingThroughHisContacts); 
+             // Stop refreshing
+             refreshContacts.IsRefreshing = false;
+         }
     }
 }

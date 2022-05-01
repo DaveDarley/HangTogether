@@ -39,7 +39,6 @@ namespace HangTogether
         public DisplayMessages(User userSendingMessage, User userReceivingMessages)
         {
             InitializeComponent();
-            CheckChanges();
             userFrom = userSendingMessage;
             userTo = userReceivingMessages;
             updateStatusUser("y");
@@ -111,53 +110,15 @@ namespace HangTogether
         }
 
         /*
-         * Chaque une seconde on verifie si n'y a pas eu de nouveaux
-         * messages ajoutés dans ma Table : Nouveaux Messages
+         * Idee:
+         * Qd user en ligne ==> c-a-d il est sur la page de conversation , je check chaque 5s si l'utilisateur avec lequel
+         * il est entrain de communiquer lui a envoyé un nouveau message.
+         * Qd il quitte la page de conversation, il redevient Hors-ligne
          */
-        // private async void SetTimer()
-        // {
-        //     // // Create a timer with a two second interval.
-        //     // aTimer = new System.Timers.Timer(5000);
-        //     // // Hook up the Elapsed event for the timer. 
-        //     // aTimer.Elapsed += IsUserOnline;
-        //     // aTimer.AutoReset = true;
-        //     // aTimer.Enabled = true;
-        //
-        //     DisplayAlert("ok", "ooo", "OK");
-        //     while (userTo.isUserReadMessage == "n")
-        //     {
-        //         var delayTask = Task.Delay(5000);
-        //         DisplayAlert("ok", "oojfdnjko", "OK");
-        //         await delayTask; // wait until at least 5s elapsed since delayTask created 
-        //     }
-        //     wait_Tick();
-        // }
-        //
-        // public void IsUserOnline(Object sender, ElapsedEventArgs e)
-        // {
-        //     
-        //     DisplayAlert("test", "UserTo est pas en ligne", "ok");
-        //     if (userTo.isUserReadMessage == "y")
-        //     {
-        //         DisplayAlert("test", "UserTo est en ligne", "ok");
-        //         aTimer.Stop();
-        //         aTimer.Dispose();
-        //         wait_Tick();
-        //         
-        //     }
-        // }
-
-        /*
-         * User A ecrit a User B ; le message de A est stocke dans ma table "Nouveaux Messages" de ma
-         * DB ; Et ensuite on affiche le message
-         *
-         * Verification si j'ai des nouveaux messages pour moi:
-         */
-        
         /*
          * Source: https://stackoverflow.com/questions/69038949/can-firebasedatabase-net-xamarin-form-mobile-update-and-notify-real-time-data
          */
-        private  async void  wait_Tick(/*Object sender, ElapsedEventArgs e*/)
+        private  async void  wait_Tick()
         {
             while(userFrom.isUserReadMessage == "y")
             {
@@ -276,28 +237,7 @@ namespace HangTogether
 
             }
         }
-        
-        private  void CheckChanges()
-        {
-            FirebaseClient firebase = new FirebaseClient("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
-            firebase.Child("Nouveaux Messages")
-                .AsObservable<Message>()
-                .Subscribe(obs =>
-                {
-                    switch (obs.EventType)
-                    {
-                        case Firebase.Database.Streaming.FirebaseEventType.InsertOrUpdate:
-                            var m = obs.Object;
-                            DisplayAlert("Test Events Firebase", "Message ajoute: " + m.message, "ok");
 
-                            break;
-                        case Firebase.Database.Streaming.FirebaseEventType.Delete:
-                            var m2 = obs.Object;
-                            DisplayAlert("Test Events Firebase", "Message supprime: " + m2.message, "ok");
-                            break;
-                    }
-                });
-        }
         
         /*
          * Function qui gere lorsque le user clique sur la fleche de retour
