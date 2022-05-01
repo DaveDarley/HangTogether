@@ -77,8 +77,7 @@ namespace HangTogether
                 var verifCodeEnterByUser = this.verifCode.Text;
                 var verifCodeSendToUser = utilisateurQuiModifieSonMdp.verifCode;
                 var emailUserRecoveringPassword = utilisateurQuiModifieSonMdp.email;
-                List<User> allUsers = await dataBaseManager.GetAllUsers();
-                User toUpdate = dataBaseManager.getUser(allUsers, emailUserRecoveringPassword);
+                User toUpdate = await dataBaseManager.getUser(emailUserRecoveringPassword);
                 
                 
                 // C'est bien un user valide qui change son mdp

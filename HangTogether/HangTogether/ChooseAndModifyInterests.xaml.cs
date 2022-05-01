@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -31,14 +32,7 @@ namespace HangTogether
             "Wood burning", "Wood carving", "Sightseeing", "drawing"
         };
 
-        // List qui contient tous les loisirs sous forme de Frame
-        public List<Frame> loisirsEnFrameADessiner = new List<Frame>();
-
-        // List qui contient les loisirs selectionnées par le user
-       public List<Frame> choixUserEnFrameADessiner = new List<Frame>();
-
-        // List qui contient une liste de loisirs selectionnes par le user
-        public List<string> choixDeLutilisateur = new List<string>();
+        private TableLoisirsManager gestionLoisirs;
         
         // LE USER EN QUESTION
         private User user;
@@ -46,6 +40,8 @@ namespace HangTogether
         public ChooseAndModifyInterests(User activeUser)
         {
             InitializeComponent();
+            listenOnLoisirsTable();
+            gestionLoisirs = new TableLoisirsManager();
             frameAnecdotes.HeightRequest =
                 DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.15;
             
@@ -53,39 +49,74 @@ namespace HangTogether
             
             user = activeUser;
             initializeListsOfInterests();
-            
-            addLoisirsToLayout(choixUserEnFrameADessiner);
+        }
+
+        // Test
+        public async void listenOnLoisirsTable()
+        {
+            FirestoreDb db = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+            CollectionReference citiesRef = db.Collection("Loisirs");
+            Query query = db.Collection("Loisirs");
+
+            FirestoreChangeListener listener = query.Listen(snapshot =>
+            {
+                Console.WriteLine("Callback received query snapshot.");
+                Console.WriteLine("Current cities in California:");
+                foreach (DocumentSnapshot documentSnapshot in snapshot.Documents)
+                {
+                    List<Loisir> nouveauLoisirAjoute = new List<Loisir>();
+                    Loisir loisirAjoute = documentSnapshot.ConvertTo<Loisir>();
+                    nouveauLoisirAjoute.Add(loisirAjoute);
+                    List<Frame> frameNouveauLoisir = CreateLoisirsFrame(nouveauLoisirAjoute);
+                    addLoisirsToLayout(frameNouveauLoisir);
+                }
+            });
         }
 
         /*
-         * Soit un User qui a deja fait son choix de loisirs et anecdotes,
-         * lorsque l'utilisateur se reconnecte on recupere ses choix de la BD
-         * et on les affiche de nouveau.
+         * Fonction qui recupere la liste de loisirs global mais aussi la liste de loisirs
+         * d'un utilisateur, transforme ces 2 listes de loisirs en liste de Frame.
+         * Pour chacune de ces 2 listes de "loisirs en Frame" il appel la fonction
+         * "addLoisirsToLayout" qui s'occupe de dessiner une liste de Frame sur l'ecran
          */
-        public void initializeListsOfInterests()
+        public async void initializeListsOfInterests()
         {
-            if (! String.IsNullOrEmpty(user.loisirs))
+            List<Loisir> allInterests = await gestionLoisirs.getAllInterests();
+            List<Loisir> interestsUser = await getLoisirsUser();
+            
+            List<Frame> frameAllInterests = CreateLoisirsFrame(allInterests);
+            List<Frame> frameInterestsUser = CreateLoisirsFrame(interestsUser);
+
+            foreach (var interest in frameAllInterests)
             {
-                var loisirs = user.loisirs.Split(',');
-                choixDeLutilisateur = new List<string>(loisirs);
-                choixUserEnFrameADessiner = CreateLoisirsFrame(loisirs);
+                if (frameInterestsUser.Contains(interest))
+                {
+                    frameInterestsUser.Remove(interest);
+                    
+                    interest.BackgroundColor = Color.Black;
+                    Label labelFrame = (Label) interest.Content;
+                    labelFrame.TextColor = Color.White;
+                }
             }
+            
             if (! String.IsNullOrEmpty(user.anecdotes))
             {
                 this.anecdotesUser.Text = user.anecdotes;
             }
-            loisirsEnFrameADessiner = CreateLoisirsFrame(tsLesLoisirs);
+
+            addLoisirsToLayout(frameAllInterests);
+            addLoisirsToLayout(frameInterestsUser);
         }
         
         
         /*
-         * Fonction qui prend une liste de loisirs sous forme
-         * de String et retourne une liste de Frame
+         * Fonction qui pour une liste de Loisir passé en entrée retourne
+         * une liste de Frame.
          */
-        public List<Frame> CreateLoisirsFrame(string [] loisirs)
+        public List<Frame>  CreateLoisirsFrame(List<Loisir>Interests)
         {
             List<Frame> frameADessinerSurlayout = new List<Frame>();
-            for (int i = 0; i < loisirs.Length; i++)
+            for (int i = 0; i < Interests.Count; i++)
             {
                 Frame frame = new Frame()
                 {
@@ -96,7 +127,7 @@ namespace HangTogether
                     Margin = new Thickness(0,4,0,4),
                     Content = new Label()
                     {
-                        Text = loisirs[i],
+                        Text = Interests[i].nom,
                         TextColor = Color.Black,
                         HorizontalOptions = LayoutOptions.StartAndExpand,
                     }
@@ -110,9 +141,20 @@ namespace HangTogether
                 frame.GestureRecognizers.Add(tapGestureRecognizer);
                 frameADessinerSurlayout.Add(frame);
             }
+
             return frameADessinerSurlayout;
         }
-        
+
+        /*
+         * Fonction qui recupere les loisirs d'un user pour ensuite les dessiner
+         * bg black text blanc sur mon flexlayout
+         */
+        public async Task<List<Loisir>> getLoisirsUser()
+        {
+            DataBaseManager dataBaseManager = new DataBaseManager();
+            return  await dataBaseManager.getInterestsUser(user);
+        }
+
 
         /*
          * Fonction qui permet de savoir les choix du User
@@ -130,7 +172,9 @@ namespace HangTogether
                 monFrame.BackgroundColor = Color.White;
                 var monLabel = (Label) monFrame.Content;
                 monLabel.TextColor= Color.Black;
-                RemoveUserChoice(monFrame);
+                
+                DataBaseManager dataBaseManager = new DataBaseManager();
+                dataBaseManager.deleteUserInterest(user,monLabel.Text);
             }
             else
             {   // Utilisateur fait un choix de loisir
@@ -138,11 +182,8 @@ namespace HangTogether
                 var monLabel = (Label) monFrame.Content;
                 monLabel.TextColor= Color.White;
                 
-                string loisirChoisi = monLabel.Text;
-                choixDeLutilisateur.Add(loisirChoisi);
-                
-                choixUserEnFrameADessiner.Add(monFrame);
-                updateInterestsUser(); // user a ajoute un loisir dans sa liste de loisirs alors on Update la BD
+                DataBaseManager dataBaseManager = new DataBaseManager();
+                dataBaseManager.addReferenceToInterest(user,monLabel.Text);
             }
         }
         
@@ -153,107 +194,24 @@ namespace HangTogether
          */
         public async void updateInterestsUser()
         {
+            User toUpdate = user;
             DataBaseManager dataBaseManager = new DataBaseManager();
-            List<User> allUsers = await dataBaseManager.GetAllUsers();
-            User toUpdate = dataBaseManager.getUser(allUsers, user.email);
-
-            string loisirsUpdate = choixDeLutilisateur.Count == 0  
-               ? "" 
-               : String.Join(",", choixDeLutilisateur.ToArray());
-
-            toUpdate.loisirs = loisirsUpdate;
             toUpdate.anecdotes = String.IsNullOrEmpty(anecdotesUser.Text) ? "" : anecdotesUser.Text;
             
             this.user = toUpdate;
             await dataBaseManager.UpdateUser(toUpdate);
         }
 
-
+        
         /*
-         * Fonction qui permet d'enlever une frame dans la liste de
-         * choix du User qd celui-ci deselectionne le loisir;
-         * Elle recoit en parametre la frame qu'elle est censée enlever
-         * (Celle-ci a ete deselectionnée par le user)
+         * Fonction qui s'occupe de dessiner les frames recues en parametre a l'ecran
          */
-        public void RemoveUserChoice(Frame toRemove)
-        {
-            var labelFrame = (Label)toRemove.Content;
-            string titreLoisirDeselectionne = labelFrame.Text;
-            
-            for (int i = 0; i < choixUserEnFrameADessiner.Count; i++)
-            {
-                var possibleFrameToRemove = (Label)choixUserEnFrameADessiner[i].Content;
-                string titrePossibleFrameToRemove = possibleFrameToRemove.Text;
-
-                if (titreLoisirDeselectionne == titrePossibleFrameToRemove)
-                { 
-                    choixUserEnFrameADessiner.RemoveAt(i);
-
-                }
-            }
-
-            for (int i = 0; i < choixDeLutilisateur.Count; i++)
-            {
-                if (choixDeLutilisateur[i] == titreLoisirDeselectionne)
-                {
-                    choixDeLutilisateur.RemoveAt(i);
-                }
-            }
-            updateInterestsUser(); // user a enleve un loisir dans sa liste de loisirs alors on Update la BD
-           
-        }
-
-
-        /*
-         * Cette fonction recoit en parametre la liste de choix de loisirs d'un user
-         * Si un loisir appartient a la liste de loisirs d'un user mais aussi appartient
-         * a la liste globale de loisirs (Allframe) on le dessine et on l'enleve de la liste de loisirs du user.
-         * Si un loisir appartient juste a Allframe et l'attribut IsVisible == true
-         * alors on le dessine.
-         * En dernier on parcours la liste de choix du User et on dessine tous les frames
-         * qu'elle contient
-         */
-        public void addLoisirsToLayout(List<Frame> choixUsers)
+        public void addLoisirsToLayout(List<Frame> interestsToDrawOnScreen)
         {
             var layoutUser = this.layoutInterest;
-            if (choixUsers.Count > 0)
+            foreach (var interest in interestsToDrawOnScreen)
             {
-                var frameChoiceUser = choixUserEnFrameADessiner;
-                foreach (var loisirs in loisirsEnFrameADessiner)
-                {
-                    var textFrameLoisirsDeDepart = ((Label) loisirs.Content).Text;
-                    for (int i = 0; i<frameChoiceUser.Count; i++)
-                    {
-                        var textFrameChoixUser = ((Label) frameChoiceUser[i].Content).Text;
-                        if (textFrameLoisirsDeDepart == textFrameChoixUser)
-                        {
-                            var labelFrame = (Label)loisirs.Content;
-                            labelFrame.TextColor = Color.White;
-                            loisirs.BackgroundColor = Color.Black;
-                            frameChoiceUser.RemoveAt(i);
-                        }
-                    }
-
-                    layoutUser.Children.Add(loisirs);
-                }
-                foreach (var choiceUser in frameChoiceUser)
-                {
-                    var labelFrame = (Label)choiceUser.Content;
-                    labelFrame.TextColor = Color.White;
-                    choiceUser.BackgroundColor = Color.Black;
-                    layoutUser.Children.Add(choiceUser);
-                }
-
-            }
-            else
-            {
-                foreach (var availableInterests in loisirsEnFrameADessiner)
-                {
-                    if (availableInterests.IsVisible)
-                    {
-                        layoutUser.Children.Add(availableInterests);
-                    }
-                }
+                layoutUser.Children.Add(interest);
             }
             
         }
@@ -273,56 +231,63 @@ namespace HangTogether
             string queryUser = searchBar.Text;
 
             // Si user cherche rien on affiche TOUS les loisirs sur l'ecran
-            if (String.IsNullOrEmpty(queryUser))
+            if (! String.IsNullOrEmpty(queryUser))
             {
-                for (int i = 0; i<loisirsEnFrameADessiner.Count; i++)
+                var framesOnLayout = layoutInterest.Children.Cast<Frame>().ToList();
+                //Cherchons le frame qui contient le query recherché par le user
+                for (int i = 0; i<framesOnLayout.Count; i++)
                 {
-                    loisirsEnFrameADessiner[i].IsVisible = true;
-                }
-                addLoisirsToLayout(choixUserEnFrameADessiner); 
-                return;
-            }
+                    var labelFrame = (Label) framesOnLayout[i].Content;
+                    var textFrame = (labelFrame.Text).ToLower();
+                    queryUser = queryUser.ToLower();
+                
+                    if (queryUser.Length > textFrame.Length)
+                    {
+                        if (queryUser.Contains(textFrame))
+                        {
+                            framesOnLayout[i].IsVisible = true;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (textFrame.Contains(queryUser))
+                        {
+                            framesOnLayout[i].IsVisible = true;
+                            continue;
+                        }
+                    }
 
-            //Cherchons le frame qui contient le query recherché par le user
-            for (int i = 0; i<loisirsEnFrameADessiner.Count; i++)
+                    framesOnLayout[i].IsVisible = false;
+                }
+            }
+            else
             {
-                var labelFrame = (Label) loisirsEnFrameADessiner[i].Content;
-                var textFrame = (labelFrame.Text).ToLower();
-                queryUser = queryUser.ToLower();
-                
-                if (queryUser.Length > textFrame.Length)
+                var framesOnLayout = layoutInterest.Children.Cast<Frame>().ToList();
+                foreach (var frame in framesOnLayout)
                 {
-                    if (queryUser.Contains(textFrame))
-                    {
-                        loisirsEnFrameADessiner[i].IsVisible = true;
-                        continue;
-                    }
+                    frame.IsVisible = true;
                 }
-                else
-                {
-                    if (textFrame.Contains(queryUser))
-                    {
-                        loisirsEnFrameADessiner[i].IsVisible = true;
-                        continue;
-                    }
-                }
-
-                loisirsEnFrameADessiner[i].IsVisible = false;
-                
             }
-            addLoisirsToLayout(choixUserEnFrameADessiner);
         }
         
         /*
-         * Fonction qui cree un nouveau frame lorsqu'un user ajoute un loisirs
-         * Cette fonction ajoute ce nouveau Frame dans la liste de loisirs selectionnes
-         * par le user(choixUser) mais aussi dans la liste de toutes les loisirs (allFrame).
+         * Qd un user ajoute un nouveau loisir:
+         * On verifie si loisir n'existe pas deja dans ma table loisir
+         * Si oui on cree une reference de mon user vers ce loisir
+         * Si non, on ajoute loisir dans ma table Loisirs et on cree ensuite
+         * la reference entre user et loisir
+         * En dernier on le dessine sur le flexlayout
          */
         async void OnAddInterests(Object s, EventArgs e)
         {
-            string loisirsAjoute = await DisplayPromptAsync("Ajout de Loisirs", "Veuillez ajouter votre loisir", keyboard: Keyboard.Text);
+            string loisirsAjoute = (await DisplayPromptAsync("Ajout de Loisirs", "Veuillez ajouter votre loisir/nSoyez le plus concis que possible", keyboard: Keyboard.Text)).ToUpper();
             if (!String.IsNullOrEmpty(loisirsAjoute))
             {
+                gestionLoisirs.addInterests(loisirsAjoute);
+                DataBaseManager dataBaseManager = new DataBaseManager();
+                dataBaseManager.addReferenceToInterest(user,loisirsAjoute);
+                
                 Frame frame = new Frame()
                 {
                     BackgroundColor = Color.Black,
@@ -349,12 +314,16 @@ namespace HangTogether
                 };
                 frame.GestureRecognizers.Add(tapGestureRecognizer);
                 // on ajout ce nouveau frame a la liste des anciens frames
-                loisirsEnFrameADessiner.Add(frame);
-                choixUserEnFrameADessiner.Add(frame);
-                choixDeLutilisateur.Add(loisirsAjoute);
-                updateInterestsUser(); // on update la liste de choix du user dans ma BD
-                addLoisirsToLayout(choixUserEnFrameADessiner);
+                // loisirsEnFrameADessiner.Add(frame);
+                // choixUserEnFrameADessiner.Add(frame);
+                // choixDeLutilisateur.Add(loisirsAjoute);
+                // updateInterestsUser(); // on update la liste de choix du user dans ma BD
+                // addLoisirsToLayout(choixUserEnFrameADessiner);
+                
+                // Dessine le nouveau frame dans mon stack
+                layoutInterest.Children.Add(frame);
             }
+            
         }
         
         /*

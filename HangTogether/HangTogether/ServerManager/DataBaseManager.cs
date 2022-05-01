@@ -14,7 +14,7 @@ namespace HangTogether
 {
     public class DataBaseManager
     {
-        private static FirestoreDb firebase;
+        public static FirestoreDb firebase;
         public DataBaseManager()
         {
             firebase = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
@@ -95,8 +95,51 @@ namespace HangTogether
             }
             return canUserConnect;
         }
-
         
+        /*
+         * Structure:
+         * - Users(Collection)
+         * -- User A
+         * --- nom
+         * --- prenom
+         * --- email
+         * --- ....
+         * --- Loisirs(Collection)
+         * ----Loisir 1
+         * ----- reference vers table Loisirs (Pareil pour les autres documents)
+         */
+
+        public async void addReferenceToInterest(User user, string loisir)
+        {
+            DocumentReference userRef = firebase.Collection("Users").Document(user.id).Collection("Loisirs").Document(loisir);
+            DocumentReference interestsRef = firebase.Collection("Loisirs").Document(loisir);
+            await userRef.SetAsync(interestsRef);
+        }
+
+        public async void deleteUserInterest(User user, string loisir)
+        {
+            DocumentReference userRef = firebase.Collection("Users").Document(user.id).Collection("Loisirs").Document(loisir);
+            await userRef.DeleteAsync();
+        }
+
+        /*
+         * Fonction qui recupere la liste de loisirs d'un user en particulier 
+         */
+        public async Task<List<Loisir>> getInterestsUser(User user)
+        {
+            List<Loisir> interestsUser = new List<Loisir>();
+            Query capitalQuery = firebase.Collection("Users").Document(user.id).Collection("Loisirs");
+            QuerySnapshot capitalQuerySnapshot = await capitalQuery.GetSnapshotAsync();
+            foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
+            {
+                Loisir loisir = documentSnapshot.ConvertTo<Loisir>();
+                interestsUser.Add(loisir);
+            }
+
+            return interestsUser;
+        }
+
+
         /*
          * Fonction qui prend en parametre un utilisateur et une liste d'utilisateur.
          * Elle retourne une liste d'utilisateur qui ont au moins un interet en commun

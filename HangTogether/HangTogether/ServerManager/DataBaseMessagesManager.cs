@@ -3,16 +3,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Firebase.Database;
 using Firebase.Database.Query;
+using Google.Cloud.Firestore;
 using HangTogether.ServerManager;
 
 namespace HangTogether
 {
     public class DataBaseMessagesManager
     { 
-        FirebaseClient firebaseClient;
+        FirestoreDb firebaseClient;
         public DataBaseMessagesManager()
         {
-            firebaseClient = new FirebaseClient("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+            firebaseClient = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
         }
 
         //Fonctiion qui ajoute un nouveau echange entre 2 utilisateurs dans 
