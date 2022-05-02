@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Google.Apis.Auth.OAuth2;
 using Google.Cloud.Firestore;
+using Google.Cloud.Firestore.V1;
+using Grpc.Auth;
 using HangTogether.ServerManager;
 using Xamarin.Forms;
 
@@ -16,9 +20,20 @@ namespace HangTogether
         public DataBaseManager()
         {
             
-            string filepath = "/Users/davejoseph/Downloads/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json";
-            System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
-            firebase = FirestoreDb.Create("hangtogether-edc71");
+            var firestoreDbBuilder = new FirestoreDbBuilder {
+                ProjectId = "hangtogether-edc71", 
+                ChannelCredentials = GoogleCredential.FromFile("/Users/davejoseph/Desktop/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json").ToChannelCredentials()// or FromFileAsync()
+            };
+            
+            firebase = firestoreDbBuilder.Build(); // or BuildAsync()
+            
+            // var firestoreDb = firestoreDbBuilder.Build(); // or BuildAsync()
+            // var jsonString = File.ReadAllText("/Users/davejoseph/Desktop/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json");
+            // var builder = new FirestoreClientBuilder {JsonCredentials = jsonString};
+            //
+            // // string filepath = "Users/davejoseph/Downloads/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json";
+            // // System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
+            // firebase = FirestoreDb.Create("hangtogether-edc71",builder.Build());
 
         }
         
