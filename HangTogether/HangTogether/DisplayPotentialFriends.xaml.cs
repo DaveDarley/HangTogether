@@ -32,12 +32,12 @@ namespace HangTogether
          * Fonction qui retourne les loisirs du user qui recherche
          * des nouveaux amis sous forme de tableau de string 
          */
-        public string[] getInterestUserLookingForNewFriends()
-        {
-            return userLookingForNewFriends.loisirs.Contains(',')
-                ? userLookingForNewFriends.loisirs.Split(',')
-                : new []{userLookingForNewFriends.loisirs};
-        }
+        // public string[] getInterestUserLookingForNewFriends()
+        // {
+        //     return userLookingForNewFriends.loisirs.Contains(',')
+        //         ? userLookingForNewFriends.loisirs.Split(',')
+        //         : new []{userLookingForNewFriends.loisirs};
+        // }
 
         /*
          * Qd on clique sur Envoyez un message;
@@ -150,7 +150,13 @@ namespace HangTogether
         {
             DataBaseManager dataBaseManager = new DataBaseManager();
             List<User>userWithSharedInterests = await dataBaseManager.getUserWithSharedInterests(userLookingForNewFriends);
+            
             List<Loisir> interestsUserLookingForNewFriends = await dataBaseManager.getInterestsUser(userLookingForNewFriends);
+            List<string> interestUserSearchingNewFriends = new List<string>();
+            foreach (var loisir in interestsUserLookingForNewFriends)
+            {
+                interestUserSearchingNewFriends.Add(loisir.nom);
+            }
 
             if (userWithSharedInterests.Count > 0)
             {
@@ -161,12 +167,17 @@ namespace HangTogether
                     string anecdotes = user.anecdotes;
 
                     List<Loisir> loisirsUserWithSharedInterests = await dataBaseManager.getInterestsUser(user);
-                    
+                    List<string> interestUserPossibleFriend = new List<string>();
                     foreach (var loisir in loisirsUserWithSharedInterests)
                     {
-                        if (interestsUserLookingForNewFriends.Contains(loisir))
+                        interestUserPossibleFriend.Add(loisir.nom);
+                    }
+                    
+                    foreach (var loisir in interestUserPossibleFriend)
+                    {
+                        if (interestUserSearchingNewFriends.Contains(loisir))
                         {
-                            loisirsEnCommun.Add(loisir.nom);
+                            loisirsEnCommun.Add(loisir);
                         }
                     }
                     DisplayUser userToDisplayOnCard = new DisplayUser(user,titre, loisirsEnCommun, anecdotes);

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using HangTogether.ServerManager;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -40,9 +41,12 @@ namespace HangTogether
                         Byte[] saltToEncryptMdp = SecureMdp.getSaltForEncryption();
                         string saltToEncryptMdpToSaveInDB = SecureMdp.byteArraySaltToString(saltToEncryptMdp);
                         string hashedMdp = SecureMdp.encryptPassword(this.mdp.Text, saltToEncryptMdp);
-                        User nouveauUser = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"","","",saltToEncryptMdpToSaveInDB);
-                    
-                        await dataBaseManager.AddUser(nouveauUser);
+                        
+                        User userCree = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"",saltToEncryptMdpToSaveInDB,"");
+                        await dataBaseManager.AddUser(userCree);
+                        
+                        // Pk: Qd on ajoute le user dans la bd son champs id est vide
+                        User nouveauUser = await dataBaseManager.getUser(userCree.email);
                         Application.Current.MainPage = new NavigationPage(new ChooseAndModifyInterests(nouveauUser));
                     
                     }

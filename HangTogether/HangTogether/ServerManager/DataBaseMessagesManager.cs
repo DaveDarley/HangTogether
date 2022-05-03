@@ -1,26 +1,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Cloud.Firestore;
+using Firebase.Database;
+using Firebase.Database.Query;
 using HangTogether.ServerManager;
 
 namespace HangTogether
 {
     public class DataBaseMessagesManager
     { 
-        FirestoreDb firebaseClient;
+        FirebaseClient firebaseClient;
         public DataBaseMessagesManager()
         {
-            firebaseClient = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+            firebaseClient = new FirebaseClient("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
         }
 
         //Fonctiion qui ajoute un nouveau echange entre 2 utilisateurs dans 
         //la BD
         public async void addNewConversation(Message conversation)
         {
-            DocumentReference messageRef = firebaseClient.Collection("Messages").Document();
-            conversation.Key = messageRef.Id;
-            await messageRef.SetAsync(conversation);
+            await firebaseClient.Child("Messages")
+                .PostAsync(conversation);
         }
 
         /*
@@ -29,8 +29,8 @@ namespace HangTogether
          */
         public async void updateConversation(Message conversation)
         {
-            DocumentReference messagesRef = firebaseClient.Collection("Messages").Document(conversation.Key);
-            await messagesRef.SetAsync(conversation);
+            await firebaseClient.Child("Messages")
+                .Child(conversation.Key).PutAsync(conversation);
         }
 
         /*
@@ -40,25 +40,43 @@ namespace HangTogether
          */
         public async Task<List<Message>> getAllMessages(User firstUser, User sndUser)
         {
-            List<Message> messages = new List<Message>();
-            Query allMessagesQuery = firebaseClient.Collection("Messages");
-            QuerySnapshot allMessagesQuerySnapshot = await allMessagesQuery.GetSnapshotAsync();
-            foreach (DocumentSnapshot documentSnapshot in allMessagesQuerySnapshot.Documents)
+            List<Message> messagesUser = new List<Message>();
+            var messages = (await firebaseClient.Child("Messages")
+                .OnceAsync<Message>()).AsEnumerable().Where(message =>
+                message.Object.toEmail == firstUser.email && message.Object.fromEmail == sndUser.email
+            || message.Object.toEmail == sndUser.email && message.Object.toEmail == firstUser.email);
+            foreach (var messageObject in messages)
             {
-                Message message = documentSnapshot.ConvertTo<Message>();
-                if (message.fromEmail == firstUser.email && message.toEmail == sndUser.email 
-                    || message.fromEmail == sndUser.email && message.toEmail == firstUser.email)
+                Message message = messageObject.Object;
+                message.Key = messageObject.Key;
+                if (message.toEmail == firstUser.email && message.fromEmail == sndUser.email)
                 {
-                    if (message.fromEmail == sndUser.email && message.toEmail == firstUser.email)
-                    {
-                        message.lu = "y";
-                        updateConversation(message);
-                    }
-                    messages.Add(message);
+                    message.lu = "y";
                 }
+                messagesUser.Add(message);
+                updateConversation(message);
             }
 
-            return messages;
+            return messagesUser;
+        }
+        
+        public async Task<List<Message>> getNonReadMessages(User firstUser, User sndUser)
+        {
+            List<Message> messagesUser = new List<Message>();
+            var messages = (await firebaseClient.Child("Messages")
+                .OnceAsync<Message>()).AsEnumerable().Where(message =>
+                message.Object.toEmail == firstUser.email && message.Object.fromEmail == sndUser.email &&
+                message.Object.lu == "n");
+            foreach (var messageObject in messages)
+            {
+                Message message = messageObject.Object;
+                message.Key = messageObject.Key;
+                message.lu = "y";
+                messagesUser.Add(message);
+                updateConversation(message);
+            }
+
+            return messagesUser;
         }
 
 
@@ -74,19 +92,19 @@ namespace HangTogether
         {
             DataBaseManager dataBaseManager = new DataBaseManager();
             List<User> userInContactWithMe = new List<User>();
-            
-            Query allMessagesQuery = firebaseClient.Collection("Messages");
-            QuerySnapshot allMessagesQuerySnapshot = await allMessagesQuery.GetSnapshotAsync();
-            foreach (DocumentSnapshot documentSnapshot in allMessagesQuerySnapshot.Documents)
+
+            var allConvosWithMe = (await firebaseClient.Child("Messages").OnceAsync<Message>())
+                .AsQueryable().Where(message => message.Object.fromEmail == user.email ||
+                                                message.Object.toEmail == user.email).ToList();
+            foreach (var messageObject in allConvosWithMe)
             {
-                Message message = documentSnapshot.ConvertTo<Message>();
-                if (message.fromEmail == user.email)
+                if (messageObject.Object.fromEmail == user.email)
                 {
-                   userInContactWithMe.Add(await dataBaseManager.getUser(message.toEmail)); 
+                    userInContactWithMe.Add(await dataBaseManager.getUser(messageObject.Object.toEmail));
                 }
-                if (message.toEmail == user.email)
+                else
                 {
-                    userInContactWithMe.Add(await dataBaseManager.getUser(message.fromEmail)); 
+                    userInContactWithMe.Add(await dataBaseManager.getUser(messageObject.Object.fromEmail));
                 }
             }
             return userInContactWithMe;
@@ -95,16 +113,11 @@ namespace HangTogether
         public async Task<int> getNumberOfNewMessages(User userSendingMessages, User userGoingThroughContacts)
         {
             int nbNouveauxMessages = 0;
-            Query allMessagesQuery = firebaseClient.Collection("Messages");
-            QuerySnapshot allMessagesQuerySnapshot = await allMessagesQuery.GetSnapshotAsync();
-            foreach (DocumentSnapshot documentSnapshot in allMessagesQuerySnapshot.Documents)
-            {
-                Message message = documentSnapshot.ConvertTo<Message>();
-                if (message.fromEmail == userSendingMessages.email && message.toEmail == userGoingThroughContacts.email && message.lu == "n")
-                {
-                    nbNouveauxMessages++;
-                }
-            }
+            nbNouveauxMessages = (await firebaseClient.Child("Messages")
+                .OnceAsync<Message>()).AsEnumerable().Where(message =>
+                message.Object.fromEmail == userSendingMessages.email && message.Object.toEmail ==
+                                                                      userGoingThroughContacts.email
+                                                                      && message.Object.lu == "n").Count();
 
             return nbNouveauxMessages;
         }

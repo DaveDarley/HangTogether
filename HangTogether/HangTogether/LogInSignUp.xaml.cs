@@ -16,8 +16,6 @@ namespace HangTogether
         public LogInSignUp()
         {
             InitializeComponent();
-            // TableLoisirsManager tableLoisirsManager = new TableLoisirsManager();
-            // tableLoisirsManager.createInterestsCollection();
         }
         
         /*
@@ -31,9 +29,7 @@ namespace HangTogether
         {
             if (IsUserCorrect())
             {
-                await DisplayAlert("Test", "Entree validation user", "OK");
                 DataBaseManager dataBaseManager = new DataBaseManager();
-                await DisplayAlert("Test2", "Reference vers firestore", "OK");
                 User user = await dataBaseManager.getUser(this.emailUser.Text);
                 var isUserValid = dataBaseManager.isUserValid(user, this.mdpUser.Text);
                 

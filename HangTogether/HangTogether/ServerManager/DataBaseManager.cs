@@ -1,13 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Google.Apis.Auth.OAuth2;
-using Google.Cloud.Firestore;
-using Google.Cloud.Firestore.V1;
-using Grpc.Auth;
+using Firebase.Database;
+using Firebase.Database.Query;
 using HangTogether.ServerManager;
 using Xamarin.Forms;
 
@@ -16,25 +12,14 @@ namespace HangTogether
 {
     public class DataBaseManager
     {
-        public static FirestoreDb firebase;
+        public  FirebaseClient firebase;
+        public  string FirebaseClient = "https://anodate-ca8b9-default-rtdb.firebaseio.com/";
+        public  string FrebaseSecret = "17hN90bHf0ROF4BDSUEsrBTw6AFvuFMe6n3sBFTS";
         public DataBaseManager()
-        {
+        { 
             
-            var firestoreDbBuilder = new FirestoreDbBuilder {
-                ProjectId = "hangtogether-edc71", 
-                ChannelCredentials = GoogleCredential.FromFile("/Users/davejoseph/Desktop/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json").ToChannelCredentials()// or FromFileAsync()
-            };
-            
-            firebase = firestoreDbBuilder.Build(); // or BuildAsync()
-            
-            // var firestoreDb = firestoreDbBuilder.Build(); // or BuildAsync()
-            // var jsonString = File.ReadAllText("/Users/davejoseph/Desktop/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json");
-            // var builder = new FirestoreClientBuilder {JsonCredentials = jsonString};
-            //
-            // // string filepath = "Users/davejoseph/Downloads/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json";
-            // // System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
-            // firebase = FirestoreDb.Create("hangtogether-edc71",builder.Build());
-
+         firebase = new FirebaseClient(FirebaseClient,
+            new FirebaseOptions { AuthTokenAsyncFactory = () => Task.FromResult(FrebaseSecret) });
         }
         
         /*
@@ -42,9 +27,10 @@ namespace HangTogether
          */
         public async Task AddUser(User user)
         {
-            DocumentReference newDoc = firebase.Collection("Users").Document();
-            user.id = newDoc.Id;
-            await newDoc.SetAsync(user);
+            await firebase.Child("Users")
+                .PostAsync(user);
+            User userToUpdateId = await getUser(user.email);
+            await UpdateUser(userToUpdateId);
         }
 
 
@@ -54,9 +40,8 @@ namespace HangTogether
          */
         public async Task UpdateUser(User user)
         {
-            DocumentReference userRef = firebase.Collection("Users").Document(user.id);
-            await userRef.SetAsync(user);
-
+            await firebase.Child("Users")
+                .Child(user.id).PutAsync(user);
         }
 
         /*
@@ -64,29 +49,37 @@ namespace HangTogether
          */
         public async Task deleteUser(User user)
         {
-            //await firebase.Child("Users").Child(user.Key).DeleteAsync(); 
+            await firebase.Child("Users").Child(user.id).DeleteAsync(); 
 
         }
 
         
         /*
-         * Fonction qui retourne un user de ma BD.
-         * Voir Firestore documentation;
-         * Peut aussi etre utilise pour savoir si l'email est en utilisation:
-         * Si le user retourne est null alors aucun user n'a deja cet email
+         * Qd on utilise ".OnceAsync" ca ns retourne un "IReadOnlyCollection"
+         * alors je le convertit en Enumerable et j'applique un filter sur mon IEnumarable<FirebaseObject<User>>
+         * Comme il existe un seul user avec cet email s'il existe, alors j'utilise single() sur le IEnumarable
+         * pour retourner le FirebaseObject<User> et ensuite je fs .Object pr me retourner le user en question
+         *
+         * Si where(..) retourner rien et ce que le querry retourne null??
          */
         public async Task<User> getUser(string emailUser)
-        {
-            User user = null;
-            // recuperation du document dont le champ email == emailUser
-            Query capitalQuery = firebase.Collection("Users").WhereEqualTo("email", emailUser);
-            QuerySnapshot capitalQuerySnapshot = await capitalQuery.GetSnapshotAsync();
-            foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
+        {   // Peut etre null si le user n'existe pas 
+            User monUser = null;
+            var userRecuper = (await firebase.Child("Users")
+                .OnceAsync<User>()).AsEnumerable().Where(user => user.Object.email == emailUser).ToList();
+
+            if (userRecuper.Count() != 0)
             {
-                user = documentSnapshot.ConvertTo<User>();
+                FirebaseObject<User> user = userRecuper.FirstOrDefault();
+                monUser = user.Object;
+                if (monUser.id == "")
+                {
+                    monUser.id = user.Key;
+                   // await UpdateUser(monUser);
+                }
             }
 
-            return user;
+            return monUser;
         }
 
         
@@ -111,51 +104,26 @@ namespace HangTogether
             }
             return canUserConnect;
         }
+     
         
-        /*
-         * Structure:
-         * - Users(Collection)
-         * -- User A
-         * --- nom
-         * --- prenom
-         * --- email
-         * --- ....
-         * --- Loisirs(Collection)
-         * ----Loisir 1
-         * ----- reference vers table Loisirs (Pareil pour les autres documents)
-         */
-
-        public async void addReferenceToInterest(User user, string loisir)
-        {
-            DocumentReference userRef = firebase.Collection("Users").Document(user.id).Collection("Loisirs").Document(loisir);
-            DocumentReference interestsRef = firebase.Collection("Loisirs").Document(loisir);
-            await userRef.SetAsync(interestsRef);
-        }
-
-        public async void deleteUserInterest(User user, string loisir)
-        {
-            DocumentReference userRef = firebase.Collection("Users").Document(user.id).Collection("Loisirs").Document(loisir);
-            await userRef.DeleteAsync();
-        }
-
         /*
          * Fonction qui recupere la liste de loisirs d'un user en particulier 
          */
         public async Task<List<Loisir>> getInterestsUser(User user)
         {
             List<Loisir> interestsUser = new List<Loisir>();
-            Query capitalQuery = firebase.Collection("Users").Document(user.id).Collection("Loisirs");
-            QuerySnapshot capitalQuerySnapshot = await capitalQuery.GetSnapshotAsync();
-            foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
+            List<FirebaseObject<ChoixLoisirsUser>> choixUser = (await firebase.Child("ChoixLoisirsUser")
+                    .OnceAsync<ChoixLoisirsUser>()).AsEnumerable()
+                .Where(userChoice => userChoice.Object.idUser == user.id)
+                .ToList();
+            foreach (var firebaseObjectLoisir in choixUser)
             {
-                Loisir loisir = documentSnapshot.ConvertTo<Loisir>();
-                interestsUser.Add(loisir);
+                interestsUser.Add(firebaseObjectLoisir.Object.loisir);
             }
-
             return interestsUser;
         }
-
-
+        
+        
         /*
          * Fonction qui prend en parametre un utilisateur et une liste d'utilisateur.
          * Elle retourne une liste d'utilisateur qui ont au moins un interet en commun
@@ -166,20 +134,35 @@ namespace HangTogether
         public async Task<List<User>> getUserWithSharedInterests(User userLookingForFriends)
         {
             List<Loisir> interestsUserLookingForFriends = await getInterestsUser(userLookingForFriends);
-            List<User> usersWithSharedInterests = new List<User>();
-            
-            Query allUsers = firebase.Collection("Users");
-            QuerySnapshot allUsersQuerySnapshot = await allUsers.GetSnapshotAsync();
-            foreach (DocumentSnapshot documentSnapshot in allUsersQuerySnapshot.Documents)
+            List<string> interestsUserLookingForFriendsInString = new List<string>();
+            foreach (var loisir in interestsUserLookingForFriends)
             {
-                User user = documentSnapshot.ConvertTo<User>();
-                List<Loisir> loisirsPotentialFriends = await getInterestsUser(user);
-                foreach (var loisirsUser in loisirsPotentialFriends)
+                interestsUserLookingForFriendsInString.Add(loisir.nom);
+            }
+            
+            List<User> usersWithSharedInterests = new List<User>();
+            var allUsers = (await firebase.Child("Users").OnceAsync<User>())
+                .AsEnumerable().Select(user => user.Object).ToList();
+
+            foreach (var user in allUsers)
+            {
+                if (user.email != userLookingForFriends.email)
                 {
-                    if (interestsUserLookingForFriends.Contains(loisirsUser))
+                    List<Loisir> loisirsOfUser = await getInterestsUser(user);
+                
+                    List<String> loisirsOfUserInString = new List<string>();
+                    foreach (var loisirUser in loisirsOfUser)
                     {
-                        usersWithSharedInterests.Add(user);
-                        break;
+                        loisirsOfUserInString.Add(loisirUser.nom); 
+                    }
+                
+                    foreach (var loisir in loisirsOfUserInString)
+                    {
+                        if (interestsUserLookingForFriendsInString.Contains(loisir))
+                        {
+                            usersWithSharedInterests.Add(user);
+                            break;
+                        }
                     }
                 }
             }

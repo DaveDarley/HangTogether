@@ -19,7 +19,7 @@
                                       Margin="10,0,10,0" BackgroundColor="White" CornerRadius="5" x:Name="menuLogo">
                 
                 <pancakeView:PancakeView.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnTapMenu" x:Name="tapMenu"/>
+                     <TapGestureRecognizer Tapped="OnTapMenu" x:Name="tapMenu"/> 
                 </pancakeView:PancakeView.GestureRecognizers>
                 
                 <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.ic_menu_user.png}" Aspect="AspectFill" />
@@ -37,7 +37,7 @@
         
             <!-- Gestion du click du user qd menu ouvert -->
             <Grid.GestureRecognizers>
-                <TapGestureRecognizer Tapped="OnTapBg"/>
+                 <TapGestureRecognizer Tapped="OnTapBg"/>
             </Grid.GestureRecognizers>
         <Grid>
         <StackLayout x:Name="stackBgMenu" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
@@ -177,7 +177,7 @@
                            HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" x:Name="sendMessageToNewFriend">
                     </Label>
                     <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnTapSendMessage"/>
+                         <TapGestureRecognizer Tapped="OnTapSendMessage"/> 
                     </Frame.GestureRecognizers>
                 </Frame>
                 
@@ -209,7 +209,7 @@
                                TextColor="White">
                             
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer>
+                                 <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer> 
                             </Label.GestureRecognizers> 
                             
                         </Label>   
@@ -219,7 +219,7 @@
                                TextColor="Black" >
                             
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
+                                 <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
                             </Label.GestureRecognizers> 
                             
                         </Label>  
@@ -229,7 +229,7 @@
                                TextColor="Black" >
                             
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer>
+                                 <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer> 
                             </Label.GestureRecognizers> 
                             
                         </Label>  
@@ -239,7 +239,7 @@
                                TextColor="White" >
                             
                             <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer>
+                                 <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer> 
                             </Label.GestureRecognizers> 
                             
                         </Label>  

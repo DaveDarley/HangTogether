@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reactive.Threading.Tasks;
 using System.Threading.Tasks;
-using Google.Cloud.Firestore;
+using Firebase.Database;
+using Firebase.Database.Query;
 
 namespace HangTogether.ServerManager
 {
@@ -23,13 +26,15 @@ namespace HangTogether.ServerManager
             "Wood burning", "Wood carving", "Sightseeing", "drawing"
         };
         
-        public  FirestoreDb db;
+        public  FirebaseClient db;
+        public  string FirebaseClient = "https://anodate-ca8b9-default-rtdb.firebaseio.com/";
+        public  string FrebaseSecret = "17hN90bHf0ROF4BDSUEsrBTw6AFvuFMe6n3sBFTS";
         public TableLoisirsManager()
         {
-            string filepath = "/Users/davejoseph/Downloads/hangtogether-edc71-firebase-adminsdk-4ohp9-40866f045d.json";
-            Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", filepath);
-            db = FirestoreDb.Create("hangtogether-edc71");
+            db = new FirebaseClient(FirebaseClient,
+                new FirebaseOptions { AuthTokenAsyncFactory = () => Task.FromResult(FrebaseSecret) });
         }
+
 
         /*
          * Lorsque mon application est lancé pour la premiere fois, ma base de données est vide
@@ -40,7 +45,10 @@ namespace HangTogether.ServerManager
         {
             List<Loisir> loisirs = new List<Loisir>();
             for (int i = 0; i<tsLesLoisirs.Length; i++) {
-                loisirs.Add(new Loisir(tsLesLoisirs[i].ToUpper()));
+                var ticks = DateTime.Now.Ticks;
+                var guid = Guid.NewGuid().ToString();
+                var uniqueSessionId = ticks.ToString() +'-'+ guid; //guid created by combining ticks and guid
+                loisirs.Add(new Loisir(tsLesLoisirs[i].ToUpper(),uniqueSessionId));
             }
             return loisirs;
         }
@@ -51,22 +59,20 @@ namespace HangTogether.ServerManager
          */
         public  async void createInterestsCollection()
         {
-            Query isLoisirsTableExists = db.Collection("Loisirs").Limit(1);
-            QuerySnapshot isLoisirsTableExistsSnapshot = await isLoisirsTableExists.GetSnapshotAsync();
-            if (isLoisirsTableExistsSnapshot.Documents.Count == 0)
-            {
-                List<Loisir> allInterests = createInterestsObjects();
-                foreach (var interest in allInterests)
-                {
-                    // DocumentReference addedDocRef = db.Collection("cities").Document();
-                    // Console.WriteLine("Added document with ID: {0}.", addedDocRef.Id);
-                    DocumentReference addedDocRef = db.Collection("Loisirs").Document(interest.nom);
-                    await addedDocRef.SetAsync(interest);
-                }
-            }
- 
-        }
+            var tableLoisirs = (await db.Child("Loisirs")
+                .OnceAsync<User>()).AsEnumerable().ToList();
 
+             int isTableLoisirsVide = tableLoisirs.Count();
+
+             if (isTableLoisirsVide == 0)
+             {
+                 List<Loisir> loisirsDeDepart = createInterestsObjects();
+                 foreach (var loisir in loisirsDeDepart)
+                 {
+                     await db.Child("Loisirs").PostAsync(loisir);
+                 }
+             }
+        }
         
         /*
          * Fonction qui verifie qd un utilisateur ajoute un loisir(i.e ajoute a la table Loisir)
@@ -74,35 +80,54 @@ namespace HangTogether.ServerManager
          * Devrait pouvoir dire que LOISIR , LOISIRS sont pareil par (lemmatization et stemming??)
          * mais le ft pas (A modifier pour une prochaine version)
          */
-        public async void addInterests(string nom)
+        public async void addInterests(User user, string nom)
         {
-            string loisir = nom.ToUpper();
-            // check si loisir existe deja :
-            // Si oui on ft rien 
-            // Sinon on l'ajoute
-            DocumentReference docRef = db.Collection("Loisirs").Document(loisir);
-            DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
-            if (!snapshot.Exists)
+            var Loisir = (await db.Child("Loisirs")
+                .OnceAsync<Loisir>()).AsEnumerable().Where(loisir => loisir.Object.nom == nom.ToUpper()).ToList();
+
+            if (Loisir.Count() == 0)
             {
-                Loisir nouveauLoisir = new Loisir(nom);
-                await docRef.SetAsync(nouveauLoisir);
+                var ticks = DateTime.Now.Ticks;
+                var guid = Guid.NewGuid().ToString();
+                var uniqueSessionId = ticks.ToString() +'-'+ guid; //guid created by combining ticks and guid
+                
+                Loisir loisir = new Loisir(nom, uniqueSessionId);
+                await db.Child("Loisirs").PostAsync(loisir);
+
+                ChoixLoisirsUser choixLoisirsUser = new ChoixLoisirsUser(uniqueSessionId, loisir, user.id);
+                await db.Child("ChoixLoisirsUser").PostAsync(choixLoisirsUser);
+            }
+            else
+            {
+                var ticks = DateTime.Now.Ticks;
+                var guid = Guid.NewGuid().ToString();
+                var uniqueSessionId = ticks.ToString() +'-'+ guid; //guid created by combining ticks and guid
+
+                Loisir loisir = await getLoisir(nom);
+                ChoixLoisirsUser choixLoisirsUser = new ChoixLoisirsUser(uniqueSessionId, loisir, user.id);
+                await db.Child("ChoixLoisirsUser").PostAsync(choixLoisirsUser);
             }
         }
 
         
         public async Task<List<Loisir>> getAllInterests()
         {
-            List<Loisir> allInterests = new List<Loisir>();
-            // recuperation du document dont le champ email == emailUser
-            Query capitalQuery = db.Collection("Loisirs");
-            QuerySnapshot capitalQuerySnapshot = await capitalQuery.GetSnapshotAsync();
-            foreach (DocumentSnapshot documentSnapshot in capitalQuerySnapshot.Documents)
+            var allInterests = (await db.Child("Loisirs")
+                    .OnceAsync<Loisir>()).Select(loisir => loisir.Object).ToList();
+            return allInterests;
+        }
+
+        public async Task<Loisir> getLoisir(string nom)
+        {
+            Loisir loisirRecherche = null;
+            var isLoisir =  (await db.Child("Loisirs").OnceAsync<Loisir>())
+                .AsEnumerable().Where(loisir => loisir.Object.nom == nom);
+            if (isLoisir.Count() != 0)
             {
-                Loisir loisir = documentSnapshot.ConvertTo<Loisir>();
-                allInterests.Add(loisir);
+                loisirRecherche = isLoisir.First().Object;
             }
 
-            return allInterests;
+            return loisirRecherche;
         }
     }
 }

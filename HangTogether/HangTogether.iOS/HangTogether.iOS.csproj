@@ -5,7 +5,7 @@
         <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
         <ProductVersion>8.0.30703</ProductVersion>
         <SchemaVersion>2.0</SchemaVersion>
-        <ProjectGuid>{8B32A7F2-C159-403A-BB5A-7B576326FE67}</ProjectGuid>
+        <ProjectGuid>{9A492FE6-6D4E-411A-8ED4-B7743F75750F}</ProjectGuid>
         <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
         <OutputType>Exe</OutputType>
         <RootNamespace>HangTogether.iOS</RootNamespace>
@@ -87,33 +87,32 @@
         <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Main.cs" />
-        <Compile Include="AppDelegate.cs" />
-        <None Include="Entitlements.plist" />
-        <None Include="Info.plist" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
+        <Compile Include="Main.cs"/>
+        <Compile Include="AppDelegate.cs"/>
+        <None Include="Entitlements.plist"/>
+        <None Include="Info.plist"/>
+        <Compile Include="Properties\AssemblyInfo.cs"/>
     </ItemGroup>
     <ItemGroup>
-        <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />
+        <InterfaceDefinition Include="Resources\LaunchScreen.storyboard"/>
         <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">
             <Visible>false</Visible>
         </ImageAsset>
     </ItemGroup>
     <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="System.Xml" />
-        <Reference Include="System.Core" />
-        <Reference Include="Xamarin.iOS" />
+        <Reference Include="System"/>
+        <Reference Include="System.Xml"/>
+        <Reference Include="System.Core"/>
+        <Reference Include="Xamarin.iOS"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Xamarin.CommunityToolkit" Version="2.0.1" />
-        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2337" />
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012"/>
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\HangTogether\HangTogether.csproj">
-            <Project>{47312A64-03B4-46E7-B4E5-9043C71A62BC}</Project>
+            <Project>{6918701A-4043-426A-BE54-38F1F7C1788A}</Project>
             <Name>HangTogether</Name>
         </ProjectReference>
     </ItemGroup>
-    <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+    <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets"/>
 </Project>

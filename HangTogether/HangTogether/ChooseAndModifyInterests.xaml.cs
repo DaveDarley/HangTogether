@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Google.Cloud.Firestore;
+using Firebase.Database;
 using HangTogether.ServerManager;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -16,31 +17,21 @@ namespace HangTogether
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ChooseAndModifyInterests : ContentPage
     {
-        private string[] tsLesLoisirs =
-        {
-            "Video Games", "Artificial Intelligence","Theater",
-            "Archery", "Caligraphy", "Travelling", "Photography",
-            "Yoga", "Dance", "Art", "Making music", "Volunteering",
-            "Blogging", "Podcast", "Marketing", "Puzzles", "Golf",
-            "Running", "Badminton", "Pilates", "Volleyball", "Ice Skating",
-            "darts", "Roller Skating", "Bowling", "Surfing", "Ice Hockey",
-            "Baseball", "Rock Climbing", "Karate", "Fishing","Fencing",
-            "Gym", "Weight Lifting", "Kickboxing", "Oil Painting", "Sculpture",
-            "Doodling", "Poetry", "Magic", "Acting", "Going to museums", "Sudoku",
-            "Brain teasers", "Singing", "LEGO", "Dollhouses" ,"Dolls", "Anime", "Manga",
-            "Grilling", "Bingo", "Sudoku", "Card Games", "Chess", "Judo", "Board Games",
-            "Wood burning", "Wood carving", "Sightseeing", "drawing"
-        };
 
         private TableLoisirsManager gestionLoisirs;
-        
+
+        private FirebaseClient firebase;
+       // private FirebaseClient firebase;
         // LE USER EN QUESTION
         private User user;
+        public  string FirebaseClient = "https://anodate-ca8b9-default-rtdb.firebaseio.com/";
+        public  string FrebaseSecret = "17hN90bHf0ROF4BDSUEsrBTw6AFvuFMe6n3sBFTS";
 
         public ChooseAndModifyInterests(User activeUser)
         {
             InitializeComponent();
-            listenOnLoisirsTable();
+            firebase = new FirebaseClient(FirebaseClient);
+            
             gestionLoisirs = new TableLoisirsManager();
             frameAnecdotes.HeightRequest =
                 DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.15;
@@ -50,29 +41,7 @@ namespace HangTogether
             user = activeUser;
             initializeListsOfInterests();
         }
-
-        // Test
-        public async void listenOnLoisirsTable()
-        {
-            FirestoreDb db = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
-            CollectionReference citiesRef = db.Collection("Loisirs");
-            Query query = db.Collection("Loisirs");
-
-            FirestoreChangeListener listener = query.Listen(snapshot =>
-            {
-                Console.WriteLine("Callback received query snapshot.");
-                Console.WriteLine("Current cities in California:");
-                foreach (DocumentSnapshot documentSnapshot in snapshot.Documents)
-                {
-                    List<Loisir> nouveauLoisirAjoute = new List<Loisir>();
-                    Loisir loisirAjoute = documentSnapshot.ConvertTo<Loisir>();
-                    nouveauLoisirAjoute.Add(loisirAjoute);
-                    List<Frame> frameNouveauLoisir = CreateLoisirsFrame(nouveauLoisirAjoute);
-                    addLoisirsToLayout(frameNouveauLoisir);
-                }
-            });
-        }
-
+        
         /*
          * Fonction qui recupere la liste de loisirs global mais aussi la liste de loisirs
          * d'un utilisateur, transforme ces 2 listes de loisirs en liste de Frame.
@@ -83,29 +52,19 @@ namespace HangTogether
         {
             List<Loisir> allInterests = await gestionLoisirs.getAllInterests();
             List<Loisir> interestsUser = await getLoisirsUser();
-            
-            List<Frame> frameAllInterests = CreateLoisirsFrame(allInterests);
-            List<Frame> frameInterestsUser = CreateLoisirsFrame(interestsUser);
-
-            foreach (var interest in frameAllInterests)
+            List<string> nomChoixUser = new List<string>();
+            foreach (var loisirUser in interestsUser)
             {
-                if (frameInterestsUser.Contains(interest))
-                {
-                    frameInterestsUser.Remove(interest);
-                    
-                    interest.BackgroundColor = Color.Black;
-                    Label labelFrame = (Label) interest.Content;
-                    labelFrame.TextColor = Color.White;
-                }
+               nomChoixUser.Add(loisirUser.nom); 
             }
+            
+            List<Frame> frameAllInterests = CreateLoisirsFrame(allInterests,nomChoixUser);
             
             if (! String.IsNullOrEmpty(user.anecdotes))
             {
                 this.anecdotesUser.Text = user.anecdotes;
             }
-
             addLoisirsToLayout(frameAllInterests);
-            addLoisirsToLayout(frameInterestsUser);
         }
         
         
@@ -113,22 +72,36 @@ namespace HangTogether
          * Fonction qui pour une liste de Loisir passé en entrée retourne
          * une liste de Frame.
          */
-        public List<Frame>  CreateLoisirsFrame(List<Loisir>Interests)
+        public List<Frame>  CreateLoisirsFrame(List<Loisir>InterestsGlobal,List<string>InterestsUser)
         {
+            Color frameColor;
+            Color textColor;
             List<Frame> frameADessinerSurlayout = new List<Frame>();
-            for (int i = 0; i < Interests.Count; i++)
+            for (int i = 0; i < InterestsGlobal.Count; i++)
             {
+                if (InterestsUser.Contains(InterestsGlobal[i].nom))
+                {
+                    frameColor = Color.Black;
+                    textColor = Color.White;
+                }
+                else
+                { 
+                    frameColor = Color.White;
+                    textColor = Color.Black;
+                }
+
                 Frame frame = new Frame()
                 {
-                    BackgroundColor = Color.White,
+                    
+                    BackgroundColor = frameColor,
                     CornerRadius = 30,
                     HasShadow = true,
                     IsVisible = true,
                     Margin = new Thickness(0,4,0,4),
                     Content = new Label()
                     {
-                        Text = Interests[i].nom,
-                        TextColor = Color.Black,
+                        Text = InterestsGlobal[i].nom,
+                        TextColor = textColor,
                         HorizontalOptions = LayoutOptions.StartAndExpand,
                     }
                 };
@@ -163,7 +136,7 @@ namespace HangTogether
          * On sauvegarde dans un tableau les choix de l'user
          * pour les stocker ensuite dans la Base de données
          */
-        public void OnTapFramFrame(Object s, EventArgs e)
+        public async void OnTapFramFrame(Object s, EventArgs e)
         {
             var monFrame = (Frame) s;
             // Verifions si le frame a deja ete selectionné ou pas 
@@ -173,17 +146,20 @@ namespace HangTogether
                 var monLabel = (Label) monFrame.Content;
                 monLabel.TextColor= Color.Black;
                 
-                DataBaseManager dataBaseManager = new DataBaseManager();
-                dataBaseManager.deleteUserInterest(user,monLabel.Text);
+                
+                GestionChoixLoisirsUser gestionChoixLoisirsUser = new GestionChoixLoisirsUser();
+                ChoixLoisirsUser choixLoisirsUser = await gestionChoixLoisirsUser.getChoixUser(user, monLabel.Text);
+                DisplayAlert("Test delete choix user", "choix user id: " + choixLoisirsUser.id, "ok");
+                gestionChoixLoisirsUser.deleteChoixUser(choixLoisirsUser);
             }
             else
             {   // Utilisateur fait un choix de loisir
                 monFrame.BackgroundColor = Color.Black;
                 var monLabel = (Label) monFrame.Content;
                 monLabel.TextColor= Color.White;
-                
-                DataBaseManager dataBaseManager = new DataBaseManager();
-                dataBaseManager.addReferenceToInterest(user,monLabel.Text);
+
+                TableLoisirsManager tableLoisirsManager = new TableLoisirsManager();
+                tableLoisirsManager.addInterests(user,monLabel.Text);
             }
         }
         
@@ -281,50 +257,69 @@ namespace HangTogether
          */
         async void OnAddInterests(Object s, EventArgs e)
         {
-            string loisirsAjoute = (await DisplayPromptAsync("Ajout de Loisirs", "Veuillez ajouter votre loisir/nSoyez le plus concis que possible", keyboard: Keyboard.Text)).ToUpper();
-            if (!String.IsNullOrEmpty(loisirsAjoute))
+            string loisirsAjoute = (await DisplayPromptAsync("Ajout de Loisirs", "Veuillez ajouter votre loisir", keyboard: Keyboard.Text)).ToUpper();
+            if (!(String.IsNullOrEmpty(loisirsAjoute)))
             {
-                gestionLoisirs.addInterests(loisirsAjoute);
-                DataBaseManager dataBaseManager = new DataBaseManager();
-                dataBaseManager.addReferenceToInterest(user,loisirsAjoute);
-                
-                Frame frame = new Frame()
+                Loisir loisir = await gestionLoisirs.getLoisir(loisirsAjoute);
+                if (loisir is null)
                 {
-                    BackgroundColor = Color.Black,
-                    CornerRadius = 30,
-                    HasShadow = true,
-                    IsVisible = true,
-                    Margin = new Thickness(0,4,0,4),
-                    Content = new Label()
+                    gestionLoisirs.addInterests(user, loisirsAjoute);
+
+                    Frame frame = new Frame()
                     {
-                        Text = loisirsAjoute,
-                        TextColor = Color.White,
-                        HorizontalOptions = LayoutOptions.StartAndExpand,
-                        LineBreakMode = LineBreakMode.WordWrap
-                       
-                        
+                        BackgroundColor = Color.Black,
+                        CornerRadius = 30,
+                        HasShadow = true,
+                        IsVisible = true,
+                        Margin = new Thickness(0, 4, 0, 4),
+                        Content = new Label()
+                        {
+                            Text = loisirsAjoute,
+                            TextColor = Color.White,
+                            HorizontalOptions = LayoutOptions.StartAndExpand,
+                            LineBreakMode = LineBreakMode.WordWrap
+
+
+                        }
+                    };
+
+                    // Ajout d'un eventListener sur le nouveau frame cree :
+                    var tapGestureRecognizer = new TapGestureRecognizer();
+                    tapGestureRecognizer.Tapped += (obj, ev) =>
+                    {
+                        // handle the tap
+                        OnTapFramFrame(obj, ev);
+                    };
+                    frame.GestureRecognizers.Add(tapGestureRecognizer);
+
+                    // Dessine le nouveau frame dans mon stack
+                    layoutInterest.Children.Add(frame);
+                }
+                else
+                {
+                    GestionChoixLoisirsUser gestionChoixLoisirsUser = new GestionChoixLoisirsUser();
+                    ChoixLoisirsUser choixLoisirsUser = await gestionChoixLoisirsUser.getChoixUser(user, loisirsAjoute);
+                    if (choixLoisirsUser is null)
+                    {
+                        gestionLoisirs.addInterests(user, loisirsAjoute);
                     }
-                };
-                
-                // Ajout d'un eventListener sur le nouveau frame cree :
-                var tapGestureRecognizer = new TapGestureRecognizer();
-                tapGestureRecognizer.Tapped += (obj, ev) => {
-                    // handle the tap
-                    OnTapFramFrame(obj,ev);
-                };
-                frame.GestureRecognizers.Add(tapGestureRecognizer);
-                // on ajout ce nouveau frame a la liste des anciens frames
-                // loisirsEnFrameADessiner.Add(frame);
-                // choixUserEnFrameADessiner.Add(frame);
-                // choixDeLutilisateur.Add(loisirsAjoute);
-                // updateInterestsUser(); // on update la liste de choix du user dans ma BD
-                // addLoisirsToLayout(choixUserEnFrameADessiner);
-                
-                // Dessine le nouveau frame dans mon stack
-                layoutInterest.Children.Add(frame);
+                    int nbFramesOnScreen = layoutInterest.Children.Count();
+                    for (int i = 0; i < nbFramesOnScreen; i++)
+                    {
+                        var monFrame = (Frame) layoutInterest.Children[i];
+                        var labelFrame = (Label) monFrame.Content;
+                        if (labelFrame.Text == loisirsAjoute)
+                        {
+                            monFrame.BackgroundColor = Color.Black;
+                            var monLabel = (Label) monFrame.Content;
+                            monLabel.TextColor = Color.White;
+
+                        }
+                    }
+                } 
             }
-            
-        }
+
+    }
         
         /*
          * Qd user clique sur le boutton de recherche de nouveauPote;
@@ -333,11 +328,13 @@ namespace HangTogether
          * On savegarde ensuite les loisirs choisies par le user mais aussi les
          * anecdotes du User dans les variables qui leurs correspondent
         */
-        public bool validateUserChoice()
+        public async Task<bool> validateUserChoice()
         {
             var canUserGoToNextPage = true;
             var lesAnecdotesDuUser = this.anecdotesUser.Text;
-            if (String.IsNullOrEmpty(user.loisirs))
+            DataBaseManager dataBaseManager = new DataBaseManager();
+            var listInterestUser = await dataBaseManager.getInterestsUser(user);
+            if (listInterestUser.Count() == 0)
             {
                 canUserGoToNextPage = false;
             }
@@ -366,10 +363,10 @@ namespace HangTogether
          */
         async void OnTapRecherche(object sender, EventArgs args)
         {
-            if (validateUserChoice())
+            if (await validateUserChoice())
             {
                 updateInterestsUser();
-                await Navigation.PushAsync(new DisplayPotentialFriends(user)); 
+               await Navigation.PushAsync(new DisplayPotentialFriends(user)); 
             }
             else
             {

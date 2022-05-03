@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Google.Cloud.Firestore;
+using System.Threading.Tasks;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Forms;
@@ -38,7 +38,8 @@ namespace HangTogether
             Title = nomUserTo;
             this.BindingContext = this;
             whenUserConnected(); //au debut on recupere ts les messages entre les 2 users dans ma DB(s'il y en a)
-            listenOnNewMessages();
+            //listenOnNewMessages();
+            getNewMessages();
         }
 
         /*
@@ -46,27 +47,43 @@ namespace HangTogether
          * et donc pour le user recepteur du message on met l'attribut lu = "y";
          * Vu que le champ lu du message a changé, on le met aussi a jour dans la BD
          */
-        public async void listenOnNewMessages()
-        {
-            FirestoreDb db = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
-            CollectionReference citiesRef = db.Collection("Messages");
-            Query query = db.Collection("Messages");
+        // public async void listenOnNewMessages()
+        // {
+        //     FirestoreDb db = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
+        //     CollectionReference citiesRef = db.Collection("Messages");
+        //     Query query = db.Collection("Messages");
+        //
+        //     FirestoreChangeListener listener = query.Listen(snapshot =>
+        //     {
+        //         List<Message> messagesRecu = new List<Message>();
+        //         foreach (DocumentSnapshot documentSnapshot in snapshot.Documents)
+        //         {
+        //             Message message = documentSnapshot.ConvertTo<Message>();
+        //             if (message.toEmail == userFrom.email && message.fromEmail == userTo.email)
+        //             {
+        //                 message.lu = "y";
+        //                 dataBaseMessagesManager.updateConversation(message);
+        //                 messagesRecu.Add(message);
+        //                 displayAllConvos(messagesRecu);
+        //             }
+        //         }
+        //     });
+        // }
 
-            FirestoreChangeListener listener = query.Listen(snapshot =>
+        public async void getNewMessages()
+        {
+            DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
+            int isNewMessages = await dataBaseMessagesManager.getNumberOfNewMessages(userTo, userFrom);
+            if (isNewMessages != 0)
             {
-                List<Message> messagesRecu = new List<Message>();
-                foreach (DocumentSnapshot documentSnapshot in snapshot.Documents)
-                {
-                    Message message = documentSnapshot.ConvertTo<Message>();
-                    if (message.toEmail == userFrom.email && message.fromEmail == userTo.email)
-                    {
-                        message.lu = "y";
-                        dataBaseMessagesManager.updateConversation(message);
-                        messagesRecu.Add(message);
-                        displayAllConvos(messagesRecu);
-                    }
-                }
-            });
+                List<Message> messagesToMe = await dataBaseMessagesManager.getNonReadMessages(userFrom, userTo);
+                displayAllConvos(messagesToMe);
+            }
+            else
+            {
+                await Task.Delay(5000);
+                getNewMessages();
+            }
         }
 
 
