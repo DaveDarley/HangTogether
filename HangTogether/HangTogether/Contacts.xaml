@@ -31,27 +31,34 @@
     
     
     <ContentPage.Content>
+        
         <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
         
-            <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="LightGray" Margin="0,25,0,0" Padding="0"
-                   CornerRadius="30" >
-                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
-                    <Label Text="Pull Down to refresh" VerticalOptions="Fill" HorizontalOptions="CenterAndExpand" TextColor="Black"
-                           Margin="0,5,0,0" Padding="0" FontSize="Large" FontAttributes="Bold"/>
-                    <RefreshView Refreshing="OnRefreshContacts" x:Name="refreshContacts">
-                        <ScrollView Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Margin="0,5,0,0">
-                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
-                                         Orientation="Vertical" x:Name="containerContacts" Margin="0" Padding="0">
-                                    
-                            </StackLayout>
-                        </ScrollView>
-                    </RefreshView>
-                </StackLayout>
-            </Frame>
+            <!-- Gestion du click du user qd menu ouvert -->
+            <Grid.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnTapBg"/>
+            </Grid.GestureRecognizers>
+            <Grid x:Name="gridContacts">
+                <Frame HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="LightGray" Margin="0,25,0,0" Padding="0"
+                       CornerRadius="30">
+                    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+                        <Label Text="Pull Down to refresh" VerticalOptions="Fill" HorizontalOptions="CenterAndExpand" TextColor="Black"
+                               Margin="0,5,0,0" Padding="0" FontSize="Large" FontAttributes="Bold"/>
+                        <RefreshView Refreshing="OnRefreshContacts" x:Name="refreshContacts">
+                            <ScrollView Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Fill" Margin="0,5,0,0">
+                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"
+                                             Orientation="Vertical" x:Name="containerContacts" Margin="0" Padding="0">
+                                        
+                                </StackLayout>
+                            </ScrollView>
+                        </RefreshView>
+                    </StackLayout>
+                </Frame>
+            </Grid>
             
             <!-- Menu User -->
-                    <pancakeView:PancakeView  VerticalOptions="EndAndExpand"  x:Name="frameMenu" CornerRadius="20" HorizontalOptions="FillAndExpand" HeightRequest="0"
-                                  BackgroundColor="White"> 
+            <pancakeView:PancakeView  VerticalOptions="EndAndExpand"  x:Name="frameMenu" CornerRadius="20" HorizontalOptions="FillAndExpand" HeightRequest="0"
+                          BackgroundColor="White"> 
 
             
             <StackLayout Orientation="Vertical" Margin="10,10,10,10" VerticalOptions="FillAndExpand">
@@ -68,43 +75,38 @@
                     
                     <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="TROUVER&#10;UN POTE"
-                               TextColor="White">
+                               TextColor="White"/>
                             
-                            <Label.GestureRecognizers>
+                            <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer>
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>   
+                            </Frame.GestureRecognizers> 
                     </Frame>
                     <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="MODIFIER&#10;MES LOISIRS"
-                               TextColor="Black" >
+                               TextColor="Black"/>
                             
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>  
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
+                        </Frame.GestureRecognizers> 
+                        
                     </Frame>
                     <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="VOIR MES&#10;MESSAGES"
-                               TextColor="Black" >
+                               TextColor="Black"/>
                             
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer>
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>  
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer>
+                        </Frame.GestureRecognizers> 
+                        
                     </Frame>
                     <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="DESACTIVER&#10;MON COMPTE"
-                               TextColor="White" >
+                               TextColor="White"/>
                             
-                            <Label.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer>
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>  
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer>
+                        </Frame.GestureRecognizers> 
+                        
                     </Frame>
                 </Grid>
                 

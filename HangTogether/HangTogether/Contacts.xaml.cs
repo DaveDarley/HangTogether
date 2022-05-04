@@ -21,6 +21,7 @@ namespace HangTogether
         public Contacts(User userConsultingContacts)
         {
             InitializeComponent();
+            DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
             _dataBaseMessagesManager = new DataBaseMessagesManager();
             this.userGoingThroughHisContacts = userConsultingContacts;
             getListUserInContactWithMe(userGoingThroughHisContacts);
@@ -32,7 +33,7 @@ namespace HangTogether
          * On recherche tous les contacts avec lequel il est en contact:
          * Avant de les afficher a l'écran on efface les contacts qui etaient affichés avant
          * Pk: Si un contact qui etait affiche avant recoit un nouveau message faut le reafficher avec le
-         * nombre de nouveaux messages qu'il a 
+         * nombre de nouveaux messages qu'il a recu
          */
         
         public async void getListUserInContactWithMe(User userLookingInContacts)
@@ -125,12 +126,8 @@ namespace HangTogether
             }
         }
 
-        /*
-         * Pk je clear avant :
-         */
         public async void OnTapContacts(User user)
         {
-            containerContacts.Children.Clear();
             await Navigation.PushAsync(new DisplayMessages(userGoingThroughHisContacts,user));
         }
 
@@ -153,6 +150,36 @@ namespace HangTogether
         }
         
         /*
+         * Fonction qui s'occupe de fermer le menu lors de la rotation du telephone
+         */
+        public void OnMainDisplayInfoChanged(object sender, DisplayInfoChangedEventArgs e)
+        {
+            frameMenu.HeightRequest = 0; // si le menu etait ouvert qd on rotate le tlf, il doit devenir fermer
+            this.gridContacts.IsEnabled = true; // pr permettre a ce que le user puisse interagir avec son bg
+        }
+        
+        /*
+         * Fonction qui s'occupe de baisser le menu lorsque le user clique n'importe ou
+         * sur l'ecran:
+         * Si gridContacts.IsEnabled = false c-a-d mon menu est sur l'ecran alors je descends
+         * le menu est j'active les interactions avec les users
+         */
+        async void OnTapBg(Object o, EventArgs e)
+        {
+            if (!this.gridContacts.IsEnabled)
+            {
+                Action<double> callback = input => frameMenu.HeightRequest = input;
+                double startHeight = /*mainDisplayInfo.Height*/ Application.Current.MainPage.Height/3;
+                double endiendHeight = 0;
+                uint rate = 32;
+                uint length = 500;
+                Easing easing = Easing.SinOut;
+                frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
+                this.gridContacts.IsEnabled = true;
+            }
+        }
+        
+        /*
          * Fonction qui s'occupe de l'apparition du menu
          * sur l'ecran
          * SRC: http://xamaringuyshow.com/2020/06/21/xamarin-forms-bottom-slider/
@@ -170,6 +197,7 @@ namespace HangTogether
                uint length = 500;
                Easing easing = Easing.CubicOut;
                frameMenu.Animate("anim", callback, startHeight, endHeight, rate, length, easing);
+               this.gridContacts.IsEnabled = false; // pour empecher toutes interactions avec mon grid
                return;
            }
            else
@@ -181,6 +209,7 @@ namespace HangTogether
                uint length = 500;
                Easing easing = Easing.SinOut;
                frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
+               this.gridContacts.IsEnabled = true;
            }
            
         }

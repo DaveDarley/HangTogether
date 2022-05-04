@@ -45,51 +45,6 @@ namespace HangTogether
             
         }
 
-        /*
-         * A chaque nouveau message ajouté a ma table "Messages", ce listener sera lancé
-         * et donc pour le user recepteur du message on met l'attribut lu = "y";
-         * Vu que le champ lu du message a changé, on le met aussi a jour dans la BD
-         */
-        // public async void listenOnNewMessages()
-        // {
-        //     FirestoreDb db = FirestoreDb.Create("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
-        //     CollectionReference citiesRef = db.Collection("Messages");
-        //     Query query = db.Collection("Messages");
-        //
-        //     FirestoreChangeListener listener = query.Listen(snapshot =>
-        //     {
-        //         List<Message> messagesRecu = new List<Message>();
-        //         foreach (DocumentSnapshot documentSnapshot in snapshot.Documents)
-        //         {
-        //             Message message = documentSnapshot.ConvertTo<Message>();
-        //             if (message.toEmail == userFrom.email && message.fromEmail == userTo.email)
-        //             {
-        //                 message.lu = "y";
-        //                 dataBaseMessagesManager.updateConversation(message);
-        //                 messagesRecu.Add(message);
-        //                 displayAllConvos(messagesRecu);
-        //             }
-        //         }
-        //     });
-        // }
-        // public async Task TaskDelayTest(CancellationToken token)
-        // {
-        //     while (LoopCheck)
-        //     {
-        //         token.throwIfCancellationRequested();
-        //         for (int i = 0; i < 100; i++)
-        //         {
-        //             textBox1.Text = i.ToString();
-        //             await Task.Delay(1000, token);
-        //         }
-        //     }
-        // }
-        //
-        // var tokenSource = new CancellationTokenSource();
-        // TaskDelayTest(tokenSource.Token);
-        //     ...
-        // tokenSource.Cancel();
-
         public async void getNewMessages()
         {
             var page1=App.Current.MainPage.Navigation.NavigationStack.LastOrDefault().GetType().Name; 
@@ -99,7 +54,6 @@ namespace HangTogether
                 return;
             }
 
-            DisplayAlert("Test", "titre page: " + this.GetType().Name, "ok");
             await Task.Delay(5000);
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
             int isNewMessages = await dataBaseMessagesManager.getNumberOfNewMessages(userTo, userFrom);
@@ -209,46 +163,11 @@ namespace HangTogether
                     
                     layoutUser.Children.Add(frameMessage);
                     lastFrameToScrollTo = frameMessage;
-                    // put scrollview at the bottom the last message not working quite well
                 }
                 await this.scrollMessages.ScrollToAsync(lastFrameToScrollTo,ScrollToPosition.MakeVisible,true);
 
-               // await this.scrollMessages.ScrollToAsync(0,scrollMessages.Content.Height,true);
 
             }
         }
-
-        
-        /*
-         * Function qui gere lorsque le user clique sur la fleche de retour
-         * PK: Je veux update (si necessaire) les infos de cette page
-         * lorsque user retourne sur la page.
-         *
-         * Prob: Fonction juste sur android
-         */
-        
-        // protected override bool OnBackButtonPressed()
-        // {
-        //     Device.BeginInvokeOnMainThread(async () =>
-        //     {
-        //         //aTimer.Stop();
-        //         updateStatusUser("n");
-        //         DisplayAlert("Status user",
-        //             "J'ai quitte messages , alors mon status doit etre: " + userFrom.isUserReadMessage, "ok");
-        //         Application.Current.MainPage = new NavigationPage(new Contacts(userFrom));
-        //     });
-        //
-        //     return true;
-        // }
-        
-        //https://stackoverflow.com/questions/57662491/detect-back-arrow-press-of-the-navigationpage-in-xamarin-forms
-        // protected override void OnDisappearing()
-        // {
-        //     base.OnDisappearing();
-        //     updateStatusUser("n");
-        //     Application.Current.MainPage = new NavigationPage(new Contacts(userFrom));
-        // }
-
-        
     }
 }
