@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Firebase.Database;
 using Firebase.Database.Query;
@@ -29,7 +30,7 @@ namespace HangTogether
         {
             await firebase.Child("Users")
                 .PostAsync(user);
-            User userToUpdateId = await getUser(user.email);
+            User userToUpdateId = await getUser(user.email); //Pr passer l'ID du FirebaseObject au User
             await UpdateUser(userToUpdateId);
         }
 
@@ -55,19 +56,15 @@ namespace HangTogether
 
         
         /*
-         * Qd on utilise ".OnceAsync" ca ns retourne un "IReadOnlyCollection"
-         * alors je le convertit en Enumerable et j'applique un filter sur mon IEnumarable<FirebaseObject<User>>
-         * Comme il existe un seul user avec cet email s'il existe, alors j'utilise single() sur le IEnumarable
-         * pour retourner le FirebaseObject<User> et ensuite je fs .Object pr me retourner le user en question
-         *
-         * Si where(..) retourner rien et ce que le querry retourne null??
+         * Fonction qui prend un email en parametre et retourner le user(s'il existe)
+         * Vu que Cette librairi
          */
         public async Task<User> getUser(string emailUser)
         {   // Peut etre null si le user n'existe pas 
             User monUser = null;
             var userRecuper = (await firebase.Child("Users")
                 .OnceAsync<User>()).AsEnumerable().Where(user => user.Object.email == emailUser).ToList();
-
+            
             if (userRecuper.Count() != 0)
             {
                 FirebaseObject<User> user = userRecuper.FirstOrDefault();
@@ -75,10 +72,8 @@ namespace HangTogether
                 if (monUser.id == "")
                 {
                     monUser.id = user.Key;
-                   // await UpdateUser(monUser);
                 }
             }
-
             return monUser;
         }
 
@@ -125,9 +120,11 @@ namespace HangTogether
         
         
         /*
-         * Fonction qui prend en parametre un utilisateur et une liste d'utilisateur.
-         * Elle retourne une liste d'utilisateur qui ont au moins un interet en commun
+         * Fonction qui prend en parametre un utilisateur et elle retourne une liste d'utilisateur qui ont au moins un interet en commun
          * avec l'utilisateur.
+         * Cette Fonction recupere tous les users de ma BD, et pour chaque user recupere ces interets.
+         * Pour chaque user, si il a au moins un interet en commun avec le user passé en parametre, on l'ajoute
+         * a la liste de user qui sera retourné.
         */
         
         //src: https://www.delftstack.com/howto/csharp/check-for-an-element-inside-an-array-in-csharp/
@@ -149,7 +146,6 @@ namespace HangTogether
                 if (user.email != userLookingForFriends.email)
                 {
                     List<Loisir> loisirsOfUser = await getInterestsUser(user);
-                
                     List<String> loisirsOfUserInString = new List<string>();
                     foreach (var loisirUser in loisirsOfUser)
                     {

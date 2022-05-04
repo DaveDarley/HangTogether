@@ -24,7 +24,8 @@ namespace HangTogether
             if (validateInfosUser())
             {
                 DataBaseManager dataBaseManager = new DataBaseManager();
-                User user = await dataBaseManager.getUser(this.email.Text);
+                var trimEmail = this.email.Text.Trim();
+                User user = await dataBaseManager.getUser(trimEmail);
                 if (!(user is null))
                 {
                     this.emailError.Text = "Il existe deja un compte avec ce courriel";
@@ -33,7 +34,7 @@ namespace HangTogether
                 else
                 {
                     // Deuxieme Verfication user:
-                    string codeVerifUserToCheck = VerificationEmail.verifEmail(this.email.Text);
+                    string codeVerifUserToCheck = VerificationEmail.verifEmail(trimEmail);
                     string codeVerifUser = await DisplayPromptAsync("Vérification Email", "Veuillez entrer le code recu par courriel");
                     if (!String.IsNullOrEmpty(codeVerifUser) && codeVerifUserToCheck == codeVerifUser) // user correct
                     {
@@ -42,7 +43,7 @@ namespace HangTogether
                         string saltToEncryptMdpToSaveInDB = SecureMdp.byteArraySaltToString(saltToEncryptMdp);
                         string hashedMdp = SecureMdp.encryptPassword(this.mdp.Text, saltToEncryptMdp);
                         
-                        User userCree = new User(this.nom.Text, this.prenom.Text, this.email.Text, hashedMdp,"",saltToEncryptMdpToSaveInDB,"");
+                        User userCree = new User(this.nom.Text, this.prenom.Text, trimEmail, hashedMdp,"",saltToEncryptMdpToSaveInDB,"");
                         await dataBaseManager.AddUser(userCree);
                         
                         // Pk: Qd on ajoute le user dans la bd son champs id est vide
@@ -136,50 +137,6 @@ namespace HangTogether
 
         
         // Src:https://docs.microsoft.com/en-us/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
-        // public bool validateEmailFormat(string email)
-        // {
-        //     if (string.IsNullOrWhiteSpace(email))
-        //         return false;
-        //
-        //     try
-        //     {
-        //         // Normalize the domain
-        //         email = Regex.Replace(email, @"(@)(.+)$", DomainMapper,
-        //             RegexOptions.None, TimeSpan.FromMilliseconds(200));
-        //
-        //         // Examines the domain part of the email and normalizes it.
-        //         string DomainMapper(Match match)
-        //         {
-        //             // Use IdnMapping class to convert Unicode domain names.
-        //             var idn = new IdnMapping();
-        //
-        //             // Pull out and process domain name (throws ArgumentException on invalid)
-        //             string domainName = idn.GetAscii(match.Groups[2].Value);
-        //
-        //             return match.Groups[1].Value + domainName;
-        //         }
-        //     }
-        //     catch (RegexMatchTimeoutException e)
-        //     {
-        //         return false;
-        //     }
-        //     catch (ArgumentException e)
-        //     {
-        //         return false;
-        //     }
-        //
-        //     try
-        //     {
-        //         return Regex.IsMatch(email,
-        //             @"^[^@\s]+@[^@\s]+\.[^@\s]+$",
-        //             RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(250));
-        //     }
-        //     catch (RegexMatchTimeoutException)
-        //     {
-        //         return false;
-        //     }
-        // }
-        
         // Src: https://stackoverflow.com/questions/1365407/c-sharp-code-to-validate-email-address
         bool IsValidEmail(string email)
         {

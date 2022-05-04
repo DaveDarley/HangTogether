@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;
@@ -31,6 +33,7 @@ namespace HangTogether
         public DisplayMessages(User userSendingMessage, User userReceivingMessages)
         {
             InitializeComponent();
+            
             dataBaseMessagesManager = new DataBaseMessagesManager();
             userFrom = userSendingMessage;
             userTo = userReceivingMessages;
@@ -39,7 +42,7 @@ namespace HangTogether
             this.BindingContext = this;
             whenUserConnected(); //au debut on recupere ts les messages entre les 2 users dans ma DB(s'il y en a)
             //listenOnNewMessages();
-            getNewMessages();
+            
         }
 
         /*
@@ -69,21 +72,47 @@ namespace HangTogether
         //         }
         //     });
         // }
+        // public async Task TaskDelayTest(CancellationToken token)
+        // {
+        //     while (LoopCheck)
+        //     {
+        //         token.throwIfCancellationRequested();
+        //         for (int i = 0; i < 100; i++)
+        //         {
+        //             textBox1.Text = i.ToString();
+        //             await Task.Delay(1000, token);
+        //         }
+        //     }
+        // }
+        //
+        // var tokenSource = new CancellationTokenSource();
+        // TaskDelayTest(tokenSource.Token);
+        //     ...
+        // tokenSource.Cancel();
 
         public async void getNewMessages()
         {
+            var page1=App.Current.MainPage.Navigation.NavigationStack.LastOrDefault().GetType().Name; 
+            
+            if (page1 != "DisplayMessages")
+            {
+                return;
+            }
+
+            DisplayAlert("Test", "titre page: " + this.GetType().Name, "ok");
+            await Task.Delay(5000);
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
             int isNewMessages = await dataBaseMessagesManager.getNumberOfNewMessages(userTo, userFrom);
+            
+            // DisplayAlert("TestMessages", "nb de nouveaux messages pour moi " + isNewMessages, "ok");
             if (isNewMessages != 0)
             {
                 List<Message> messagesToMe = await dataBaseMessagesManager.getNonReadMessages(userFrom, userTo);
                 displayAllConvos(messagesToMe);
             }
-            else
-            {
-                await Task.Delay(5000);
-                getNewMessages();
-            }
+            
+            getNewMessages();
+            
         }
 
 
@@ -96,6 +125,7 @@ namespace HangTogether
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
             List<Message> listMessagesTotal = await dataBaseMessagesManager.getAllMessages(userFrom,userTo);
             displayAllConvos(listMessagesTotal);
+            getNewMessages();
         }
         
         /*

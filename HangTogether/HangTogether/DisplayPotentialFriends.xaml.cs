@@ -22,23 +22,12 @@ namespace HangTogether
         public DisplayPotentialFriends(User user)
         {
             InitializeComponent();
+            DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
             BindingContext = this;
             userLookingForNewFriends = user;
             CardBinding();
         }
-
         
-        /*
-         * Fonction qui retourne les loisirs du user qui recherche
-         * des nouveaux amis sous forme de tableau de string 
-         */
-        // public string[] getInterestUserLookingForNewFriends()
-        // {
-        //     return userLookingForNewFriends.loisirs.Contains(',')
-        //         ? userLookingForNewFriends.loisirs.Split(',')
-        //         : new []{userLookingForNewFriends.loisirs};
-        // }
-
         /*
          * Qd on clique sur Envoyez un message;
          * je cherche quel user est actuelement sur l'ecran(CarouselView.CurrentItem)
@@ -70,6 +59,7 @@ namespace HangTogether
                 Easing easing = Easing.CubicOut;
                 frameMenu.Animate("anim", callback, startHeight, endHeight, rate, length, easing);
                 this.stackBgMenu.IsEnabled = false;
+                this.sendMessageToNewFriend.IsEnabled = false;
                 return;
             }
             else
@@ -82,6 +72,7 @@ namespace HangTogether
                 Easing easing = Easing.SinOut;
                 frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
                 this.stackBgMenu.IsEnabled = true;
+                this.sendMessageToNewFriend.IsEnabled = true;
             }
         }
         
@@ -112,6 +103,16 @@ namespace HangTogether
         }
         
         /*
+         * Fonction qui s'occupe de fermer le menu lors de la rotation du telephone
+         */
+        public void OnMainDisplayInfoChanged(object sender, DisplayInfoChangedEventArgs e)
+        {
+            frameMenu.HeightRequest = 0; // si le menu etait ouvert qd on rotate le tlf, il doit devenir fermer
+            this.stackBgMenu.IsEnabled = true; // pr permettre a ce que le user puisse interagir avec son bg
+            this.sendMessageToNewFriend.IsEnabled = true;
+        }
+        
+        /*
          * Fonction qui s'occupe de baisser le menu lorsque le user clique n'importe ou
          * sur l'ecran:
          * Si GridLoisirs.IsEnabled = false c-a-d mon menu est sur l'ecran alors je descends
@@ -130,6 +131,7 @@ namespace HangTogether
                 Easing easing = Easing.SinOut;
                 frameMenu.Animate("anim", callback, startHeight, endiendHeight, rate, length, easing);
                 this.stackBgMenu.IsEnabled = true;
+                this.sendMessageToNewFriend.IsEnabled = true;
             }
         }
         
@@ -190,10 +192,6 @@ namespace HangTogether
                     "Aucun utilisateur a les memes interets que toi, Essaie d'elargir ta liste d'interets", "OK");
 
                 await Application.Current.MainPage.Navigation.PopAsync();
-                
-                /*  await Navigation.PushAsync(new ChooseAndModifyInterests(userLookingForNewFriends));
-                  // on enleve page de DisplayPotentialFriends de la liste de NAVIGATIONPAGE
-                  Navigation.RemovePage(Navigation.NavigationStack[1]); */
             }
 
 

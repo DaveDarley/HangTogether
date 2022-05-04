@@ -21,7 +21,6 @@ namespace HangTogether
         private TableLoisirsManager gestionLoisirs;
 
         private FirebaseClient firebase;
-       // private FirebaseClient firebase;
         // LE USER EN QUESTION
         private User user;
         public  string FirebaseClient = "https://anodate-ca8b9-default-rtdb.firebaseio.com/";
@@ -43,10 +42,10 @@ namespace HangTogether
         }
         
         /*
-         * Fonction qui recupere la liste de loisirs global mais aussi la liste de loisirs
-         * d'un utilisateur, transforme ces 2 listes de loisirs en liste de Frame.
-         * Pour chacune de ces 2 listes de "loisirs en Frame" il appel la fonction
-         * "addLoisirsToLayout" qui s'occupe de dessiner une liste de Frame sur l'ecran
+         * Fonction qui recupere les loisirs globales de l'application mais
+         * aussi les loisirs propres au user qui se trouve sur la page "choix de loisirs".
+         * Et appele une fonction qui dessine les differents loisirs sous forme de frame
+         * sur l'ecran du user.
          */
         public async void initializeListsOfInterests()
         {
@@ -69,8 +68,12 @@ namespace HangTogether
         
         
         /*
-         * Fonction qui pour une liste de Loisir passé en entrée retourne
-         * une liste de Frame.
+         * Cette fonction prend en parametre la liste globale de loisirs et une liste des loisirs
+         * du user(sous forme de string) et dessine chaque loisir de la liste globale de loisirs
+         * sous forme de Frame sur l'ecran du user.
+         * Si un loisir appartient a la liste globale mais aussi a la liste de loisirs du user(i.e user
+         * a selectionne ce loisir), on le dessine en Frame avec bg noir et texte blanc(ce qui dessine
+         * le choix du user).
          */
         public List<Frame>  CreateLoisirsFrame(List<Loisir>InterestsGlobal,List<string>InterestsUser)
         {
@@ -133,8 +136,7 @@ namespace HangTogether
          * Fonction qui permet de savoir les choix du User
          * Qd user selectionne Frame(bg devient noir et textcolor Blanc)
          * Si bg deja noir alors user veux deselectionner son choix.
-         * On sauvegarde dans un tableau les choix de l'user
-         * pour les stocker ensuite dans la Base de données
+         * On sauvegarde chaque choix de l'user dans ma BD
          */
         public async void OnTapFramFrame(Object s, EventArgs e)
         {
@@ -149,7 +151,6 @@ namespace HangTogether
                 
                 GestionChoixLoisirsUser gestionChoixLoisirsUser = new GestionChoixLoisirsUser();
                 ChoixLoisirsUser choixLoisirsUser = await gestionChoixLoisirsUser.getChoixUser(user, monLabel.Text);
-                DisplayAlert("Test delete choix user", "choix user id: " + choixLoisirsUser.id, "ok");
                 gestionChoixLoisirsUser.deleteChoixUser(choixLoisirsUser);
             }
             else
@@ -165,8 +166,7 @@ namespace HangTogether
         
 
         /*
-         * Fonction qui s'occupe de mettre a jour la liste de loisirs
-         * du user (Qd user ajoute, selectionne ou deselectionne un loisir)
+         * Fonction qui s'occupe de mettre a jour les anecdotes du user dans la BD
          */
         public async void updateInterestsUser()
         {
@@ -257,9 +257,10 @@ namespace HangTogether
          */
         async void OnAddInterests(Object s, EventArgs e)
         {
-            string loisirsAjoute = (await DisplayPromptAsync("Ajout de Loisirs", "Veuillez ajouter votre loisir", keyboard: Keyboard.Text)).ToUpper();
+            string loisirsAjoute = (await DisplayPromptAsync("Ajout de Loisirs", "Veuillez ajouter votre loisir", keyboard: Keyboard.Text));
             if (!(String.IsNullOrEmpty(loisirsAjoute)))
             {
+                loisirsAjoute = loisirsAjoute.ToUpper();
                 Loisir loisir = await gestionLoisirs.getLoisir(loisirsAjoute);
                 if (loisir is null)
                 {
@@ -299,6 +300,8 @@ namespace HangTogether
                 {
                     GestionChoixLoisirsUser gestionChoixLoisirsUser = new GestionChoixLoisirsUser();
                     ChoixLoisirsUser choixLoisirsUser = await gestionChoixLoisirsUser.getChoixUser(user, loisirsAjoute);
+                    
+                    // Loisir existe dans la liste globale mais pas dans le choix du user
                     if (choixLoisirsUser is null)
                     {
                         gestionLoisirs.addInterests(user, loisirsAjoute);

@@ -153,43 +153,40 @@
                     
                     <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="TROUVER&#10;UN POTE"
-                               TextColor="White">
+                               TextColor="White"/>
                             
-                            <Label.GestureRecognizers>
+                            <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer>
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>   
+                            </Frame.GestureRecognizers> 
+                        
                     </Frame>
                     <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="MODIFIER&#10;MES LOISIRS"
-                               TextColor="Black" >
+                               TextColor="Black"/>
                             
-                            <Label.GestureRecognizers>
+                            <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>  
+                            </Frame.GestureRecognizers> 
+                        
                     </Frame>
                     <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="VOIR MES&#10;MESSAGES"
-                               TextColor="Black" >
+                               TextColor="Black"/>
                             
-                            <Label.GestureRecognizers>
+                            <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer>
-                            </Label.GestureRecognizers> 
+                            </Frame.GestureRecognizers> 
                             
-                        </Label>  
+                          
                     </Frame>
                     <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="DESACTIVER&#10;MON COMPTE"
-                               TextColor="White" >
+                               TextColor="White"/>
                             
-                            <Label.GestureRecognizers>
+                            <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer>
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>  
+                            </Frame.GestureRecognizers> 
+                        
                     </Frame>
                 </Grid>
                 

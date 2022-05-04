@@ -40,152 +40,152 @@
                  <TapGestureRecognizer Tapped="OnTapBg"/>
             </Grid.GestureRecognizers>
         <Grid>
-        <StackLayout x:Name="stackBgMenu" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-            
-            <Grid VerticalOptions="FillAndExpand" Margin="10,0,10,0">
+            <StackLayout x:Name="stackBgMenu" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 
-                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                 </Grid.RowDefinitions>
-                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                 </Grid.ColumnDefinitions>
-                
-                 
-                <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Vertical" HorizontalOptions="FillAndExpand"
-                             VerticalOptions="FillAndExpand">
+                <Grid VerticalOptions="FillAndExpand" Margin="10,0,10,0">
                     
-                    <CarouselView  x:Name="TheCarousel"
-                                   ItemsSource="{Binding Profile}"
-                                   PeekAreaInsets="0" Margin="10,20,10,10"
-                                   IndicatorView="indicatorView">
-
-                        <!-- Swipe un element a la fois dans mon carouselView
-                            https://stackoverflow.com/questions/65790269/xamarin-forms-carouselview-swipe-only-one-element-at-a-time-->
-                        <CarouselView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20" SnapPointsType="MandatorySingle"/>
-                        </CarouselView.ItemsLayout>
+                     <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                     </Grid.RowDefinitions>
+                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                     </Grid.ColumnDefinitions>
+                    
+                     
+                    <StackLayout Grid.Row="0" Grid.Column="0" Orientation="Vertical" HorizontalOptions="FillAndExpand"
+                                 VerticalOptions="FillAndExpand">
                         
-                        <CarouselView.ItemTemplate >
-                            <DataTemplate >
-                                
-                                <!-- contient chaque carte -->
-                                <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
-                                                         Padding="0,0,0,0" Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}"
-                                                         VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
-                                                         Margin="0,15,0,0">
+                        <CarouselView  x:Name="TheCarousel"
+                                       ItemsSource="{Binding Profile}"
+                                       PeekAreaInsets="0" Margin="10,20,10,10"
+                                       IndicatorView="indicatorView">
 
-                                    <ScrollView>
-                                        <StackLayout>
-                                            <!-- src bgEntireGrid: https://stackoverflow.com/questions/47387836/background-image-for-grid-in-xamarin-forms -->
-
-                                            <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="White">
-                                                <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.bg_display_potential_friends.png}" Aspect="AspectFill"
-                                                       Grid.RowSpan="3" Grid.ColumnSpan="1"/>
-
-                                                        <Grid.RowDefinitions>
-                                                            <RowDefinition Height="Auto"/>
-                                                            <RowDefinition Height="*"/> <!-- 200 -->
-                                                            <RowDefinition Height="*"/>
-                                                        </Grid.RowDefinitions>
-                                                        <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*"/>
-                                                        </Grid.ColumnDefinitions>
-                                                    
-                                                    
-                                                        <Frame Grid.Row="0" Grid.Column="0" Margin="20,20,20,0" HorizontalOptions="FillAndExpand"
-                                                               BorderColor="Aquamarine" CornerRadius="20" Opacity="0.85">
-                                                            
-                                                            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
-                                                                <Label Text="{Binding titre}" FontSize="Large" FontAttributes="Bold"
-                                                                       TextColor="Black"  Margin="10,0,0,0" HorizontalOptions="CenterAndExpand"/> 
-                                                            </StackLayout>
-                                                        </Frame>
-                                                        
-                                                        
-                                                        <!-- BindableLayout.ItemsSource="{Binding sharedInterests}" -->
-                                                        
-                                                        <Frame Grid.Row="1" Grid.Column="0" Margin="20,15,20,0" HorizontalOptions="FillAndExpand"
-                                                               BorderColor="DarkCyan" CornerRadius="20" HasShadow="True" Opacity="0.90">
-                                                            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
-                                                                
-                                                                <Label Text="Loisir(s) en commun(s)" TextColor="Black" FontAttributes="Bold" HorizontalTextAlignment="Center" FontSize="Large"/>
-                                                            
-                                                                <ScrollView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" VerticalScrollBarVisibility="Always">
-                                                                    <FlexLayout 
-                                                                        Wrap="Wrap"
-                                                                        Direction="Row"
-                                                                        JustifyContent="Start"
-                                                                        AlignItems="Start"
-                                                                        AlignContent="Start"
-                                                                        Padding="8"
-                                                                        HorizontalOptions="FillAndExpand"
-                                                                        VerticalOptions="FillAndExpand"
-                                                                        BindableLayout.ItemsSource="{Binding sharedInterests}"
-                                                                    >
-                                                                        <BindableLayout.ItemTemplate>
-                                                                            <DataTemplate>
-                                                                                <Frame BackgroundColor="White" CornerRadius="30" HasShadow="True"
-                                                                                       IsVisible="True" Margin="0,4,0,4">
-                                                                                    <Label Text="{Binding .}" TextColor="Black" HorizontalOptions="StartAndExpand"/>
-                                                                                </Frame>
-                                                                            </DataTemplate>
-                                                                        </BindableLayout.ItemTemplate>
-                                                                        
-                                                                    </FlexLayout>
-                                                                </ScrollView>
-                                                                
-                                                            </StackLayout>
-                                                        </Frame>
-                                                        
-                                                        
-                                                        <Frame  Grid.Row="2" Grid.Column="0" Margin="40,15,40,30" HorizontalOptions="FillAndExpand"
-                                                                BorderColor="purple" CornerRadius="20">
-                                                            
-                                                            <StackLayout Orientation="Vertical" >
-                                                                <Label Text="Anecdotes:" FontSize="Large" TextColor="Black" HorizontalOptions="Center"
-                                                                       FontAttributes="Bold"/>
-                                                                <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" VerticalScrollBarVisibility="Always"
-                                                                            HorizontalOptions="FillAndExpand">
-                                                                    <Label Text="{Binding anecdotes}" FontSize="22" TextColor="Black"
-                                                                           HorizontalOptions="CenterAndExpand" /> 
-                                                                </ScrollView>
-                                                            </StackLayout>
-                                                        </Frame>
-                                            </Grid>
-                                        </StackLayout>
-                                    </ScrollView>   
+                            <!-- Swipe un element a la fois dans mon carouselView
+                                https://stackoverflow.com/questions/65790269/xamarin-forms-carouselview-swipe-only-one-element-at-a-time-->
+                            <CarouselView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20" SnapPointsType="MandatorySingle"/>
+                            </CarouselView.ItemsLayout>
+                            
+                            <CarouselView.ItemTemplate >
+                                <DataTemplate >
                                     
-                                </pancakeView:PancakeView>
-                                
-                            </DataTemplate>
-                        </CarouselView.ItemTemplate>
-                        
-                    </CarouselView>
-                    
-                    
-                    <IndicatorView x:Name="indicatorView" IndicatorColor="Gray" SelectedIndicatorColor="Black"
-                                   HorizontalOptions="Center" Margin="0,20,0,0" IndicatorSize="18"/>
-                    
-                </StackLayout>
-               
-                
-                <Frame Grid.Row="1" Grid.Column="0" CornerRadius="30" BackgroundColor="MediumSlateBlue" Margin="25,30,25,10"
-                       VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-                    <Label Text="ENVOYEZ UN MESSAGE" TextColor="White" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
-                           HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" x:Name="sendMessageToNewFriend">
-                    </Label>
-                    <Frame.GestureRecognizers>
-                         <TapGestureRecognizer Tapped="OnTapSendMessage"/> 
-                    </Frame.GestureRecognizers>
-                </Frame>
-                
+                                    <!-- contient chaque carte -->
+                                    <pancakeView:PancakeView CornerRadius="40,40,20,20" BackgroundColor="White"
+                                                             Padding="0,0,0,0" Border="{pancakeView:BorderMarkup Color=DarkGray, Thickness='10'}"
+                                                             VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"
+                                                             Margin="0,15,0,0">
 
-                   <!-- <Button Grid.Row="1" Grid.Column="0"  Text="ENVOYEZ UN MESSAGE" CornerRadius="15" HorizontalOptions="FillAndExpand"
-                            Margin="20,30,20,10" BackgroundColor="DarkGray"/> -->
-            </Grid>
-        </StackLayout>
+                                        <ScrollView>
+                                            <StackLayout>
+                                                <!-- src bgEntireGrid: https://stackoverflow.com/questions/47387836/background-image-for-grid-in-xamarin-forms -->
+
+                                                <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" BackgroundColor="White">
+                                                    <Image Source="{hangTogether:ImageRessource HangTogether.mes_bg.bg_display_potential_friends.png}" Aspect="AspectFill"
+                                                           Grid.RowSpan="3" Grid.ColumnSpan="1"/>
+
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="Auto"/>
+                                                                <RowDefinition Height="*"/> <!-- 200 -->
+                                                                <RowDefinition Height="*"/>
+                                                            </Grid.RowDefinitions>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                        
+                                                        
+                                                            <Frame Grid.Row="0" Grid.Column="0" Margin="20,20,20,0" HorizontalOptions="FillAndExpand"
+                                                                   BorderColor="Aquamarine" CornerRadius="20" Opacity="0.85">
+                                                                
+                                                                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                                                                    <Label Text="{Binding titre}" FontSize="Large" FontAttributes="Bold"
+                                                                           TextColor="Black"  Margin="10,0,0,0" HorizontalOptions="CenterAndExpand"/> 
+                                                                </StackLayout>
+                                                            </Frame>
+                                                            
+                                                            
+                                                            <!-- BindableLayout.ItemsSource="{Binding sharedInterests}" -->
+                                                            
+                                                            <Frame Grid.Row="1" Grid.Column="0" Margin="20,15,20,0" HorizontalOptions="FillAndExpand"
+                                                                   BorderColor="DarkCyan" CornerRadius="20" HasShadow="True" Opacity="0.90">
+                                                                <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand" Orientation="Vertical">
+                                                                    
+                                                                    <Label Text="Loisir(s) en commun(s)" TextColor="Black" FontAttributes="Bold" HorizontalTextAlignment="Center" FontSize="Large"/>
+                                                                
+                                                                    <ScrollView VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" VerticalScrollBarVisibility="Always">
+                                                                        <FlexLayout 
+                                                                            Wrap="Wrap"
+                                                                            Direction="Row"
+                                                                            JustifyContent="Start"
+                                                                            AlignItems="Start"
+                                                                            AlignContent="Start"
+                                                                            Padding="8"
+                                                                            HorizontalOptions="FillAndExpand"
+                                                                            VerticalOptions="FillAndExpand"
+                                                                            BindableLayout.ItemsSource="{Binding sharedInterests}"
+                                                                        >
+                                                                            <BindableLayout.ItemTemplate>
+                                                                                <DataTemplate>
+                                                                                    <Frame BackgroundColor="White" CornerRadius="30" HasShadow="True"
+                                                                                           IsVisible="True" Margin="0,4,0,4">
+                                                                                        <Label Text="{Binding .}" TextColor="Black" HorizontalOptions="StartAndExpand"/>
+                                                                                    </Frame>
+                                                                                </DataTemplate>
+                                                                            </BindableLayout.ItemTemplate>
+                                                                            
+                                                                        </FlexLayout>
+                                                                    </ScrollView>
+                                                                    
+                                                                </StackLayout>
+                                                            </Frame>
+                                                            
+                                                            
+                                                            <Frame  Grid.Row="2" Grid.Column="0" Margin="40,15,40,30" HorizontalOptions="FillAndExpand"
+                                                                    BorderColor="purple" CornerRadius="20">
+                                                                
+                                                                <StackLayout Orientation="Vertical" >
+                                                                    <Label Text="Anecdotes:" FontSize="Large" TextColor="Black" HorizontalOptions="Center"
+                                                                           FontAttributes="Bold"/>
+                                                                    <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" VerticalScrollBarVisibility="Always"
+                                                                                HorizontalOptions="FillAndExpand">
+                                                                        <Label Text="{Binding anecdotes}" FontSize="22" TextColor="Black"
+                                                                               HorizontalOptions="CenterAndExpand" /> 
+                                                                    </ScrollView>
+                                                                </StackLayout>
+                                                            </Frame>
+                                                </Grid>
+                                            </StackLayout>
+                                        </ScrollView>   
+                                        
+                                    </pancakeView:PancakeView>
+                                    
+                                </DataTemplate>
+                            </CarouselView.ItemTemplate>
+                            
+                        </CarouselView>
+                        
+                        
+                        <IndicatorView x:Name="indicatorView" IndicatorColor="Gray" SelectedIndicatorColor="Black"
+                                       HorizontalOptions="Center" Margin="0,20,0,0" IndicatorSize="18"/>
+                        
+                    </StackLayout>
+                   
+                    
+                    <Frame Grid.Row="1" Grid.Column="0" CornerRadius="30" BackgroundColor="MediumSlateBlue" Margin="25,30,25,10"
+                           VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                        <Label Text="ENVOYEZ UN MESSAGE" TextColor="White" FontAttributes="Bold" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"
+                               HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" x:Name="sendMessageToNewFriend">
+                        </Label>
+                        <Frame.GestureRecognizers>
+                             <TapGestureRecognizer Tapped="OnTapSendMessage"/> 
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                    
+
+                       <!-- <Button Grid.Row="1" Grid.Column="0"  Text="ENVOYEZ UN MESSAGE" CornerRadius="15" HorizontalOptions="FillAndExpand"
+                                Margin="20,30,20,10" BackgroundColor="DarkGray"/> -->
+                </Grid>
+            </StackLayout>
         </Grid>
         
         <pancakeView:PancakeView  VerticalOptions="EndAndExpand"  x:Name="frameMenu" CornerRadius="20" HorizontalOptions="FillAndExpand" HeightRequest="0"
@@ -206,43 +206,38 @@
                     
                     <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="Black" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="TROUVER&#10;UN POTE"
-                               TextColor="White">
+                               TextColor="White"/>
                             
-                            <Label.GestureRecognizers>
+                            <Frame.GestureRecognizers>
                                  <TapGestureRecognizer Tapped="OnTapFindFriends"></TapGestureRecognizer> 
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>   
+                            </Frame.GestureRecognizers> 
                     </Frame>
                     <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="Aqua" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="MODIFIER&#10;MES LOISIRS"
-                               TextColor="Black" >
+                               TextColor="Black"/>
                             
-                            <Label.GestureRecognizers>
-                                 <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>  
+                        <Frame.GestureRecognizers>
+                             <TapGestureRecognizer Tapped="OnTapChooseInterests"></TapGestureRecognizer>
+                        </Frame.GestureRecognizers> 
+                        
                     </Frame>
                     <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="Azure" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="VOIR MES&#10;MESSAGES"
-                               TextColor="Black" >
+                               TextColor="Black"/>
                             
-                            <Label.GestureRecognizers>
-                                 <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer> 
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>  
+                        <Frame.GestureRecognizers>
+                             <TapGestureRecognizer Tapped="OnTapViewMessages"></TapGestureRecognizer> 
+                        </Frame.GestureRecognizers> 
+                        
                     </Frame>
                     <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="Red" CornerRadius="20" HasShadow="True" Padding="20,0,20,0">
                         <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" Text="DESACTIVER&#10;MON COMPTE"
-                               TextColor="White" >
+                               TextColor="White"/>
                             
-                            <Label.GestureRecognizers>
-                                 <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer> 
-                            </Label.GestureRecognizers> 
-                            
-                        </Label>  
+                        <Frame.GestureRecognizers>
+                             <TapGestureRecognizer Tapped="OnTapDeactivateAccount"></TapGestureRecognizer> 
+                        </Frame.GestureRecognizers> 
+                        
                     </Frame>
                 </Grid>
                 

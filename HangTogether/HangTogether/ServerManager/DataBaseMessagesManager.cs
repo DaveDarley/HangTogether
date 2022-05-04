@@ -15,7 +15,7 @@ namespace HangTogether
             firebaseClient = new FirebaseClient("https://anodate-ca8b9-default-rtdb.firebaseio.com/");
         }
 
-        //Fonctiion qui ajoute un nouveau echange entre 2 utilisateurs dans 
+        //Fonction qui ajoute un nouveau echange entre 2 utilisateurs dans 
         //la BD
         public async void addNewConversation(Message conversation)
         {
@@ -36,7 +36,8 @@ namespace HangTogether
         /*
          * Fonction qui recupere tous les messages entre 2 users;
          * Pour tous les messages destines a l'user qui a appelé cette fonction (firstUser)
-         * on met l'attribut lu des messages a "y"
+         * on met l'attribut lu des messages a "y".
+         * Cette fonction represente l'historique de conversations entre 2 users.
          */
         public async Task<List<Message>> getAllMessages(User firstUser, User sndUser)
         {
@@ -44,7 +45,7 @@ namespace HangTogether
             var messages = (await firebaseClient.Child("Messages")
                 .OnceAsync<Message>()).AsEnumerable().Where(message =>
                 message.Object.toEmail == firstUser.email && message.Object.fromEmail == sndUser.email
-            || message.Object.toEmail == sndUser.email && message.Object.toEmail == firstUser.email);
+            || message.Object.toEmail == sndUser.email && message.Object.fromEmail == firstUser.email);
             foreach (var messageObject in messages)
             {
                 Message message = messageObject.Object;
@@ -52,28 +53,47 @@ namespace HangTogether
                 if (message.toEmail == firstUser.email && message.fromEmail == sndUser.email)
                 {
                     message.lu = "y";
+                    messagesUser.Add(message);
+                    updateConversation(message);
                 }
-                messagesUser.Add(message);
-                updateConversation(message);
+
+                if (message.toEmail == sndUser.email && message.fromEmail == firstUser.email)
+                {
+                    messagesUser.Add(message);
+                    updateConversation(message);
+                }
             }
 
             return messagesUser;
         }
         
+        /*
+         * Fonction qui recupere tous les messages non lu destinés a l'utilisateur passe au premier
+         * parametre;
+         * Lorsque recuperé, on met l'attribut "lu" de ces messages a y
+         */
         public async Task<List<Message>> getNonReadMessages(User firstUser, User sndUser)
         {
             List<Message> messagesUser = new List<Message>();
             var messages = (await firebaseClient.Child("Messages")
                 .OnceAsync<Message>()).AsEnumerable().Where(message =>
-                message.Object.toEmail == firstUser.email && message.Object.fromEmail == sndUser.email &&
-                message.Object.lu == "n");
-            foreach (var messageObject in messages)
+                message.Object.toEmail == firstUser.email && message.Object.fromEmail == sndUser.email).ToList();
+
+            if (messages.Count() != 0)
             {
-                Message message = messageObject.Object;
-                message.Key = messageObject.Key;
-                message.lu = "y";
-                messagesUser.Add(message);
-                updateConversation(message);
+                var nonReadMessagesObject = messages.AsEnumerable().Where(message =>
+                    message.Object.lu == "n").ToList();
+                if (nonReadMessagesObject.Count() != 0)
+                {
+                    foreach (var messageObject in nonReadMessagesObject)
+                    {
+                        Message message = messageObject.Object;
+                        message.Key = messageObject.Key;
+                        message.lu = "y";
+                        messagesUser.Add(message);
+                        updateConversation(message);
+                    }
+                }
             }
 
             return messagesUser;
@@ -91,33 +111,54 @@ namespace HangTogether
         public async Task<List<User>> getUserInContactsWithMe(User user)
         {
             DataBaseManager dataBaseManager = new DataBaseManager();
+            List<string> emailUserInContactWithMe = new List<string>();
             List<User> userInContactWithMe = new List<User>();
 
             var allConvosWithMe = (await firebaseClient.Child("Messages").OnceAsync<Message>())
-                .AsQueryable().Where(message => message.Object.fromEmail == user.email ||
+                .AsEnumerable().Where(message => message.Object.fromEmail == user.email ||
                                                 message.Object.toEmail == user.email).ToList();
             foreach (var messageObject in allConvosWithMe)
             {
+                
                 if (messageObject.Object.fromEmail == user.email)
                 {
-                    userInContactWithMe.Add(await dataBaseManager.getUser(messageObject.Object.toEmail));
+                    string emailPossibleUserInContactWithMe = messageObject.Object.toEmail;
+                    if (!( emailUserInContactWithMe.Contains(emailPossibleUserInContactWithMe)))
+                    {
+                        emailUserInContactWithMe.Add(emailPossibleUserInContactWithMe);
+                    }
                 }
-                else
+                if (messageObject.Object.toEmail == user.email)
                 {
-                    userInContactWithMe.Add(await dataBaseManager.getUser(messageObject.Object.fromEmail));
+                    string emailPossibleUserInContactWithMe = messageObject.Object.fromEmail;
+                    if (!( emailUserInContactWithMe.Contains(emailPossibleUserInContactWithMe)))
+                    {
+                        emailUserInContactWithMe.Add(emailPossibleUserInContactWithMe);
+                    }
                 }
+            }
+
+            foreach (var userEmail in emailUserInContactWithMe)
+            {
+                userInContactWithMe.Add(await dataBaseManager.getUser(userEmail));
             }
             return userInContactWithMe;
         }
 
+        
         public async Task<int> getNumberOfNewMessages(User userSendingMessages, User userGoingThroughContacts)
         {
             int nbNouveauxMessages = 0;
-            nbNouveauxMessages = (await firebaseClient.Child("Messages")
+            var nonReadMessagesToME = (await firebaseClient.Child("Messages")
                 .OnceAsync<Message>()).AsEnumerable().Where(message =>
                 message.Object.fromEmail == userSendingMessages.email && message.Object.toEmail ==
                                                                       userGoingThroughContacts.email
-                                                                      && message.Object.lu == "n").Count();
+                                                                      && message.Object.lu == "n");
+
+            if (nonReadMessagesToME.Count() != 0)
+            {
+                nbNouveauxMessages += nonReadMessagesToME.Count();
+            }
 
             return nbNouveauxMessages;
         }

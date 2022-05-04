@@ -30,7 +30,8 @@ namespace HangTogether
             if (IsUserCorrect())
             {
                 DataBaseManager dataBaseManager = new DataBaseManager();
-                User user = await dataBaseManager.getUser(this.emailUser.Text);
+                var trimEmail = this.emailUser.Text.Trim();
+                User user = await dataBaseManager.getUser(trimEmail);
                 var isUserValid = dataBaseManager.isUserValid(user, this.mdpUser.Text);
                 
                 if (isUserValid)
