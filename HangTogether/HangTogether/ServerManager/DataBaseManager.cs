@@ -117,17 +117,12 @@ namespace HangTogether
          */
         public async Task<List<Loisir>> getInterestsUser(User user)
         {
-            GestionChoixLoisirsUser gestionChoixLoisirsUser = new GestionChoixLoisirsUser();
             List<Loisir> interestsUser = new List<Loisir>();
-            var allInterests = (await firebase.Child("Loisirs")
-                .OnceAsync<Loisir>()).AsEnumerable().ToList();
-            foreach (var loisir in allInterests)
+            var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
+            var allInterestsUser = (await firebase.Child("ChoixLoisirsUser").Child(convertEmail).OnceAsync<ChoixLoisirsUser>()).ToList();
+            foreach (var loisir in allInterestsUser)
             {
-                ChoixLoisirsUser isUserHaveThisLoisir = await gestionChoixLoisirsUser.getChoixUser(user, loisir.Object.nom);
-                if (isUserHaveThisLoisir != null)
-                {
-                    interestsUser.Add(isUserHaveThisLoisir.loisir);
-                }
+                interestsUser.Add(loisir.Object.loisir);
             }
             return interestsUser;
         }
@@ -151,7 +146,7 @@ namespace HangTogether
                 interestsUserLookingForFriendsInString.Add(loisir.nom);
             }
             
-            // pas trop couteux ??
+            // pas trop couteux, qd on a des millions de user ??
             List<User> usersWithSharedInterests = new List<User>();
             var allUsers = (await firebase.Child("Users").OnceAsync<User>())
                 .AsEnumerable().Select(user => user.Object).ToList();

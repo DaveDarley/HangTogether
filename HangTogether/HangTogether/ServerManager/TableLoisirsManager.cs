@@ -111,7 +111,8 @@ namespace HangTogether.ServerManager
         }
 
         /*
-         * Fonction qui retourne tous les loisirs existants de ma BD
+         * Fonction qui retourne tous les loisirs existants de ma BD;
+         * Si la liste devient longue, elle prendra bcp de temps mais on a pas vraiment le choix
          */
         public async Task<List<Loisir>> getAllInterests()
         {

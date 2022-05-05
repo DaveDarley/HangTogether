@@ -25,9 +25,10 @@ namespace HangTogether.ServerManager
         /*
          * L'id du loisir est pareil que l'id du user qui lui a selectionné
          */
-        public async void deleteChoixUser(ChoixLoisirsUser choixLoisirsUser)
+        public async void deleteChoixUser(User user, ChoixLoisirsUser choixLoisirsUser)
         {
-            await firebase.Child("ChoixLoisirsUser").Child(choixLoisirsUser.idChoix).DeleteAsync();
+            var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
+            await firebase.Child("ChoixLoisirsUser").Child(convertEmail).Child(choixLoisirsUser.idChoix).DeleteAsync();
         }
 
         /*
@@ -38,7 +39,7 @@ namespace HangTogether.ServerManager
         {
             var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
             string cleChoixUser = nomLoisir + convertEmail;
-            var loisirSiExist = (await firebase.Child("ChoixLoisirsUser").OrderByKey().StartAt(cleChoixUser).EndAt(cleChoixUser)
+            var loisirSiExist = (await firebase.Child("ChoixLoisirsUser").Child(convertEmail).OrderByKey().StartAt(cleChoixUser).EndAt(cleChoixUser)
                 .LimitToFirst(1).OnceAsync<ChoixLoisirsUser>()).ToList();
             ChoixLoisirsUser choixUser = null;
 
@@ -58,7 +59,9 @@ namespace HangTogether.ServerManager
             Loisir loisir = await tableLoisirsManager.getLoisir(nomLoisir);
             ChoixLoisirsUser choixLoisirsUser = new ChoixLoisirsUser(cleChoixUser,user.id,loisir);
 
-            await firebase.Child("ChoixLoisirsUser").Child(cleChoixUser).PutAsync(choixLoisirsUser);
+         //  await firebase.Child("ChoixLoisirsUser").Child(cleChoixUser).PutAsync(choixLoisirsUser);
+           
+           await firebase.Child("ChoixLoisirsUser").Child(convertEmail).Child(cleChoixUser).PutAsync(choixLoisirsUser);
         }
 
 

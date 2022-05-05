@@ -159,7 +159,7 @@ namespace HangTogether
                 
                 GestionChoixLoisirsUser gestionChoixLoisirsUser = new GestionChoixLoisirsUser();
                 ChoixLoisirsUser choixLoisirsUser = await gestionChoixLoisirsUser.getChoixUser(user, monLabel.Text);
-                gestionChoixLoisirsUser.deleteChoixUser(choixLoisirsUser);
+                gestionChoixLoisirsUser.deleteChoixUser(user,choixLoisirsUser);
             }
             else
             {   // Utilisateur fait un choix de loisir

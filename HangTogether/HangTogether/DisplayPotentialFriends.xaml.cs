@@ -24,6 +24,9 @@ namespace HangTogether
         {
             InitializeComponent();
             
+            this.ContentView.IsVisible = false;
+            this.indicator.IsRunning = false;
+            
             DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
             BindingContext = this;
             userLookingForNewFriends = user;
@@ -152,6 +155,10 @@ namespace HangTogether
          */
         public async void CardBinding()
         {
+                        
+            this.ContentView.IsVisible = true;
+            this.indicator.IsRunning = true;
+            
             DataBaseManager dataBaseManager = new DataBaseManager();
             List<User>userWithSharedInterests = await dataBaseManager.getUserWithSharedInterests(userLookingForNewFriends);
             
@@ -184,12 +191,18 @@ namespace HangTogether
                             loisirsEnCommun.Add(loisir);
                         }
                     }
+                    this.ContentView.IsVisible = false;
+                    this.indicator.IsRunning = false;
+                    
                     DisplayUser userToDisplayOnCard = new DisplayUser(user,titre, loisirsEnCommun, anecdotes);
                     _userToDisplayOnCard.Add(userToDisplayOnCard);
                 }
             }
             else
             {
+                this.ContentView.IsVisible = false;
+                this.indicator.IsRunning = false;
+                
                 await DisplayAlert("Recherche nouveau pote",
                     "Aucun utilisateur a les memes interets que toi, Essaie d'elargir ta liste d'interets", "OK");
 
