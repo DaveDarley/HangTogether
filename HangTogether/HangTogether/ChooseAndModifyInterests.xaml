@@ -33,13 +33,17 @@
         
     <ContentPage.Content>
         
+        <Grid>
+
+        
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             
                 <!-- Gestion du click du user qd menu ouvert -->
                 <Grid.GestureRecognizers>
                     <TapGestureRecognizer Tapped="OnTapBg"/>
                 </Grid.GestureRecognizers>
-
+                
+                
             
             <!-- Lorsque le menu est ouvert j'enleve toutes les interactions de ce grid 
                  avec IsEnabled=false-->
@@ -195,6 +199,11 @@
  
         </pancakeView:PancakeView> 
             
+        </Grid>
+                <ContentView x:Name="ContentView" IsVisible="false" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                    <ActivityIndicator IsRunning="false" x:Name="indicator" Color="Black" VerticalOptions="Center"
+                                       HorizontalOptions="Center" Scale="1.3"/>
+                </ContentView>
         </Grid>
         
         

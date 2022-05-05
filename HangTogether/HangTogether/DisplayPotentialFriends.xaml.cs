@@ -24,8 +24,6 @@ namespace HangTogether
         {
             InitializeComponent();
             
-            UserDialogs.Instance.ShowLoading("Loading",MaskType.Black); 
-            
             DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
             BindingContext = this;
             userLookingForNewFriends = user;
@@ -189,7 +187,6 @@ namespace HangTogether
                     DisplayUser userToDisplayOnCard = new DisplayUser(user,titre, loisirsEnCommun, anecdotes);
                     _userToDisplayOnCard.Add(userToDisplayOnCard);
                 }
-                UserDialogs.Instance.HideLoading();   //Hide loader
             }
             else
             {

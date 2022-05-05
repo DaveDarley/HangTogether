@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 using Firebase.Database;
 using HangTogether.ServerManager;
 using Xamarin.Essentials;
@@ -49,22 +50,29 @@ namespace HangTogether
          */
         public async void initializeListsOfInterests()
         {
-            List<Loisir> allInterests = await gestionLoisirs.getAllInterests();
+            this.ContentView.IsVisible = true;
+            this.indicator.IsRunning = true;
+            List<Loisir> allInterests =  await gestionLoisirs.getAllInterests();
             List<Loisir> interestsUser = await getLoisirsUser();
             List<string> nomChoixUser = new List<string>();
             foreach (var loisirUser in interestsUser)
             {
-               nomChoixUser.Add(loisirUser.nom); 
+                nomChoixUser.Add(loisirUser.nom); 
             }
-            
+        
             if (! String.IsNullOrEmpty(user.anecdotes))
             {
                 this.anecdotesUser.Text = user.anecdotes;
             }
-            
+        
             List<Frame> frameAllInterests = CreateLoisirsFrame(allInterests,nomChoixUser);
+            
+            this.ContentView.IsVisible = false;
+            this.indicator.IsRunning = false;
+            
             addLoisirsToLayout(frameAllInterests);
-        }
+                
+            }
         
         
         /*
@@ -368,6 +376,8 @@ namespace HangTogether
         {
             if (await validateUserChoice())
             {
+                this.ContentView.IsVisible = false;
+                this.indicator.IsRunning = false;
                 updateInterestsUser();
                await Navigation.PushAsync(new DisplayPotentialFriends(user)); 
             }
