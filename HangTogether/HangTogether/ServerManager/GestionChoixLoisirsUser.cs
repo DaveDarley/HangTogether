@@ -23,7 +23,8 @@ namespace HangTogether.ServerManager
 
 
         /*
-         * L'id du loisir est pareil que l'id du user qui lui a selectionné
+         * Fonction qui permet d'effacer un loisir quelcquonque de la liste de
+         * loisirs du user (i.e table "ChoixLoisirsUser")
          */
         public async void deleteChoixUser(User user, ChoixLoisirsUser choixLoisirsUser)
         {
@@ -50,6 +51,9 @@ namespace HangTogether.ServerManager
             return choixUser;
         }
 
+        /*
+         * Fonction permettant d'ajouter pour un user quelconque, un choix de loisir
+         */
         public async void addChoixUser(User user, string nomLoisir)
         {
             var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
@@ -58,8 +62,6 @@ namespace HangTogether.ServerManager
             TableLoisirsManager tableLoisirsManager = new TableLoisirsManager();
             Loisir loisir = await tableLoisirsManager.getLoisir(nomLoisir);
             ChoixLoisirsUser choixLoisirsUser = new ChoixLoisirsUser(cleChoixUser,user.id,loisir);
-
-         //  await firebase.Child("ChoixLoisirsUser").Child(cleChoixUser).PutAsync(choixLoisirsUser);
            
            await firebase.Child("ChoixLoisirsUser").Child(convertEmail).Child(cleChoixUser).PutAsync(choixLoisirsUser);
         }

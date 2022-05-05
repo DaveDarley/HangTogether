@@ -55,7 +55,7 @@ namespace HangTogether
         
         /*
          * Cette fonction genere de maniere ALEATOIRE
-         * une suite de 10 lettres
+         * une suite de 10 lettres, qui sert lors de la verification de l'email du user par lui meme
          * Src: https://www.softwaretestinghelp.com/csharp-random-number/
          */
         public static string generateVerifCodeRandom()

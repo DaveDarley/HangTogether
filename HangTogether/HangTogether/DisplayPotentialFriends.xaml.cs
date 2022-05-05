@@ -214,6 +214,7 @@ namespace HangTogether
         }
        
         
+        // Pour remplir mon ObservableCollection
         public ObservableCollection<DisplayUser> Profile
         {
             get => _userToDisplayOnCard;

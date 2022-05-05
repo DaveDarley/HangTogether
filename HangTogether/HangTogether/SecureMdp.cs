@@ -13,7 +13,6 @@ namespace HangTogether
          * Personne doit avoir acces au mdp de l'user incluant le developpeur
          * Src:https://docs.microsoft.com/en-us/aspnet/core/security/data-protection/consumer-apis/password-hashing?view=aspnetcore-6.0
          */
-        
         public static string encryptPassword(string mdpToEncrypt, byte[] salt)
         {
             // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)

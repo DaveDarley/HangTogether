@@ -20,7 +20,7 @@ namespace HangTogether
         }
         
         /*
-         * Fonction qui valide le format des informations entrees par le
+         * Fonction qui valide le FORMAT des informations entrees par le
          * user (S'assure champ code de verif pas vide mais aussi mdp a au moins 8 caracteres)
          */
         public bool verifRecoveryPassword()

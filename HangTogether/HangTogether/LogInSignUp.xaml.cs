@@ -22,7 +22,7 @@ namespace HangTogether
          *Fonction qui s'occupe de valider l'email et le mot de passe du user
          * lors du Log In;
          * Tout d'abord elle appelle une fonction qui verifie que les infos mis dans les
-         * champs email, mdp sont du bon format et ensuite on verifie ces informations par
+         * champs email, mdp sont du bon Format et ensuite on verifie ces informations par
          * rapport a la BD
          */
         async void ValidateInfosUser(object sender, EventArgs args)
@@ -54,7 +54,7 @@ namespace HangTogether
         /*
          * Cette fonction valide les infos entrees par le user a l'etape de
          * sign in; Cette fonction verifie juste que les champs ne sont pas
-         * laissés par le user
+         * laissés vide par le user
          */
         public bool IsUserCorrect()
         {

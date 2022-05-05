@@ -9,13 +9,12 @@ namespace HangTogether.ServerManager
         public ChoixLoisirsUser(string idChoix,string id, Loisir loisir)
         {
             this.loisir = loisir;
-            this.id = id;
-            this.idChoix = idChoix;
+            this.id = id; // id du user qui a fait ce choix de loisirs
+            this.idChoix = idChoix; 
         }
 
         public Loisir loisir { get; set; }
         public string id { get; set; }
-
         public string idChoix { get; set; }
     }
 }

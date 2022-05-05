@@ -1,5 +1,3 @@
-
-
 namespace HangTogether
 {
     public class Message

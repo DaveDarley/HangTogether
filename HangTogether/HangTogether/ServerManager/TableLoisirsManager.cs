@@ -76,8 +76,13 @@ namespace HangTogether.ServerManager
         }
         
         /*
-         * Fonction qui verifie qd un utilisateur ajoute un loisir(i.e ajoute a la table Loisir)
+         * Fonction qui verifie qd un utilisateur ajoute un loisir(i.e ajoute a la table Loisirs)
          * si le loisir existe pas deja dans ma BD.
+         * Si loisir existe deja dans ma BD (i.e Table Loisirs) alors on ajoute seulement le loisir
+         * dans la "table de choix de loisirs du user"
+         * Sinon, on l'ajoute dans ma table globale de loisirs et ensuite on l'ajoute dans la table de
+         * choix de loisirs du user
+         * 
          * Devrait pouvoir dire que LOISIR , LOISIRS sont pareil par (lemmatization et stemming??)
          * mais le ft pas (A modifier pour une prochaine version)
          */
@@ -111,7 +116,7 @@ namespace HangTogether.ServerManager
         }
 
         /*
-         * Fonction qui retourne tous les loisirs existants de ma BD;
+         * Fonction qui retourne tous les loisirs existants de ma BD(i.e table "Loisirs");
          * Si la liste devient longue, elle prendra bcp de temps mais on a pas vraiment le choix
          */
         public async Task<List<Loisir>> getAllInterests()
@@ -121,7 +126,10 @@ namespace HangTogether.ServerManager
             return allInterests;
         }
 
-        // A tester
+
+        /*
+         * Fonction qui retourne un Loisir quelcquonque si il existe dans ma table "Loisirs"
+         */
         public async Task<Loisir> getLoisir(string nom)
         {
             Loisir loisirRecherche = null;

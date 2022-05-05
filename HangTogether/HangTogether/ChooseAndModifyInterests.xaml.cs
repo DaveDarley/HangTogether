@@ -1,13 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Acr.UserDialogs;
-using Firebase.Database;
 using HangTogether.ServerManager;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -20,18 +14,13 @@ namespace HangTogether
     {
 
         private TableLoisirsManager gestionLoisirs;
-
-        private FirebaseClient firebase;
+        
         // LE USER EN QUESTION
         private User user;
-        public  string FirebaseClient = "https://anodate-ca8b9-default-rtdb.firebaseio.com/";
-        public  string FrebaseSecret = "17hN90bHf0ROF4BDSUEsrBTw6AFvuFMe6n3sBFTS";
 
         public ChooseAndModifyInterests(User activeUser)
         {
             InitializeComponent();
-            firebase = new FirebaseClient(FirebaseClient);
-            
             gestionLoisirs = new TableLoisirsManager();
             frameAnecdotes.HeightRequest =
                 DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.15;
@@ -156,7 +145,7 @@ namespace HangTogether
                 var monLabel = (Label) monFrame.Content;
                 monLabel.TextColor= Color.Black;
                 
-                
+                //On enleve un choix de loisirs et donc il faut aussi l'enlever de la liste de choix du user dans la BD 
                 GestionChoixLoisirsUser gestionChoixLoisirsUser = new GestionChoixLoisirsUser();
                 ChoixLoisirsUser choixLoisirsUser = await gestionChoixLoisirsUser.getChoixUser(user, monLabel.Text);
                 gestionChoixLoisirsUser.deleteChoixUser(user,choixLoisirsUser);
@@ -167,6 +156,9 @@ namespace HangTogether
                 var monLabel = (Label) monFrame.Content;
                 monLabel.TextColor= Color.White;
 
+                // Faut ajouter le nouveaux choix du user a liste de choix de user dans ma BD
+                // mais si le loisir n'existe pas deja dans ma BD, il faut aussi l'ajouter a liste globale 
+                // de loisirs (i.e table "Loisirs")
                 TableLoisirsManager tableLoisirsManager = new TableLoisirsManager();
                 tableLoisirsManager.addInterests(user,monLabel.Text);
             }
@@ -197,7 +189,6 @@ namespace HangTogether
             {
                 layoutUser.Children.Add(interest);
             }
-            
         }
         
         /*
@@ -499,13 +490,5 @@ namespace HangTogether
                      DeviceDisplay.MainDisplayInfo.Height / DeviceDisplay.MainDisplayInfo.Density * 0.18;
              }
          }
-         
-        
-        
-
-
-        
-
-        
     }
 }

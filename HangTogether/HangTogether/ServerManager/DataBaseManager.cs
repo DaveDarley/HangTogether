@@ -11,6 +11,14 @@ using HangTogether.ServerManager;
 using Xamarin.Forms;
 
 // utilisation firestore et c# : https://pieterdlinde.medium.com/netcore-and-cloud-firestore-94628943eb3c
+/*
+ * https://stackoverflow.com/questions/44940726/c-sharp-query-path-for-firebase-data-through-firebasedatabase-net
+ * https://stackoverflow.com/questions/71953262/orderby-property-not-working-xamarin-firebase
+ * https://stackoverflow.com/questions/60734705/how-to-create-email-key-in-realtime-database-using-firebasedatabase-net
+ * https://stackoverflow.com/questions/52557203/how-should-i-make-use-of-ids-in-firebase-database
+ * https://stackoverflow.com/questions/70125236/firebase-rest-apihow-to-use-orderby-and-startat-using-the-last-key-id
+ * 
+ */
 namespace HangTogether
 {
     public class DataBaseManager
@@ -27,9 +35,9 @@ namespace HangTogether
         
         /*
          * Fonction qui s'occupe d'ajouter un nouveau user a la base de données
-         */
+        */
         /*
-         * PK:
+         * PK: Ajoute infos dans la BD en inscrivant nous meme notre id
          * https://stackoverflow.com/questions/60734705/how-to-create-email-key-in-realtime-database-using-firebasedatabase-net
          */
         public async Task AddUser(User user)
@@ -58,8 +66,7 @@ namespace HangTogether
         public async Task deleteUser(User user)
         {
             var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
-            await firebase.Child("Users").Child(convertEmail).DeleteAsync(); 
-
+            await firebase.Child("Users").Child(convertEmail).DeleteAsync();
         }
 
         
@@ -134,6 +141,8 @@ namespace HangTogether
          * Cette Fonction recupere tous les users de ma BD, et pour chaque user recupere ces interets.
          * Pour chaque user, si il a au moins un interet en commun avec le user passé en parametre, on l'ajoute
          * a la liste de user qui sera retourné.
+         *
+         * Cote non efficace: Qd le nb de users s'agrandit, cette operation peut s'averer couteuse
         */
         
         //src: https://www.delftstack.com/howto/csharp/check-for-an-element-inside-an-array-in-csharp/
