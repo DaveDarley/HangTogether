@@ -12,6 +12,7 @@ using Xamarin.Forms;
 
 // utilisation firestore et c# : https://pieterdlinde.medium.com/netcore-and-cloud-firestore-94628943eb3c
 /*
+ * https://github.com/step-up-labs/firebase-database-dotnet
  * https://stackoverflow.com/questions/44940726/c-sharp-query-path-for-firebase-data-through-firebasedatabase-net
  * https://stackoverflow.com/questions/71953262/orderby-property-not-working-xamarin-firebase
  * https://stackoverflow.com/questions/60734705/how-to-create-email-key-in-realtime-database-using-firebasedatabase-net
