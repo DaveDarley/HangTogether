@@ -126,6 +126,7 @@ namespace HangTogether
 
             // vu qu'on a ft 4 requetes pour recuperer tous les messages entre user, on est pas sur de l'ordre d'arrivee
             // alors on ordonne les message par timestamp
+            // Src: https://www.codegrepper.com/code-examples/csharp/sort+long+list+like+short+list+c%23+
             messagesUser = messagesUser.OrderBy(o=>o.Key).ToList();
 
             return messagesUser;
@@ -218,8 +219,8 @@ namespace HangTogether
         {
             int nbNouveauxMessages = 0;
             var nonReadMessagesToME =
-                (await firebaseClient.Child("Messages").Child(userSendingMessages.id).Child(userGoingThroughContacts.id).Child("nonlu").OrderByKey().StartAt(userSendingMessages.id)
-                    .EndAt(userSendingMessages.id).OnceAsync<Message>()).AsEnumerable().ToList();
+                (await firebaseClient.Child("Messages").Child(userSendingMessages.id).Child(userGoingThroughContacts.id).Child("nonlu")
+                    .OnceAsync<Message>()).AsEnumerable().ToList();
 
             if (nonReadMessagesToME.Count() != 0)
             {
