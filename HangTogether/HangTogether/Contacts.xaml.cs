@@ -39,7 +39,7 @@ namespace HangTogether
         public async void getListUserInContactWithMe(User userLookingInContacts)
         {
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
-            List<User> usersInContactWithMe =  await dataBaseMessagesManager.getUserInContactsWithMe(userLookingInContacts);;
+            List<User> usersInContactWithMe =  await dataBaseMessagesManager.getUserInContactsWithMe(userLookingInContacts);
             containerContacts.Children.Clear();
             displayAllContacts(usersInContactWithMe);
         }

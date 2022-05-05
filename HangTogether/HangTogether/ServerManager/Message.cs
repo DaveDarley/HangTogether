@@ -2,14 +2,13 @@ namespace HangTogether
 {
     public class Message
     {
-        public Message(string fromEmail, string toEmail, string message, string Key, string timeStamp, string lu)
+        public Message(string fromEmail, string toEmail, string message, string Key, string timeStamp)
         {
             this.fromEmail = fromEmail;
             this.toEmail = toEmail;
             this.message = message;
             this.Key = Key;
             this.timeStamp = timeStamp;
-            this.lu = lu;
         }
         public string timeStamp { get; set; }
 
@@ -23,8 +22,6 @@ namespace HangTogether
         
         public string Key { get; set; }
 
-       
-        public string lu { get; set; }
 
     }
 }

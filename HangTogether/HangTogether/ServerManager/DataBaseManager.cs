@@ -97,7 +97,20 @@ namespace HangTogether
             return monUser;
         }
 
-        
+        public async Task<User> getUserById(string idUser)
+        {
+            User user = null;
+            var monUser = (await firebase.Child("Users").OrderByKey().StartAt(idUser).EndAt(idUser).OnceAsync<User>()).AsEnumerable()
+                .ToList();
+            if (monUser.Count() != 0)
+            {
+                user = monUser.First().Object;
+            }
+
+            return user;
+        }
+
+
         /*
          * Avant d'appeler cette fonction je recupere le user qui a l'email entre par le user
          * qui essaie de se connecter, je compare ensuite le mdp entré par le user avec le le mdp

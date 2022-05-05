@@ -41,7 +41,6 @@ namespace HangTogether
             Title = nomUserTo;
             this.BindingContext = this;
             whenUserConnected(); //au debut on recupere ts les messages entre les 2 users dans ma DB(s'il y en a)
-            //listenOnNewMessages();
             
         }
 
@@ -56,12 +55,11 @@ namespace HangTogether
 
             await Task.Delay(5000);
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
-            int isNewMessages = await dataBaseMessagesManager.getNumberOfNewMessages(userTo, userFrom);
+            List<Message> messagesToMe = await dataBaseMessagesManager.getNonReadMessages(userFrom, userTo);
             
             // DisplayAlert("TestMessages", "nb de nouveaux messages pour moi " + isNewMessages, "ok");
-            if (isNewMessages != 0)
+            if (messagesToMe.Count() != 0)
             {
-                List<Message> messagesToMe = await dataBaseMessagesManager.getNonReadMessages(userFrom, userTo);
                 displayAllConvos(messagesToMe);
             }
             
@@ -91,7 +89,8 @@ namespace HangTogether
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
             var textToSend = this.message.Text;
             var dateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-            Message message = new Message(userFrom.email, userTo.email, textToSend, "", dateTime,"n");
+            string cleMessage = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond + "";
+            Message message = new Message(userFrom.email, userTo.email, textToSend, cleMessage, dateTime);
             dataBaseMessagesManager.addNewConversation(message);
             
             // Je dois dessiner le message sur l'ecran de l'emetteur du message:
