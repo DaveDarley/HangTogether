@@ -6,15 +6,16 @@ namespace HangTogether.ServerManager
      */
     public class ChoixLoisirsUser
     {
-        public ChoixLoisirsUser(string id, Loisir loisir, string idUser)
+        public ChoixLoisirsUser(string idChoix,string id, Loisir loisir)
         {
-            this.id = id;
             this.loisir = loisir;
-            this.idUser = idUser;
+            this.id = id;
+            this.idChoix = idChoix;
         }
 
-        public string id { get; set; }
         public Loisir loisir { get; set; }
-        public string idUser { get; set; }
+        public string id { get; set; }
+
+        public string idChoix { get; set; }
     }
 }

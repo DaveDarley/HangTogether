@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Firebase.Database;
 using Firebase.Database.Query;
@@ -19,29 +22,46 @@ namespace HangTogether.ServerManager
         }
 
 
+        /*
+         * L'id du loisir est pareil que l'id du user qui lui a selectionné
+         */
         public async void deleteChoixUser(ChoixLoisirsUser choixLoisirsUser)
         {
-            await firebase.Child("ChoixLoisirsUser").Child(choixLoisirsUser.id).DeleteAsync();
+            await firebase.Child("ChoixLoisirsUser").Child(choixLoisirsUser.idChoix).DeleteAsync();
         }
 
         /*
-         * Fonction est appelé qd un user selectionne un choix alors c'est sure le table choixuser
-         * contient au moins un choix (A ameliorer francais)
-         * i.e choix user sera jamais null
+         * Lorsqu'un user selectionne un loisir(Tape sur un frame loisir de l'ecran), on verifie si il avait pas auparavant
+         * selectionne ce loisir(i.e deja mis dans la table ChoixLoisirsUser)
          */
         public async Task<ChoixLoisirsUser> getChoixUser(User user, string nomLoisir)
         {
+            var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
+            string cleChoixUser = nomLoisir + convertEmail;
+            var loisirSiExist = (await firebase.Child("ChoixLoisirsUser").OrderByKey().StartAt(cleChoixUser).EndAt(cleChoixUser)
+                .LimitToFirst(1).OnceAsync<ChoixLoisirsUser>()).ToList();
             ChoixLoisirsUser choixUser = null;
-            var firebaseObjectChoixUser = (await firebase.Child("ChoixLoisirsUser").OnceAsync<ChoixLoisirsUser>())
-                .AsEnumerable().Where(choixuser =>
-                    choixuser.Object.idUser == user.id && choixuser.Object.loisir.nom == nomLoisir);
-            if (firebaseObjectChoixUser.Count() != 0)
+
+            if (loisirSiExist.Count() != 0)
             {
-                choixUser = firebaseObjectChoixUser.First().Object;
-                choixUser.id = firebaseObjectChoixUser.First().Key;
+                choixUser = loisirSiExist.First().Object;
             }
             return choixUser;
         }
+
+        public async void addChoixUser(User user, string nomLoisir)
+        {
+            var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
+            string cleChoixUser = nomLoisir + convertEmail;
+
+            TableLoisirsManager tableLoisirsManager = new TableLoisirsManager();
+            Loisir loisir = await tableLoisirsManager.getLoisir(nomLoisir);
+            ChoixLoisirsUser choixLoisirsUser = new ChoixLoisirsUser(cleChoixUser,user.id,loisir);
+
+            await firebase.Child("ChoixLoisirsUser").Child(cleChoixUser).PutAsync(choixLoisirsUser);
+        }
+
+
 
 
 

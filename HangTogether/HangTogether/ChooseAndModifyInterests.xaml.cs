@@ -57,12 +57,12 @@ namespace HangTogether
                nomChoixUser.Add(loisirUser.nom); 
             }
             
-            List<Frame> frameAllInterests = CreateLoisirsFrame(allInterests,nomChoixUser);
-            
             if (! String.IsNullOrEmpty(user.anecdotes))
             {
                 this.anecdotesUser.Text = user.anecdotes;
             }
+            
+            List<Frame> frameAllInterests = CreateLoisirsFrame(allInterests,nomChoixUser);
             addLoisirsToLayout(frameAllInterests);
         }
         

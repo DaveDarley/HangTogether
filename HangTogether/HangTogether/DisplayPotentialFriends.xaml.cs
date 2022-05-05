@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Acr.UserDialogs;
 using HangTogether.ServerManager;
 using Xamarin.CommunityToolkit.Extensions;
 using Xamarin.Essentials;
@@ -22,6 +23,9 @@ namespace HangTogether
         public DisplayPotentialFriends(User user)
         {
             InitializeComponent();
+            
+            UserDialogs.Instance.ShowLoading("Loading",MaskType.Black); 
+            
             DeviceDisplay.MainDisplayInfoChanged += OnMainDisplayInfoChanged;
             BindingContext = this;
             userLookingForNewFriends = user;
@@ -185,6 +189,7 @@ namespace HangTogether
                     DisplayUser userToDisplayOnCard = new DisplayUser(user,titre, loisirsEnCommun, anecdotes);
                     _userToDisplayOnCard.Add(userToDisplayOnCard);
                 }
+                UserDialogs.Instance.HideLoading();   //Hide loader
             }
             else
             {

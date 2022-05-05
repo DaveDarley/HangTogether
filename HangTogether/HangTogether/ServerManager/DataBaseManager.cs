@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Firebase.Database;
+using Firebase.Database.Offline;
 using Firebase.Database.Query;
 using HangTogether.ServerManager;
 using Xamarin.Forms;
@@ -26,12 +28,16 @@ namespace HangTogether
         /*
          * Fonction qui s'occupe d'ajouter un nouveau user a la base de données
          */
+        /*
+         * PK:
+         * https://stackoverflow.com/questions/60734705/how-to-create-email-key-in-realtime-database-using-firebasedatabase-net
+         */
         public async Task AddUser(User user)
         {
+            string emailUser = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
             await firebase.Child("Users")
-                .PostAsync(user);
-            User userToUpdateId = await getUser(user.email); //Pr passer l'ID du FirebaseObject au User
-            await UpdateUser(userToUpdateId);
+              .Child(emailUser)
+              .PutAsync(user);
         }
 
 
@@ -41,8 +47,9 @@ namespace HangTogether
          */
         public async Task UpdateUser(User user)
         {
+            var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
             await firebase.Child("Users")
-                .Child(user.id).PutAsync(user);
+                .Child(convertEmail).PutAsync(user);
         }
 
         /*
@@ -50,30 +57,35 @@ namespace HangTogether
          */
         public async Task deleteUser(User user)
         {
-            await firebase.Child("Users").Child(user.id).DeleteAsync(); 
+            var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(user.email));
+            await firebase.Child("Users").Child(convertEmail).DeleteAsync(); 
 
         }
 
         
         /*
-         * Fonction qui prend un email en parametre et retourner le user(s'il existe)
-         * Vu que Cette librairi
+         * Fonction qui recupere le User s'il existe dans ma BD
+         * Vu que la clé de chaque user est : email du user convertit en Base64String
+         * Pour verifier si un user existe, on convertit son email en base64string et on verifie
+         * si cette cle existe dans la BD
          */
         public async Task<User> getUser(string emailUser)
         {   // Peut etre null si le user n'existe pas 
             User monUser = null;
-            var userRecuper = (await firebase.Child("Users")
-                .OnceAsync<User>()).AsEnumerable().Where(user => user.Object.email == emailUser).ToList();
             
-            if (userRecuper.Count() != 0)
+            var convertEmail = Convert.ToBase64String(Encoding.ASCII.GetBytes(emailUser));
+            var userRecuperer = await firebase.Child("Users").OrderByKey().StartAt(convertEmail).EndAt(convertEmail).LimitToFirst(1).OnceAsync<User>();
+            var listFirebaseObjectUser = userRecuperer.ToList();
+            if (listFirebaseObjectUser.Count() != 0) // on a trouve un user avec cet email 
             {
-                FirebaseObject<User> user = userRecuper.FirstOrDefault();
-                monUser = user.Object;
+                monUser = listFirebaseObjectUser.First().Object;
                 if (monUser.id == "")
                 {
-                    monUser.id = user.Key;
+                    monUser.id = convertEmail;
+                    await UpdateUser(monUser);
                 }
             }
+
             return monUser;
         }
 
@@ -99,21 +111,23 @@ namespace HangTogether
             }
             return canUserConnect;
         }
-     
-        
+   
         /*
          * Fonction qui recupere la liste de loisirs d'un user en particulier 
          */
         public async Task<List<Loisir>> getInterestsUser(User user)
         {
+            GestionChoixLoisirsUser gestionChoixLoisirsUser = new GestionChoixLoisirsUser();
             List<Loisir> interestsUser = new List<Loisir>();
-            List<FirebaseObject<ChoixLoisirsUser>> choixUser = (await firebase.Child("ChoixLoisirsUser")
-                    .OnceAsync<ChoixLoisirsUser>()).AsEnumerable()
-                .Where(userChoice => userChoice.Object.idUser == user.id)
-                .ToList();
-            foreach (var firebaseObjectLoisir in choixUser)
+            var allInterests = (await firebase.Child("Loisirs")
+                .OnceAsync<Loisir>()).AsEnumerable().ToList();
+            foreach (var loisir in allInterests)
             {
-                interestsUser.Add(firebaseObjectLoisir.Object.loisir);
+                ChoixLoisirsUser isUserHaveThisLoisir = await gestionChoixLoisirsUser.getChoixUser(user, loisir.Object.nom);
+                if (isUserHaveThisLoisir != null)
+                {
+                    interestsUser.Add(isUserHaveThisLoisir.loisir);
+                }
             }
             return interestsUser;
         }
@@ -137,6 +151,7 @@ namespace HangTogether
                 interestsUserLookingForFriendsInString.Add(loisir.nom);
             }
             
+            // pas trop couteux ??
             List<User> usersWithSharedInterests = new List<User>();
             var allUsers = (await firebase.Child("Users").OnceAsync<User>())
                 .AsEnumerable().Select(user => user.Object).ToList();

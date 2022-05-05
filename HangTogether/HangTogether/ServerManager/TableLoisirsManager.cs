@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Threading.Tasks;
+using System.Text;
 using System.Threading.Tasks;
 using Firebase.Database;
 using Firebase.Database.Query;
@@ -69,7 +70,7 @@ namespace HangTogether.ServerManager
                  List<Loisir> loisirsDeDepart = createInterestsObjects();
                  foreach (var loisir in loisirsDeDepart)
                  {
-                     await db.Child("Loisirs").PostAsync(loisir);
+                     await db.Child("Loisirs").Child(loisir.nom).PutAsync(loisir);
                  }
              }
         }
@@ -80,36 +81,38 @@ namespace HangTogether.ServerManager
          * Devrait pouvoir dire que LOISIR , LOISIRS sont pareil par (lemmatization et stemming??)
          * mais le ft pas (A modifier pour une prochaine version)
          */
+        
+        // How to use OrderBy() method:
+        // https://stackoverflow.com/questions/71953262/orderby-property-not-working-xamarin-firebase
         public async void addInterests(User user, string nom)
         {
-            var Loisir = (await db.Child("Loisirs")
-                .OnceAsync<Loisir>()).AsEnumerable().Where(loisir => loisir.Object.nom == nom.ToUpper()).ToList();
+            GestionChoixLoisirsUser gestionChoixLoisirsUser = new GestionChoixLoisirsUser();
+            var loisirSiExist = (await db.Child("Loisirs").OrderByKey().StartAt(nom).EndAt(nom)
+                .LimitToFirst(1).OnceAsync<Loisir>()).ToList();
 
-            if (Loisir.Count() == 0)
+            if (loisirSiExist.Count() == 0)
+                /*
+                 * La table totale de loisirs a deja ce 
+                 */
             {
                 var ticks = DateTime.Now.Ticks;
                 var guid = Guid.NewGuid().ToString();
                 var uniqueSessionId = ticks.ToString() +'-'+ guid; //guid created by combining ticks and guid
                 
                 Loisir loisir = new Loisir(nom, uniqueSessionId);
-                await db.Child("Loisirs").PostAsync(loisir);
+                await db.Child("Loisirs").Child(nom).PutAsync(loisir);
 
-                ChoixLoisirsUser choixLoisirsUser = new ChoixLoisirsUser(uniqueSessionId, loisir, user.id);
-                await db.Child("ChoixLoisirsUser").PostAsync(choixLoisirsUser);
+                gestionChoixLoisirsUser.addChoixUser(user, nom);
             }
             else
             {
-                var ticks = DateTime.Now.Ticks;
-                var guid = Guid.NewGuid().ToString();
-                var uniqueSessionId = ticks.ToString() +'-'+ guid; //guid created by combining ticks and guid
-
-                Loisir loisir = await getLoisir(nom);
-                ChoixLoisirsUser choixLoisirsUser = new ChoixLoisirsUser(uniqueSessionId, loisir, user.id);
-                await db.Child("ChoixLoisirsUser").PostAsync(choixLoisirsUser);
+                gestionChoixLoisirsUser.addChoixUser(user, nom);
             }
         }
 
-        
+        /*
+         * Fonction qui retourne tous les loisirs existants de ma BD
+         */
         public async Task<List<Loisir>> getAllInterests()
         {
             var allInterests = (await db.Child("Loisirs")
@@ -117,16 +120,16 @@ namespace HangTogether.ServerManager
             return allInterests;
         }
 
+        // A tester
         public async Task<Loisir> getLoisir(string nom)
         {
             Loisir loisirRecherche = null;
-            var isLoisir =  (await db.Child("Loisirs").OnceAsync<Loisir>())
-                .AsEnumerable().Where(loisir => loisir.Object.nom == nom);
-            if (isLoisir.Count() != 0)
+            var loisir = (await db.Child("Loisirs").OrderByKey().StartAt(nom).EndAt(nom).LimitToFirst(1)
+                .OnceAsync<Loisir>()).ToList();
+            if (loisir.Count() != 0)
             {
-                loisirRecherche = isLoisir.First().Object;
+                loisirRecherche = loisir.First().Object;
             }
-
             return loisirRecherche;
         }
     }

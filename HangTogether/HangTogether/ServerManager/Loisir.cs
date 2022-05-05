@@ -10,6 +10,7 @@ namespace HangTogether.ServerManager
             this.id = id;
         }
 
+ 
         public string nom { get; set; }
         public string id { get; set; }
     }
