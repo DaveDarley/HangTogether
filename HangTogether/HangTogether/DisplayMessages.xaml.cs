@@ -87,16 +87,19 @@ namespace HangTogether
         {
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
             var textToSend = this.message.Text;
-            var dateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
-            string cleMessage = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond + "";
-            Message message = new Message(userFrom.email, userTo.email, textToSend, cleMessage, dateTime);
-            dataBaseMessagesManager.addNewConversation(message);
+            if (!(string.IsNullOrEmpty(textToSend))) // pas envoyer des messages vide
+            {
+                var dateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
+                string cleMessage = DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond + "";
+                Message message = new Message(userFrom.email, userTo.email, textToSend, cleMessage, dateTime);
+                dataBaseMessagesManager.addNewConversation(message);
             
-            // Je dois dessiner le message sur l'ecran de l'emetteur du message:
-            List<Message> messageToDisplay = new List<Message>();
-            messageToDisplay.Add(message);
-            displayAllConvos(messageToDisplay);
-            this.message.Text = String.Empty;
+                // Je dois dessiner le message sur l'ecran de l'emetteur du message:
+                List<Message> messageToDisplay = new List<Message>();
+                messageToDisplay.Add(message);
+                displayAllConvos(messageToDisplay);
+                this.message.Text = String.Empty;
+            }
         }
 
         /*
