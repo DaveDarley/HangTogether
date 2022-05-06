@@ -57,7 +57,6 @@ namespace HangTogether
             DataBaseMessagesManager dataBaseMessagesManager = new DataBaseMessagesManager();
             List<Message> messagesToMe = await dataBaseMessagesManager.getNonReadMessages(userFrom, userTo);
             
-            // DisplayAlert("TestMessages", "nb de nouveaux messages pour moi " + isNewMessages, "ok");
             if (messagesToMe.Count() != 0)
             {
                 displayAllConvos(messagesToMe);

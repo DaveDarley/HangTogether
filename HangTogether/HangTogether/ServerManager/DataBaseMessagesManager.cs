@@ -183,6 +183,8 @@ namespace HangTogether
                     idAllUsers.Add(firebaseObjectUser.Object.id);
                 }
             }
+            
+            
 
             foreach (var iduser in idAllUsers)
             {

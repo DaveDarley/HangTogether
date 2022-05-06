@@ -95,9 +95,10 @@ namespace HangTogether
          */
         async void OnTapForgetPassword(object sender, EventArgs args)
         {
-            string emailUser = await DisplayPromptAsync("Recouvrement de Mot de passe", "Quel est votre courriel?");
-            if (!String.IsNullOrEmpty(emailUser))
+            string email = await DisplayPromptAsync("Recouvrement de Mot de passe", "Quel est votre courriel?");
+            if (!String.IsNullOrEmpty(email))
             {
+                string emailUser = email.Trim();
                 DataBaseManager dataBaseManager = new DataBaseManager();
                 var user = await dataBaseManager.getUser(emailUser);
                 if (!(user is null))
